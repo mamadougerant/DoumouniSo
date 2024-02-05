@@ -23,6 +23,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +38,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.malisoftware.cart.CartRoomViewModel
 import com.malisoftware.components.LazyLists.HorizontalItemList
 import com.malisoftware.components.LazyLists.ItemList
 import com.malisoftware.components.container.PlusIcon
@@ -43,6 +46,7 @@ import com.malisoftware.components.container.SmallBusinessContainer
 import com.malisoftware.components.container.icons.ArrowForward
 import com.malisoftware.components.container.icons.NavigationIcon
 import com.malisoftware.components.screens.OrderScreenInModalSheet
+import com.malisoftware.local.local.BusinessEntity
 import com.malisoftware.model.Items
 import com.malisoftware.theme.AppTheme
 
@@ -50,9 +54,16 @@ import com.malisoftware.theme.AppTheme
 @Composable
 fun Cart(
     navController: NavController,
+    cartVm: CartRoomViewModel,
 ) {
+
+    LaunchedEffect(key1 = cartVm,) {
+        cartVm.getOrders()
+    }
     var openSheet by remember { mutableStateOf(false) }
     var sheetContent by remember { mutableStateOf(Items()) }
+
+    val orders by cartVm.orders.collectAsState()
 
     Scaffold (
         topBar = {
@@ -83,29 +94,19 @@ fun Cart(
 
             )
         },
-    ) {
+    ) { paddingValues ->
         LazyColumn (
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
+                .padding(paddingValues)
         ){
-            item {
+            items (orders.size ){
+                val order = orders[it]
                 CartItemContainer(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
-                    onItemClick = {
-                        sheetContent = it
-                        openSheet = true
-
-                    }
-
-                )
-                CartItemContainer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-
+                    business = order.restaurant,
                 )
 
             }
@@ -133,11 +134,7 @@ fun Cart(
 @Composable
 fun CartItemContainer(
     modifier: Modifier = Modifier,
-    title: String = "title title title",
-    price: String = "price",
-    description: String = "description description description description description description description",
-    imageUrl: String = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg/800px-Good_Food_Display_-_NCI_Visuals_Online.jpg",
-    onItemClick: (Items) -> Unit = {},
+    business: BusinessEntity = BusinessEntity(),
     onBusinessClick: () -> Unit = {},
     onCancel: () -> Unit = {},
     onConfirm: () -> Unit = {},
@@ -150,80 +147,66 @@ fun CartItemContainer(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp),
+            imageUrl = business.imageUrl,
+            title = business.title,
+            subtitle = business.category,
         ) { ArrowForward(onClick = onBusinessClick) }
-        ItemList (
+        Button(
+            onClick = onConfirm,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp),
-            title = null,
-            items = List(6){ Items() },
-            onClick = onItemClick,
-        ){}
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-        ){
-            Button(
-                onClick = onCancel,
-                modifier = Modifier
-                    .weight(1f)
-                    .height(50.dp)
-                    .padding(end = 5.dp),
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(if (isSystemInDarkTheme()) Color.LightGray.copy(0.5f) else Color.LightGray),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Text(
-                    text = "Supprimer",
-                    style = AppTheme.typography.titleMedium,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .align(Alignment.CenterVertically)
-                        .padding(15.dp),
-                    color = AppTheme.colors.background
-                )
-            }
-            Button(
-                onClick = onConfirm,
-                modifier = Modifier
-                    .weight(2f)
-                    .height(50.dp)
-                    .padding(start = 5.dp),
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(AppTheme.colors.onBackground),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                val text = buildAnnotatedString {
-                    withStyle(AppTheme.typography.titleMedium.toSpanStyle()) {
-                        append("Confirmer - ")
-                    }
-                    withStyle(AppTheme.typography.titleMedium.toSpanStyle()) {
-                        // formatPrice(price = price)
-                        append("1.000.000 ")
-                    }
-                    withStyle(AppTheme.typography.titleMedium.toSpanStyle()) {
-                        append("FCFA")
-                    }
+                .padding(5.dp)
+                .padding(horizontal = 5.dp)
+                .height(50.dp),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.buttonColors(AppTheme.colors.onBackground),
+            contentPadding = PaddingValues(0.dp)
+        ) {
+            val text = buildAnnotatedString {
+                withStyle(AppTheme.typography.titleMedium.toSpanStyle()) {
+                    append("Voir le panier")
                 }
-                Text(
-                    text = text,
-                    style = AppTheme.typography.titleMedium,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .align(Alignment.CenterVertically)
-                        .padding(vertical = 15.dp, horizontal = 10.dp),
-                    color = AppTheme.colors.background
-                )
             }
+            Text(
+                text = text,
+                style = AppTheme.typography.titleMedium,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .align(Alignment.CenterVertically)
+                    .padding(vertical = 15.dp, horizontal = 10.dp),
+                color = AppTheme.colors.background
+            )
         }
+        Button(
+            onClick = onCancel,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(5.dp)
+                .padding(horizontal = 5.dp)
+                .height(50.dp),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.buttonColors(if (isSystemInDarkTheme()) Color.LightGray.copy(0.5f) else Color.LightGray),
+            contentPadding = PaddingValues(0.dp)
+        ) {
+            Text(
+                text = "Supprimer",
+                style = AppTheme.typography.titleMedium,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .align(Alignment.CenterVertically)
+                    .padding(15.dp),
+                color = AppTheme.colors.background
+            )
+        }
+
+
     }
 }
 
 @Preview
 @Composable
 fun Cart_() {
-    Cart(navController = NavController(LocalContext.current))
+    //Cart(navController = NavController(LocalContext.current), cartVm = cartVm)
 
 
 }

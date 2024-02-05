@@ -96,6 +96,7 @@ fun OrderScreen(
     bottomContent: (@Composable () -> Unit )? = null,
     extraContent: LazyListScope.() -> Unit = {}
 ) {
+
     ItemCustomScaffold(
         modifier = modifier
             .padding(bottom = 105.dp),

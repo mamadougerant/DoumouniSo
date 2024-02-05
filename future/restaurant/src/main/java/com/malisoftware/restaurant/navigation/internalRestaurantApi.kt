@@ -11,6 +11,7 @@ import com.future.restaurant.Restaurant
 import com.malisoftware.restaurant.RestaurantItem
 import com.future.restaurant.viewModel.RestaurantOrderVM
 import com.future.restaurant.viewModel.RestaurantViewModel
+import com.malisoftware.restaurant.viewModel.RoomViewModel
 
 
 internal object InternalRestaurantApi: RestaurantApi {
@@ -29,13 +30,13 @@ internal object InternalRestaurantApi: RestaurantApi {
             composable(MainFeatures.RESTAURANT_ITEM + "/{id}"){ backStack->
                 val viewModel: RestaurantViewModel = hiltViewModel()
                 val orderViewModel: RestaurantOrderVM = hiltViewModel()
-                //val roomVm: RestaurantRoomVM = hiltViewModel()
+                val roomVm: RoomViewModel = hiltViewModel()
                 RestaurantItem(
                     navController = navController,
                     id = backStack.arguments?.getString("id") ?: "",
                     viewModel = viewModel,
                     orderViewModel = orderViewModel,
-                    //roomVm = roomVm
+                    roomVm = roomVm
                 )
             }
         }

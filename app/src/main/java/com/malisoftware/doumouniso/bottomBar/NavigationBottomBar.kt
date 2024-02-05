@@ -18,6 +18,7 @@ import com.malisoftware.theme.AppTheme
 @Composable
 fun NavigationBottomBar(
     navController: NavController,
+    orderCount: Int = 0
 ) {
     // if current destination is shop on va dire bottomBarNavigationItems = listOF(Home, Favorites, Cart, Profile)
     // pour shop donc comme ca va mettre les buttom bar de shop comme pour restaurant automatiquement on va
@@ -46,7 +47,7 @@ fun NavigationBottomBar(
         ) {
             bottomBarNavigationItems.forEach { bottomBarNavigation ->
                 val isSelected = currentRoute.hierarchy.any { it.route == bottomBarNavigation.route }
-                val badgeNum = 10 //roomViewModel.orders().asFlow().collectAsState(initial = null).value?.filter { !it.completed }?.size
+                val badgeNum = orderCount //roomViewModel.orders().asFlow().collectAsState(initial = null).value?.filter { !it.completed }?.size
                 BottomBarItem(
                     navController = navController,
                     bottomBarNavigation = bottomBarNavigation,

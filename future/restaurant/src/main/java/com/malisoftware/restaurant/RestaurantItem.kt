@@ -30,6 +30,7 @@ import com.malisoftware.model.Items
 import com.malisoftware.theme.AppTheme
 import com.future.restaurant.viewModel.RestaurantOrderVM
 import com.future.restaurant.viewModel.RestaurantViewModel
+import com.malisoftware.restaurant.viewModel.RoomViewModel
 import kotlinx.coroutines.launch
 
 
@@ -38,6 +39,7 @@ fun RestaurantItem(
     id: String, navController: NavHostController,
     viewModel: RestaurantViewModel,
     orderViewModel: RestaurantOrderVM,
+    roomVm: RoomViewModel,
 ) {
 
     // TODO: check if the restaurant is open before ordering
@@ -58,6 +60,8 @@ fun RestaurantItem(
     val scope = rememberCoroutineScope()
     var sheetContent by remember { mutableStateOf(Items()) }
     var openSheet by remember { mutableStateOf(false) }
+
+    var instruction by remember { mutableStateOf("") }
 
     if (restaurant == null) { return }
 
@@ -116,6 +120,19 @@ fun RestaurantItem(
         OrderScreenInModalSheet(
             item = sheetContent,
             onSheetClose = { openSheet = it },
+            onBottomBarClick = {
+                scope.launch {
+                    openSheet = false
+                    roomVm.insertOrder(
+                        item = it,
+                        restaurant = restaurant!!,
+                        instruction = instruction
+                    )
+                }
+            },
+            onValueChange = {
+                instruction = it
+            }
         ) {
 
             items.forEachIndexed { _, it ->

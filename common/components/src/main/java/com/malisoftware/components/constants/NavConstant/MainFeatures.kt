@@ -1,4 +1,4 @@
-package com.common.components.constants.NavConstant
+package com.malisoftware.components.constants.NavConstant
 
 object MainFeatures {
     const val HOME = "home"
@@ -7,6 +7,7 @@ object MainFeatures {
     const val SHOP = "shop"
     const val SHOP_ITEM = "shop_item"
     const val CART = "cart"
+    const val CART_ITEM = "cart_item"
     const val CART_CHECKOUT = "cart_checkout"
     const val PROFILE = "profile"
     const val ORDER = "order"

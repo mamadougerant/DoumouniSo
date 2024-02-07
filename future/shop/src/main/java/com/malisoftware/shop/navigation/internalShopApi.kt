@@ -5,8 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.common.components.constants.NavConstant.MainFeatures
-import com.common.components.constants.NavConstant.Roots
+import com.malisoftware.components.constants.NavConstant.MainFeatures
+import com.malisoftware.components.constants.NavConstant.Roots
 import com.future.shop.ShopItem
 import com.future.shop.ShopScreen
 import com.future.shop.viewModel.ShopViewModel

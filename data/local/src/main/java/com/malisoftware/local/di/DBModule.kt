@@ -3,7 +3,7 @@ package com.malisoftware.local.di
 
 import android.content.Context
 import androidx.room.Room
-import com.data.local.db.AppDatabase
+import com.malisoftware.local.db.AppDatabase
 import com.malisoftware.local.repository.LocalRepository
 import dagger.Module
 import dagger.Provides
@@ -23,7 +23,7 @@ object DBModule {
     ): AppDatabase {
         return Room.databaseBuilder(
             applicationContext,
-            AppDatabase::class.java, "order-database1"
+            AppDatabase::class.java, "order-database43"
         ).build()
     }
 

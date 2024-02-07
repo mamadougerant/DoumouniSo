@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.malisoftware.components.R
 import com.malisoftware.components.shimmerEffect
 
 /**
@@ -71,6 +72,7 @@ fun ImageContainer(
     // TODO: Add a error image or leave it
     val painter = rememberAsyncImagePainter(ImageRequest.Builder(LocalContext.current)
             .data(data = imageUrl)
+            //.error(R.drawable.salad)
             .build())
     val colorMatrix = ColorMatrix(
         floatArrayOf(

@@ -6,11 +6,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import com.malisoftware.theme.AppTheme
 
 @Composable
 fun TextWithIcon(
     modifier: Modifier = Modifier,
+    customStyle: TextStyle? = null,
     title: String,
     leadingIcon: (@Composable () -> Unit)? = null,
     icon: @Composable () -> Unit,
@@ -23,7 +25,7 @@ fun TextWithIcon(
         leadingIcon?.invoke()
         Text(
             text = title,
-            style = AppTheme.typography.headlineLarge
+            style = customStyle ?: AppTheme.typography.headlineLarge
         )
         icon()
     }

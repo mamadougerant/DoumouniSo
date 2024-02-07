@@ -35,11 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.malisoftware.components.LazyLists.ChipList
 import com.malisoftware.components.LazyLists.ColumnBusinessList
-import com.malisoftware.components.LazyLists.ItemList
 import com.malisoftware.components.LazyLists.RoundedCategoryList
 import com.malisoftware.components.LazyLists.RowBusinessList
 import com.malisoftware.components.LazyLists.SmallBusinessList
-import com.common.components.constants.NavConstant.MainFeatures
+import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.TextWithIcon
 import com.malisoftware.components.component.RangeSliderWithData
 import com.malisoftware.components.component.RangeSliderWithGraph

@@ -12,7 +12,7 @@ import java.util.UUID
 object TestObjects {
     val restaurants = listOf(
         BusinessData(
-            id = UUID.randomUUID().toString(),
+            id = "Burger house",
             title = "Burger house",
             category = "Burger",
             minPrice = 2000.00,
@@ -32,7 +32,7 @@ object TestObjects {
             badRate = 0,
         ),
         BusinessData(
-            id = UUID.randomUUID().toString(),
+            id = "Pizza flow",
             title = "Pizza flow",
             category = "Pizza",
             minPrice = 1000.00,
@@ -52,7 +52,7 @@ object TestObjects {
             badRate = 0,
         ),
         BusinessData(
-            id = UUID.randomUUID().toString(),
+            id = "Sandwich king",
             title = "Sandwich king",
             category = "Sandwich",
             minPrice = 2000.00,
@@ -72,7 +72,7 @@ object TestObjects {
             badRate = 0,
         ),
         BusinessData(
-            id = UUID.randomUUID().toString(),
+            id = "Petit croissant",
             title = "Petit croissant",
             category = "Petit déjeuner",
             minPrice = 1000.00,
@@ -92,7 +92,7 @@ object TestObjects {
             badRate = 0,
         ),
         BusinessData(
-            id = UUID.randomUUID().toString(),
+            id = "Burger master",
             title = "Burger master",
             category = "Burger",
             minPrice = 2500.00,
@@ -113,7 +113,7 @@ object TestObjects {
             sponsored = true
         ),
         BusinessData(
-            id = UUID.randomUUID().toString(),
+            id = "Pizza king",
             title = "Pizza king",
             category = "Pizza",
             minPrice = 2500.00,
@@ -134,7 +134,7 @@ object TestObjects {
             sponsored = true
         ),
         BusinessData(
-            id = UUID.randomUUID().toString(),
+            id = "chick chicken",
             title = "chick chicken",
             category = "Poulet",
             minPrice = 3000.00,
@@ -155,7 +155,7 @@ object TestObjects {
             sponsored = true
         ),
         BusinessData(
-            id = UUID.randomUUID().toString(),
+            id = "Tchieke",
             title = "Tchieke",
             category = "Africain",
             minPrice = 3000.00,
@@ -491,7 +491,7 @@ object TestItemObject{
             title = "Classic Pizzas",
             items = listOf(
                 Items(
-                    id = 1,
+                    id = 11,
                     title = "Margherita",
                     promotion = "10% de reduction",
                     imageUrl = "https://www.blossmangas.com/wp-content/uploads/2021/05/Margherita-pizza-2.jpg",
@@ -499,14 +499,14 @@ object TestItemObject{
                     price = 1200.99
                 ),
                 Items(
-                    id = 2,
+                    id = 12,
                     title = "Pepperoni",
                     imageUrl = "https://fr.ooni.com/cdn/shop/articles/Ooni_Diablo_resized.jpg?crop=center&height=1200&v=1616496838&width=1200",
                     description = "Tomato sauce, mozzarella, and pepperoni.",
                     price = 1400.99
                 ),
                 Items(
-                    id = 3,
+                    id = 13,
                     title = "Vegetarian",
                     imageUrl = "https://cdn.loveandlemons.com/wp-content/uploads/2018/09/vegan-pizza.jpg",
                     description = "Tomato sauce, mozzarella, bell peppers, onions, mushrooms, and olives.",
@@ -519,20 +519,20 @@ object TestItemObject{
             title = "Specialty Pizzas",
             items = listOf(
                 Items(
-                    id = 4,
+                    id = 14,
                     title = "BBQ Chicken",
                     imageUrl = "https://www.loveandotherspices.com/wp-content/uploads/2022/04/air-fryer-bbq-chicken-main.jpg",
                     description = "BBQ sauce, mozzarella, grilled chicken, red onions, and cilantro.",
                     price = 1600.99
                 ),
                 Items(
-                    id = 5,
+                    id = 15,
                     title = "Hawaiian",
                     description = "Tomato sauce, mozzarella, ham, pineapple, and bacon.",
                     price = 1700.99
                 ),
                 Items(
-                    id = 6,
+                    id = 16,
                     title = "Meat Lovers",
                     imageUrl = "https://www.kayscleaneats.com/wp-content/uploads/2020/07/unadjustednonraw_thumb_a8b0-480x360.jpg",
                     description = "Tomato sauce, mozzarella, pepperoni, sausage, bacon, and ground beef.",
@@ -549,21 +549,21 @@ object TestItemObject{
             title = "Classic Sandwiches",
             items = listOf(
                 Items(
-                    id = 1,
+                    id = 21,
                     title = "Turkey Club",
                     imageUrl = "https://food.fnr.sndimg.com/content/dam/images/food/fullset/2021/07/16/0/FNM_090121-Turkey-Club_s4x3.jpg.rend.hgtvcom.1280.1280.suffix/1626465609122.jpeg",
                     description = "Turkey, bacon, lettuce, tomato, and mayo on toasted bread.",
                     price = 900.99
                 ),
                 Items(
-                    id = 2,
+                    id = 22,
                     title = "BLT",
                     imageUrl = "https://somethingaboutsandwiches.com/wp-content/uploads/2020/07/blt-sandwich.jpg",
                     description = "Bacon, lettuce, tomato, and mayo on toasted bread.",
                     price = 800.99
                 ),
                 Items(
-                    id = 3,
+                    id = 23,
                     title = "Grilled Cheese",
                     promotion = "10% de reduction",
                     imageUrl = "https://thealmondeater.com/wp-content/uploads/2022/05/brie-grilled-cheese_web-6.jpg",
@@ -577,21 +577,21 @@ object TestItemObject{
             title = "Signature Sandwiches",
             items = listOf(
                 Items(
-                    id = 4,
+                    id = 24,
                     title = "Chicken Avocado Wrap",
                     imageUrl = "https://veronikaskitchen.com/wp-content/uploads/2020/03/20200226-IMG_2517.jpg",
                     description = "Grilled chicken, avocado, lettuce, tomato, and ranch dressing wrapped in a tortilla.",
                     price = 1000.99
                 ),
                 Items(
-                    id = 5,
+                    id = 25,
                     title = "Italian Sub",
                     imageUrl = "https://images.squarespace-cdn.com/content/v1/5e80e64f9327941b94517c20/1663635990195-U70NTD4TI9V6EZS7H7CA/Italian+Combo.jpg",
                     description = "Ham, salami, pepperoni, provolone cheese, lettuce, tomato, onion, and Italian dressing on a sub roll.",
                     price = 1199.99
                 ),
                 Items(
-                    id = 6,
+                    id = 26,
                     title = "Veggie Delight",
                     imageUrl = "https://img.freepik.com/photos-premium/veggie-delight-liberez-plaisir-abondance-morceaux-legumes-visibles_971713-420.jpg",
                     description = "Grilled vegetables, hummus, lettuce, tomato, and feta cheese on multigrain bread.",
@@ -607,21 +607,21 @@ object TestItemObject{
             title = "Classic Petit Croissants",
             items = listOf(
                 Items(
-                    id = 1,
+                    id = 31,
                     title = "Plain",
                     imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjX66UZAViAfck8FZxylpHLW0wmbXsL3wnEA&usqp=CAU",
                     description = "A classic flaky croissant without any additional filling.",
                     price = 299.99
                 ),
                 Items(
-                    id = 2,
+                    id = 32,
                     title = "Chocolate",
                     imageUrl = "https://res.cloudinary.com/hksqkdlah/image/upload/SFS_Chocolate_Croissants_035_xmghbe.jpg",
                     description = "A buttery croissant filled with rich chocolate.",
                     price = 399.99
                 ),
                 Items(
-                    id = 3,
+                    id = 33,
                     title = "Almond",
                     promotion = "10% de reduction",
                     imageUrl = "https://www.miflavour.com/cdn/shop/products/almond-croissant-morning-pastry-patissserie_1200x1200.jpg?v=1616116319",
@@ -635,21 +635,21 @@ object TestItemObject{
             title = "Specialty Petit Croissants",
             items = listOf(
                 Items(
-                    id = 4,
+                    id = 34,
                     title = "Strawberry Cream",
                     imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjAfdQLxrGnlyAilavdMv3pUohQmlRRL-gQ5_NFAQFsr9kax7xZ_b6EotD_vizh1QgQHo&usqp=CAU",
                     description = "A delightful croissant filled with strawberry cream.",
                     price = 499.49
                 ),
                 Items(
-                    id = 5,
+                    id = 35,
                     title = "Ham and Cheese",
                     imageUrl = "https://az727718.vo.msecnd.net/c262cdbb171e45e48ac6851141eed6c2/images/008d5589e6534dfd9b4cb7297f44f5a7@2x.png",
                     description = "A savory croissant with ham and melted cheese.",
                     price = 599.49
                 ),
                 Items(
-                    id = 6,
+                    id = 36,
                     title = "Raspberry Danish",
                     imageUrl = "https://i.pinimg.com/736x/4d/ec/48/4dec488b2015c665cd8cb762896c7b04.jpg",
                     description = "A flaky croissant with a raspberry filling, topped with icing.",
@@ -664,19 +664,19 @@ object TestItemObject{
             title = "Classic Burgers",
             items = listOf(
                 Items(
-                    id = 1,
+                    id = 41,
                     title = "Burger Master Classic",
                     description = "Classic beef patty, lettuce, tomato, onion, pickles, and special sauce.",
                     price = 999.99
                 ),
                 Items(
-                    id = 2,
+                    id = 42,
                     title = "Cheese Lover's Burger",
                     description = "Beef patty, melted cheddar cheese, lettuce, tomato, and mayo.",
                     price = 1099.99
                 ),
                 Items(
-                    id = 3,
+                    id = 43,
                     title = "Bacon Deluxe",
                     description = "Beef patty, crispy bacon, lettuce, tomato, onion, and BBQ sauce.",
                     price = 1199.99
@@ -688,19 +688,19 @@ object TestItemObject{
             title = "Signature Burgers",
             items = listOf(
                 Items(
-                    id = 4,
+                    id = 44,
                     title = "Spicy Inferno",
                     description = "Spicy beef patty, pepper jack cheese, jalapeños, lettuce, and chipotle mayo.",
                     price = 1299.99
                 ),
                 Items(
-                    id = 5,
+                    id = 45,
                     title = "Avocado Bliss",
                     description = "Beef patty, avocado slices, lettuce, tomato, and garlic aioli.",
                     price = 1399.99
                 ),
                 Items(
-                    id = 6,
+                    id = 46,
                     title = "Mushroom Swiss Supreme",
                     description = "Beef patty, sautéed mushrooms, Swiss cheese, lettuce, and truffle mayo.",
                     price = 1499.99
@@ -715,21 +715,21 @@ object TestItemObject{
             title = "Classic Pizzas",
             items = listOf(
                 Items(
-                    id = 1,
+                    id = 51,
                     title = "Margarita",
                     imageUrl = "https://ohsweetbasil.com/wp-content/uploads/four-cheese-margherita-pizza-recipe-12-scaled.jpg",
                     description = "Classic tomato, mozzarella, and basil.",
                     price = 1299.99
                 ),
                 Items(
-                    id = 2,
+                    id = 52,
                     title = "Pepperoni Feast",
                     imageUrl = "https://i.pinimg.com/originals/a4/65/06/a465068d51da74380d01c79b2f575dfa.jpg",
                     description = "Tomato sauce, mozzarella, and a generous amount of pepperoni.",
                     price = 1499.99
                 ),
                 Items(
-                    id = 3,
+                    id = 53,
                     title = "Vegetarian Delight",
                     imageUrl = "https://sonipizza.co/wp-content/uploads/2020/06/tomaoto.jpg",
                     description = "Tomato sauce, mozzarella, bell peppers, onions, mushrooms, and olives.",
@@ -742,21 +742,21 @@ object TestItemObject{
             title = "Specialty Pizzas",
             items = listOf(
                 Items(
-                    id = 4,
+                    id = 54,
                     title = "BBQ Chicken Supreme",
                     imageUrl = "https://bakingmischief.com/wp-content/uploads/2020/08/bbq-chicken-pizza-image-square-2.jpg",
                     description = "BBQ sauce, mozzarella, grilled chicken, red onions, and cilantro.",
                     price = 1699.99
                 ),
                 Items(
-                    id = 5,
+                    id = 55,
                     title = "Hawaiian Bliss",
                     imageUrl = "https://img.cdn4dd.com/p/fit=cover,width=1200,height=1200,format=auto,quality=90/media/photosV2/143d3000-2f0b-4aeb-abc4-731e155de7a9-retina-large.jpg",
                     description = "Tomato sauce, mozzarella, ham, pineapple, and bacon.",
                     price = 1799.99
                 ),
                 Items(
-                    id = 6,
+                    id = 56,
                     title = "Meat Lovers Extravaganza",
                     imageUrl = "https://familyaroundthetable.com/wp-content/uploads/2020/09/skillet-pizza-overhead-whole-2.jpg",
                     description = "Tomato sauce, mozzarella, pepperoni, sausage, bacon, and ground beef.",
@@ -773,21 +773,21 @@ object TestItemObject{
             title = "Classic Chicken Dishes",
             items = listOf(
                 Items(
-                    id = 1,
+                    id = 61,
                     title = "Grilled Chicken Breast",
                     imageUrl = "https://assets.epicurious.com/photos/629e61c3c8fc75488633ba7d/1:1/w_4102,h_4102,c_limit/GrilledChickenBreast_RECIPE_052522_34925.jpg",
                     description = "Juicy grilled chicken breast seasoned to perfection.",
                     price = 1099.99
                 ),
                 Items(
-                    id = 2,
+                    id = 62,
                     title = "Fried Chicken Wings",
                     imageUrl = "https://www.krumpli.co.uk/wp-content/uploads/2023/08/Crispy-Fried-Buttermilk-Chicken-Wings-01.jpg",
                     description = "Crispy fried chicken wings with your choice of sauce.",
                     price = 1299.99
                 ),
                 Items(
-                    id = 3,
+                    id = 63,
                     title = "Chicken Tenders Basket",
                     imageUrl = "https://www.simplejoy.com/wp-content/uploads/2021/03/Air-Fryer-Chicken-Tenders-683x1024.webp",
                     description = "Tender and golden-brown chicken tenders served with dipping sauce.",
@@ -800,21 +800,21 @@ object TestItemObject{
             title = "Signature Chicken Specialties",
             items = listOf(
                 Items(
-                    id = 4,
+                    id = 64,
                     title = "Spicy Buffalo Chicken Sandwich",
                     imageUrl = "https://somethingaboutsandwiches.com/wp-content/uploads/2021/03/crispy-buffalo-chicken-sandwich.jpg",
                     description = "Spicy buffalo chicken breast, lettuce, tomato, and ranch dressing on a bun.",
                     price = 1399.99
                 ),
                 Items(
-                    id = 5,
+                    id = 65,
                     title = "Honey Mustard Glazed Chicken",
                     imageUrl = "https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2015/08/Baked-Honey-Mustard-Chicken-8.jpg",
                     description = "Grilled chicken glazed with honey mustard, served with rice and vegetables.",
                     price = 1499.99
                 ),
                 Items(
-                    id = 6,
+                    id = 66,
                     title = "Crispy Chicken Caesar Salad",
                     imageUrl = "https://s23209.pcdn.co/wp-content/uploads/2023/01/220905_DD_Chx-Caesar-Salad_051.jpg",
                     description = "Crispy chicken strips, romaine lettuce, croutons, and Caesar dressing.",
@@ -831,14 +831,14 @@ object TestItemObject{
             title = "Classic Tchieke Dishes",
             items = listOf(
                 Items(
-                    id = 1,
+                    id = 71,
                     title = "Atieke Poulet",
                     imageUrl = "https://voiedefemme.net/wp-content/uploads/2021/07/cuisine.jpg",
                     description = "Description of the first Tchieke dish.",
                     price = 1299.99
                 ),
                 Items(
-                    id = 2,
+                    id = 72,
                     title = "Atieke Poisson",
                     imageUrl = "https://www.cuisinedecheznous.net/wp-content/uploads/2021/10/117163947_1647146982104283_6612211351728648199_n.jpg",
                     description = "Description of the second Tchieke dish.",
@@ -851,14 +851,14 @@ object TestItemObject{
             title = "Alloco",
             items = listOf(
                 Items(
-                    id = 3,
+                    id = 73,
                     title = "Atieke Alloco",
                     imageUrl = "https://oswaldkouame.jp/wp-content/uploads/2018/02/Atti%C3%A9k%C3%A9-with-Alloco.jpg",
                     description = "Description of the first special Tchieke dish.",
                     price = 1599.99
                 ),
                 Items(
-                    id = 4,
+                    id = 74,
                     title = "Alloco Poisson",
                     imageUrl = "https://www.linfodrome.com/media//article/images/src/59575-8d929d80ab3c4bb235557267c12f147e.webp",
                     description = "Description of the second special Tchieke dish.",

@@ -1,5 +1,6 @@
 package com.malisoftware.doumouniso.bottomBar
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.height
@@ -13,6 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.doumounidron.DoumouniDron.bottomBar.BottomBarNavigation
+import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.theme.AppTheme
 
 @Composable
@@ -32,7 +34,7 @@ fun NavigationBottomBar(
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination
-    if (currentRoute?.hierarchy?.any { it.route == "" /* dont show bar in AUTH ROUTE   */ } == false &&
+    if (currentRoute?.hierarchy?.any { it.route == MainFeatures.CART_ITEM + "/{id}" } == false &&
         !currentRoute.hierarchy.any { it.route == "" /* dont show any other route   */ }
     ) {
         NavigationBar(

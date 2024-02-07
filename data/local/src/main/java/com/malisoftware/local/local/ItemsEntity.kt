@@ -1,9 +1,15 @@
 package com.malisoftware.local.local
 
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 import com.malisoftware.model.format.formatPrice
 
+@Entity()
 data class ItemsEntity(
+    @PrimaryKey(autoGenerate = true)
     val itemId: Int = 0,
+    val restaurantId: String = "",
     val title: String = "title",
     val price: Double = 1110.0,
     val description: String = "description",

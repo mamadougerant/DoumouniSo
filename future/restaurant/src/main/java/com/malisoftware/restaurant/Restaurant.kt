@@ -1,4 +1,4 @@
-package com.future.restaurant
+package com.malisoftware.restaurant
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -26,10 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,10 +34,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.common.components.constants.NavConstant.MainFeatures
+import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.LazyLists.ChipList
 import com.malisoftware.components.LazyLists.ColumnBusinessList
 import com.malisoftware.components.LazyLists.ItemList
@@ -60,6 +55,7 @@ import com.malisoftware.model.CategoryData
 import com.malisoftware.model.Items
 import com.malisoftware.theme.AppTheme
 import com.doumounidron.theme.DoumouniDronTheme
+import com.future.restaurant.RestaurantShimmer
 import com.future.restaurant.viewModel.RestaurantViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

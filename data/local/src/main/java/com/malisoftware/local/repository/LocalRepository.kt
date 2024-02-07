@@ -2,10 +2,11 @@ package com.malisoftware.local.repository
 
 
 import androidx.lifecycle.asFlow
-import com.data.local.db.AppDatabase
+import com.malisoftware.local.db.AppDatabase
 import com.malisoftware.components.uiEvent.UiEvent
 import com.malisoftware.local.local.AddressEntity
 import com.malisoftware.local.local.ItemOrderEntity
+import com.malisoftware.local.local.ItemsEntity
 import com.malisoftware.local.local.RecentlyViewedEntity
 import com.malisoftware.local.local.UserFavoritesEntity
 import kotlinx.coroutines.Dispatchers
@@ -29,22 +30,7 @@ class LocalRepository(
 
     fun insertOrder(order: ItemOrderEntity) = flow {
         emit(UiEvent.Loading())
-        val existingOrder = appDatabase.orderDao().getOrderById(order.id).value
-        if (existingOrder == null) {
-            appDatabase.orderDao().insert(order)
-        } else {
-            val updatedItems = existingOrder.items.toMutableList()
-            updatedItems.addAll(order.items)
-            val updated = existingOrder.copy(items = updatedItems)
-            val updatedOrder = updated.items.groupBy { it.title }
-                .map {(_, itemList) ->
-                    itemList.reduce { acc, item ->
-                        acc.copy(quantity = acc.quantity + item.quantity)
-                    }
-                }
-            appDatabase.orderDao().insert(updated.copy(items = updatedOrder))
-
-        }
+        appDatabase.orderDao().insert(order)
         emit(UiEvent.Success("Order added"))
     }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
 
@@ -72,7 +58,43 @@ class LocalRepository(
         emit(UiEvent.Success("All orders deleted"))
     }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
 
+
+    // ORDER ITEM
+
+    fun getAllOrderByRestaurantId(restaurantId: String) = flow {
+        emit(UiEvent.Loading())
+        val result = appDatabase.orderItemDao().getAllOrderByRestaurantId(restaurantId).asFlow()
+        emit(UiEvent.Success(result))
+    }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
+
+    fun insertOrderItem(itemsEntity: ItemsEntity) = flow {
+        emit(UiEvent.Loading())
+        appDatabase.orderItemDao().insert(itemsEntity)
+        emit(UiEvent.Success("Order item added"))
+    }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
+
+    fun deleteOrderItemByItemId(itemId: String) = flow {
+        emit(UiEvent.Loading())
+        appDatabase.orderItemDao().deleteByItemId(itemId)
+        emit(UiEvent.Success("Order item deleted"))
+    }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
+
+    fun deleteOrderItemByRestaurantId(restaurantId: String) = flow {
+        emit(UiEvent.Loading())
+        appDatabase.orderItemDao().deleteByRestaurantId(restaurantId)
+        emit(UiEvent.Success("Order item deleted"))
+    }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
+
+    fun deleteOrderItem(item: ItemsEntity) = flow {
+        emit(UiEvent.Loading())
+        appDatabase.orderItemDao().deleteItem(item)
+        emit(UiEvent.Success("Order item deleted"))
+    }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
+
+
     // Address
+
+
     fun insertAddress(address: AddressEntity) = flow {
         emit(UiEvent.Loading())
         appDatabase.address().insert(address)
@@ -103,7 +125,9 @@ class LocalRepository(
         emit(UiEvent.Success("All addresses deleted"))
     }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
 
+
     // favorite
+
 
     fun getAlFavorite() = flow {
         emit(UiEvent.Loading())
@@ -129,7 +153,9 @@ class LocalRepository(
         emit(UiEvent.Success("All favorites deleted"))
     }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
 
+
     // recent view
+
 
     fun getRecentView() = flow {
         emit(UiEvent.Loading())

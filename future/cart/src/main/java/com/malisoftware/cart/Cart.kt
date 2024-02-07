@@ -1,18 +1,16 @@
-package com.future.cart
+package com.malisoftware.cart
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,27 +26,23 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.malisoftware.cart.CartRoomViewModel
-import com.malisoftware.components.LazyLists.HorizontalItemList
-import com.malisoftware.components.LazyLists.ItemList
-import com.malisoftware.components.container.PlusIcon
+import com.malisoftware.components.TextWithIcon
+import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.container.SmallBusinessContainer
-import com.malisoftware.components.container.icons.ArrowForward
-import com.malisoftware.components.container.icons.NavigationIcon
-import com.malisoftware.components.screens.OrderScreenInModalSheet
 import com.malisoftware.local.local.BusinessEntity
 import com.malisoftware.model.Items
 import com.malisoftware.theme.AppTheme
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,33 +59,12 @@ fun Cart(
 
     val orders by cartVm.orders.collectAsState()
 
+    val scope = rememberCoroutineScope()
+
     Scaffold (
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = "Cart",
-                        style = AppTheme.typography.titleLarge,
-                    )
-                },
-                navigationIcon = {
-                    NavigationIcon(
-                        modifier = Modifier.height(30.dp),
-                        onClick = { navController.navigateUp() },
-                        color = Color.Unspecified
-                    )
-                },
-                actions = {
-                    IconButton(
-                        onClick = { /*TODO*/ },
-                        modifier = Modifier
-                            .padding(5.dp)
-                            .size(30.dp)
-                    ) {
-                        Icon(Icons.Rounded.Delete, contentDescription = "")
-                    }
-                },
-
+                title = { TextWithIcon(title = "Cart") {}},
             )
         },
     ) { paddingValues ->
@@ -107,25 +80,20 @@ fun Cart(
                         .fillMaxWidth()
                         .padding(10.dp),
                     business = order.restaurant,
+                    onClear = {
+                        scope.launch {
+                            cartVm.deleteOrder(order,order.id)
+                        }
+                    },
+                    onConfirm = {
+                        navController.navigate(MainFeatures.CART_ITEM + "/${order.id}")
+                    },
+                    onBusinessForward = {
+                        navController.navigate(MainFeatures.HOME)
+                        navController.navigate(MainFeatures.RESTAURANT_ITEM + "/${order.id}")
+                    }
                 )
 
-            }
-        }
-        if (openSheet) {
-            OrderScreenInModalSheet(
-                item = sheetContent,
-                onSheetClose = { openSheet = it },
-                bottomContent = {}
-            ) {
-
-                HorizontalItemList(
-                    items = List(10){ Items() },
-                    customIcon = {PlusIcon()},
-                    title = "Dans votre panier",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp),
-                )
             }
         }
     }
@@ -135,8 +103,8 @@ fun Cart(
 fun CartItemContainer(
     modifier: Modifier = Modifier,
     business: BusinessEntity = BusinessEntity(),
-    onBusinessClick: () -> Unit = {},
-    onCancel: () -> Unit = {},
+    onClear: () -> Unit = {},
+    onBusinessForward: () -> Unit = {},
     onConfirm: () -> Unit = {},
 ) {
     OutlinedCard (
@@ -150,7 +118,9 @@ fun CartItemContainer(
             imageUrl = business.imageUrl,
             title = business.title,
             subtitle = business.category,
-        ) { ArrowForward(onClick = onBusinessClick) }
+        ) { IconButton(onClick = onClear) {
+            Icon(Icons.Rounded.Clear, contentDescription = "")
+        } }
         Button(
             onClick = onConfirm,
             modifier = Modifier
@@ -178,7 +148,7 @@ fun CartItemContainer(
             )
         }
         Button(
-            onClick = onCancel,
+            onClick = onBusinessForward,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp)
@@ -189,7 +159,7 @@ fun CartItemContainer(
             contentPadding = PaddingValues(0.dp)
         ) {
             Text(
-                text = "Supprimer",
+                text = "Voir le restaurant",
                 style = AppTheme.typography.titleMedium,
                 modifier = Modifier
                     .fillMaxHeight()

@@ -3,8 +3,7 @@ package com.malisoftware.doumouniso.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.common.components.constants.NavConstant.Roots
-import com.malisoftware.doumouniso.navigation.NavigationProvider
+import com.malisoftware.components.constants.NavConstant.Roots
 
 @Composable
 fun AppNavigation(

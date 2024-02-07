@@ -30,6 +30,7 @@ import com.malisoftware.model.Items
 import com.malisoftware.theme.AppTheme
 import com.future.restaurant.viewModel.RestaurantOrderVM
 import com.future.restaurant.viewModel.RestaurantViewModel
+import com.malisoftware.local.mappers.toItemEntity
 import com.malisoftware.restaurant.viewModel.RoomViewModel
 import kotlinx.coroutines.launch
 
@@ -47,12 +48,14 @@ fun RestaurantItem(
     LaunchedEffect(key1 = viewModel, ){
         viewModel.getRestaurant(id)
         orderViewModel.getRestaurantItems(id)
+        roomVm.getAllOrderByRestaurantId(id)
     }
 
     val restaurant by viewModel.restaurantById.collectAsState()
     val restaurantItems by orderViewModel.restaurantItems.collectAsState()
     val items = restaurantItems.map { it.items }.flatten()
     val promotionItems by orderViewModel.itemsInPromotion.collectAsState()
+    val orderItem by roomVm.items.collectAsState()
 
 
 
@@ -75,7 +78,7 @@ fun RestaurantItem(
                 list = items.map { it.title to null },
                 onIndexChange = {
                     scope.launch {
-                        scrollState.animateScrollToItem(it+1)
+                        scrollState.animateScrollToItem(it)
                     }
                 },
                 containerColor = Color.White
@@ -101,8 +104,17 @@ fun RestaurantItem(
             }
         }
         items.forEachIndexed { _, it ->
+            val item = (it.items).map {
+                val order = orderItem.find { order -> order.title == it.title && order.price == it.price }
+                if (order != null) {
+                    it.copy(quantity = order.quantity)
+                } else {
+                    it
+                }
+            }
+
             HorizontalItemList(
-                items = it.items,
+                items = item,
                 title = it.title,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -123,11 +135,8 @@ fun RestaurantItem(
             onBottomBarClick = {
                 scope.launch {
                     openSheet = false
-                    roomVm.insertOrder(
-                        item = it,
-                        restaurant = restaurant!!,
-                        instruction = instruction
-                    )
+                    roomVm.insertOrderItem(item = it.toItemEntity(restaurant!!.id))
+                    roomVm.insertOrder(restaurant = restaurant!!, restaurant!!.id )
                 }
             },
             onValueChange = {

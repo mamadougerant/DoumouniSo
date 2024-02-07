@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.malisoftware.local.local.ItemOrderEntity
 
@@ -29,10 +30,10 @@ interface OrderDao {
     @Query("DELETE FROM itemorderentity")
     suspend fun deleteAll()
 
-    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(itemOrderEntity: ItemOrderEntity)
 
-    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(itemOrderEntity: ItemOrderEntity)
 
     @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)

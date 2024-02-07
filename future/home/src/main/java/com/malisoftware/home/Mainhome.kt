@@ -24,8 +24,8 @@ import com.malisoftware.components.LazyLists.ColumnBusinessList
 import com.malisoftware.components.LazyLists.RoundedCategoryList
 import com.malisoftware.components.LazyLists.RowBusinessList
 import com.malisoftware.components.LazyLists.SmallBusinessList
-import com.common.components.constants.NavConstant.MainFeatures
-import com.common.components.constants.NavConstant.Roots
+import com.malisoftware.components.constants.NavConstant.MainFeatures
+import com.malisoftware.components.constants.NavConstant.Roots
 import com.malisoftware.components.TextWithIcon
 import com.malisoftware.components.component.scaffold.HomeScaffoldWithBar
 import com.malisoftware.components.container.ImageContainer

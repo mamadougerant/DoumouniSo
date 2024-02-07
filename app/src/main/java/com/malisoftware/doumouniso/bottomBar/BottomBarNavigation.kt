@@ -7,7 +7,7 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.ShoppingCart
-import com.common.components.constants.NavConstant.Roots
+import com.malisoftware.components.constants.NavConstant.Roots
 import com.malisoftware.doumouniso.R
 
 

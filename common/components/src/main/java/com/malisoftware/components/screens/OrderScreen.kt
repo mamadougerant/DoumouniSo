@@ -111,7 +111,8 @@ fun OrderScreen(
             if (bottomContent == null)
                  OrderBottomBar(
                      onAddClick = { onBottomBarClick(item.copy(quantity = it)) },
-                     price = item.price
+                     price = item.price,
+                     quantity = item.quantity
                  )
         },
     ){
@@ -153,9 +154,10 @@ fun OrderScreen(
 @Composable
 fun OrderBottomBar(
     onAddClick: (Int) -> Unit = {},
-    price: Double = 1000.0
+    price: Double = 1000.0,
+    quantity: Int = 1
 ) {
-    var number by remember{ mutableStateOf(1)}
+    var number by remember{ mutableStateOf(quantity.coerceAtLeast(1))}
     BottomAppBar(
         containerColor = Color.LightGray,
     ) {

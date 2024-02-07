@@ -1,5 +1,6 @@
 package com.malisoftware.components.container
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.TextDisposition
 import com.malisoftware.components.R
@@ -142,14 +144,16 @@ fun ItemContainer(
 fun PlusIcon(
     quantity: Int = 0,
     onQuantityChange: (Int) -> Unit = {},
+    elevation: Dp = 10.dp,
+    color: Color = Color.White,
 ) {
     Card (
         modifier = Modifier
             .padding(horizontal = 5.dp, vertical = 10.dp)
             .height(35.dp),
         shape = CircleShape,
-        colors = CardDefaults.cardColors(Color.White),
-        elevation = CardDefaults.cardElevation(10.dp),
+        colors = CardDefaults.cardColors(color),
+        elevation = CardDefaults.cardElevation(elevation),
     ) {
         AnimatedPlusMinusIcon(
             quantity = quantity,
@@ -163,7 +167,8 @@ private fun ColumnScope.AnimatedPlusMinusIcon(
     quantity: Int = 0,
     onQuantityChange: (Int) -> Unit = {},
 ) {
-    var num by remember { mutableStateOf(quantity) }
+    var num by remember(quantity) { mutableStateOf(quantity.coerceAtLeast(0)) }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(5.dp),
@@ -174,8 +179,8 @@ private fun ColumnScope.AnimatedPlusMinusIcon(
     ) {
         AnimatedVisibility(visible = num > 0) {
             IconButton(
-                onClick = { if (num in 1..9 ) { num-- ; onQuantityChange(num - 1) }  },
-                colors = IconButtonDefaults.iconButtonColors(Color.White, Color.Black),
+                onClick = { if (num in 1..9 ) { num-- ; onQuantityChange(num) }  },
+                colors = IconButtonDefaults.iconButtonColors(Color.Unspecified, Color.Black),
                 modifier = Modifier.size(30.dp)
             ) {
                 if (num > 1) Icon(painterResource(id = R.drawable.ic_baseline_minus), contentDescription = "")
@@ -186,8 +191,8 @@ private fun ColumnScope.AnimatedPlusMinusIcon(
             Text(text = num.toString(), style = AppTheme.typography.titleMedium,color = Color.Black)
         }
         IconButton(
-            onClick = { if (num in 0..8 ) { num++; onQuantityChange(num + 1) } },
-            colors = IconButtonDefaults.iconButtonColors(Color.White, Color.Black),
+            onClick = { if (num in 0..8 ) { num++; onQuantityChange(num) } },
+            colors = IconButtonDefaults.iconButtonColors(Color.Unspecified, Color.Black),
             modifier = Modifier.size(30.dp)
         ) {
             Icon(Icons.Rounded.Add, contentDescription = "")

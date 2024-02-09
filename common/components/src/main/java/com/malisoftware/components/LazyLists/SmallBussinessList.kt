@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.container.SmallBusinessContainer
-import com.malisoftware.components.container.icons.ArrowForward
+import com.malisoftware.components.icons.ArrowForward
 import com.malisoftware.model.Items
 
 @Composable

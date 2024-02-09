@@ -1,4 +1,4 @@
-package com.malisoftware.components.container.icons
+package com.malisoftware.components.icons
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues

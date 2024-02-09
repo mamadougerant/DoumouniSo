@@ -71,6 +71,8 @@ fun OrderScreenInModalSheet(
             .fillMaxWidth()
             .fillMaxHeight(.9f),
         dragHandle = null,
+        scrimColor = Color.LightGray.copy(alpha = 0.8f),
+
 
     ) {
         OrderScreen(
@@ -141,7 +143,7 @@ fun OrderScreen(
         item {
             Card(
                 modifier = Modifier
-                    .fillMaxWidth() ,
+                    .fillMaxWidth(),
                 colors = CardDefaults.cardColors(if (isSystemInDarkTheme()) AppTheme.colors.background else Color.White),
                 shape = RoundedCornerShape(0.dp),
             ){
@@ -217,9 +219,10 @@ fun OrderBottomBar(
 
 @Composable
 fun SpecialInstruction(
+    initialValue: String = "",
     onValueChange: (String) -> Unit = {}
 ) {
-    var value by remember { mutableStateOf("instructions") }
+    var value by remember (initialValue) { mutableStateOf(initialValue) }
     OutlinedTextField(
         value = value,
         onValueChange = { value = it ; onValueChange(it) },

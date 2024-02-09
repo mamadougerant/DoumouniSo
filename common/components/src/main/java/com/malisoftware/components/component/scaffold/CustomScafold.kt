@@ -61,6 +61,7 @@ fun CustomScaffold(
     barColor: Color = Color.White,
     navIcon: (@Composable () -> Unit)? = null,
     onNavIconClick: () -> Unit = {},
+    isFavorite: Boolean = false,
     onSearch: () -> Unit = {},
     onHeartClick: (Boolean) -> Unit = {},
     barExtraContent: (@Composable () -> Unit)? = null,
@@ -82,6 +83,7 @@ fun CustomScaffold(
                 onHeartClick = onHeartClick,
                 barExtraContent = barExtraContent,
                 showBarAtIndex = showBarAtIndex,
+                isFavorite = isFavorite
             )
         },
         imageUrl = imageUrl,

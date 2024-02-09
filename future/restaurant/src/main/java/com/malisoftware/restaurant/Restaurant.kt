@@ -30,6 +30,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,8 +48,8 @@ import com.malisoftware.components.component.RangeSliderWithGraph
 import com.malisoftware.components.component.scaffold.HomeScaffoldWithBar
 import com.malisoftware.components.constants.FilterConstant
 import com.malisoftware.components.container.SmallBusinessContainer
-import com.malisoftware.components.container.icons.ArrowForward
-import com.malisoftware.components.container.icons.NavigationIcon
+import com.malisoftware.components.icons.ArrowForward
+import com.malisoftware.components.icons.NavigationIcon
 import com.malisoftware.components.formatPrice
 import com.malisoftware.model.BusinessData
 import com.malisoftware.model.CategoryData
@@ -56,7 +57,14 @@ import com.malisoftware.model.Items
 import com.malisoftware.theme.AppTheme
 import com.doumounidron.theme.DoumouniDronTheme
 import com.future.restaurant.RestaurantShimmer
-import com.future.restaurant.viewModel.RestaurantViewModel
+import com.future.restaurant.viewModel.RestaurantOrderVM
+import com.malisoftware.components.container.ItemContainer
+import com.malisoftware.components.container.RowListContainer
+import com.malisoftware.restaurant.viewModel.RestaurantViewModel
+import com.malisoftware.local.mappers.toBusinessData
+import com.malisoftware.local.mappers.toItemEntity
+import com.malisoftware.model.BusinessItems
+import com.malisoftware.restaurant.viewModel.RoomViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -64,26 +72,48 @@ import kotlinx.coroutines.launch
 @Composable
 fun Restaurant(
     navController: NavHostController,
-    viewModel: RestaurantViewModel
+    viewModel: RestaurantViewModel,
+    roomVm: RoomViewModel,
+    orderViewModel: RestaurantOrderVM
 ) {
 
-    // TODO: format price
+    // TODO: solve price filter issues
     LaunchedEffect(key1 = viewModel){
         viewModel.getSponsors()
         viewModel.getRestaurantCategoryList()
         viewModel.getRestaurantList()
         viewModel.getSponsoredRestaurant()
         viewModel.getDiscountedRestaurant()
+        roomVm.getRecentlyViewed()
+    }
+    LaunchedEffect(key1 = roomVm.favorite, ){
+        roomVm.getFavorites()
+    }
+    LaunchedEffect(key1 = roomVm.orders, ){
+        roomVm.getOrders()
     }
 
+    val orders by roomVm.orders.collectAsState()
+
+
     val sponsors by viewModel.sponsors.collectAsState()
-    val stores by viewModel.storeList.collectAsState()
     val restaurantCategories by viewModel.restaurantCategoryList.collectAsState()
     val restaurantList by viewModel.restaurantList.collectAsState()
     val sponsoredRestaurants by viewModel.sponsorRestaurantList.collectAsState()
     val promotionRestaurants by viewModel.promotionRestaurantList.collectAsState()
+    val recentlyViewed by roomVm.recentlyViewed.collectAsState()
+    val favorites by roomVm.favorite.collectAsState()
 
+    LaunchedEffect(key1 = sponsoredRestaurants ){
+        orderViewModel.getRestaurantsItems(sponsoredRestaurants.map { it.id })
+    }
+
+    val restaurantsItems by orderViewModel.restaurantsItems.collectAsState()
+
+    // use for the filter
     val filteredRestaurantList by viewModel.restaurantsByCategory.collectAsState()
+
+    val orderList = orders.shuffled().take(1)
 
 
     val loading by viewModel.loading.collectAsState(true)
@@ -138,6 +168,10 @@ fun Restaurant(
                         )
                     },
                     onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
+                    favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+                    onFavoriteClick = { businessData, b ->
+                        addFavorite(scope, roomVm, businessData, b)
+                    }
                 )
                 if (filteredRestaurantList!!.isEmpty()) {
                     item {
@@ -162,20 +196,7 @@ fun Restaurant(
             RowBusinessListWithNav(
                 navController = navController,
                 modifier = Modifier,
-                businessData = listOf(
-                    BusinessData(
-                        id  = "6",
-                    ),
-                    BusinessData(
-                        id  = "7",
-                    ),
-                    BusinessData(
-                        id  = "8",
-                    ),
-                    BusinessData(
-                        id  = "9",
-                    ),
-                ),
+                businessData = recentlyViewed.map { it.business }.map { it.toBusinessData() },
                 title = "Recently Viewed",
                 trailingContent = {
                     ArrowForward(onClick = { })
@@ -184,11 +205,8 @@ fun Restaurant(
             )
         }
         item {
-            Column (
-                modifier = Modifier,
-                verticalArrangement = Arrangement.spacedBy(0.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ){
+
+            if (orderList.isNotEmpty()){
                 TextWithIcon(
                     title = "Continue Order",
                     modifier = Modifier.fillMaxWidth()
@@ -196,11 +214,13 @@ fun Restaurant(
                 OutlinedCard() {
                     SmallBusinessContainer(
                         modifier = Modifier.padding(5.dp),
-                        imageUrl = "",
-                        title = "Burger King",
-                        subtitle = "null",
+                        imageUrl = orderList[0].restaurant.imageUrl,
+                        title = orderList[0].restaurant.title,
+                        subtitle = orderList[0].restaurant.category,
                     ) {
-                        ArrowForward(onClick = { })
+                        ArrowForward(onClick = {
+                            navController.navigate(MainFeatures.CART)
+                        })
                     }
                 }
             }
@@ -211,38 +231,57 @@ fun Restaurant(
             businessData = sponsoredRestaurants,
             title = { Divider() },
             onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
+            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+            onFavoriteClick = { businessData, b ->
+                addFavorite(scope, roomVm, businessData, b)
+            }
         )
         item {
-            // show ordering modal
-            ItemList (
-                title = "Quoi Manger ?",
-                modifier = Modifier,
-                items = listOf(
-                    Items(),
-                    Items(),
-                    Items(),
-                    Items(),
-                ),
-                onQuantityChange = { },
-            ) {
-
-            }
-        }
-        item {
             RowBusinessListWithNav(
+                navController = navController,
                 modifier = Modifier,
-                businessData = listOf(
-                    BusinessData(),
-                    BusinessData(),
-                    BusinessData(),
-                    BusinessData(),
-                ),
-                title = "Pour vous",
+                businessData = List(4){ BusinessData() },
+                title = "Recently Viewed",
                 trailingContent = {
                     ArrowForward(onClick = { })
                 },
+
+                )
+        }
+        item {
+            (restaurantsItems).forEachIndexed { index, _ ->
+                val oneRestaurantsItems = restaurantsItems.random()
+                val items = oneRestaurantsItems.items.map { it.items }.flatten().take(5)
+                ItemList(
+                    title = if (index==0) "Quoi Manger ?" else "",
+                    modifier = Modifier,
+                    items = items,
+                    showAddButton = false,
+                    onClick = {
+                        navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${oneRestaurantsItems.businessId}")
+                    }
+                ) {
+
+                }
+            }
+        }
+        item {
+            val favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() }
+            RowBusinessListWithNav(
+                modifier = Modifier,
+                businessData = favoriteBusiness,
+                title = "Favories",
+                trailingContent = {
+                    ArrowForward(onClick = {
+                        viewModel.setRestaurantsByCategory(favoriteBusiness)
+                    })
+                },
                 navController = navController,
                 onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+                onFavoriteClick = { businessData, b ->
+                    addFavorite(scope, roomVm, businessData, b)
+                }
             )
         }
         item {
@@ -257,15 +296,48 @@ fun Restaurant(
                 },
                 navController = navController,
                 onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+                onFavoriteClick = { businessData, b ->
+                    addFavorite(scope, roomVm, businessData, b)
+                }
             )
         }
+
+        val openRestaurant = restaurantList.filter { it.isOpen }
+        val closeRestaurant = restaurantList.filter { !it.isOpen }
         ColumnBusinessList(
             modifier = Modifier,
-            businessData = restaurantList,
+            businessData = openRestaurant + closeRestaurant,
             title = { TextWithIcon(title = "Tous les Restaurants", modifier = Modifier.fillMaxWidth() ){} },
             onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
+            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+            onFavoriteClick = { businessData, b ->
+                addFavorite(scope, roomVm, businessData, b)
+            }
         )
 
+    }
+}
+
+fun <T> randomList(list: List<T>, size: Int = 2): List<T> {
+    return list.shuffled().take(size).toSet().toList()
+}
+
+
+fun addFavorite (
+    scope: CoroutineScope,
+    roomVm: RoomViewModel,
+    businessData: BusinessData,
+    b: Boolean
+){
+    if (b) {
+        scope.launch {
+            roomVm.insertFavorite(businessData)
+        }
+    } else {
+        scope.launch {
+            roomVm.deleteFavorite(businessData)
+        }
     }
 }
 
@@ -275,6 +347,8 @@ fun RowBusinessListWithNav(
     modifier: Modifier = Modifier,
     title: String = "Categories",
     businessData: List<BusinessData>,
+    favoriteBusiness: List<BusinessData> = emptyList(),
+    onFavoriteClick: (BusinessData, Boolean) -> Unit = { businessData: BusinessData, b: Boolean -> },
     onClick: (BusinessData) -> Unit = {},
     color: Color? = null,
     trailingContent: @Composable () -> Unit = {},
@@ -287,6 +361,8 @@ fun RowBusinessListWithNav(
         onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}"); onClick(it) },
         color = color,
         trailingContent = trailingContent,
+        favoriteBusiness = favoriteBusiness,
+        onFavoriteClick = onFavoriteClick
     )
 }
 

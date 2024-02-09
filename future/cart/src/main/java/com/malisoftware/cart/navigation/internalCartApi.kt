@@ -10,7 +10,7 @@ import androidx.navigation.navigation
 import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.constants.NavConstant.Roots
 import com.malisoftware.cart.Cart
-import com.future.cart.CheckOut
+import com.malisoftware.cart.CheckOut
 import com.malisoftware.cart.CartItems
 import com.malisoftware.cart.CartRoomViewModel
 
@@ -40,7 +40,7 @@ internal object InternalCartApi: CartApi {
                 val cartVm: CartRoomViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
                 CheckOut(
                     navController = navController,
-                    orderId = it.arguments?.getString("id") ?: "",
+                    restaurantId = it.arguments?.getString("id") ?: "",
                     cartVm = cartVm
                 )
             }

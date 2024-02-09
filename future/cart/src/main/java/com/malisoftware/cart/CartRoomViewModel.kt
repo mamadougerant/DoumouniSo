@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.malisoftware.components.uiEvent.UiEvent
 import com.malisoftware.local.local.ItemOrderEntity
 import com.malisoftware.local.local.ItemsEntity
+import com.malisoftware.local.local.RecentlyViewedEntity
 import com.malisoftware.local.mappers.toItemEntity
 import com.malisoftware.local.repository.LocalRepository
 import com.malisoftware.model.Items
@@ -68,20 +69,6 @@ class CartRoomViewModel @Inject constructor(
         }
     }
 
-    suspend fun updateOrder(order: ItemOrderEntity) = roomDb.updateOrder(order).collect{
-        when(it){
-            is UiEvent.Loading -> {
-                //Do something
-            }
-            is UiEvent.Success -> {
-                //Do something
-            }
-            is UiEvent.Error -> {
-                //Do something
-            }
-        }
-    }
-
     suspend fun deleteOrder(order: ItemOrderEntity, id: String) {
         roomDb.deleteOrder(order).collect{}
         deleteItems(id)
@@ -101,6 +88,12 @@ class CartRoomViewModel @Inject constructor(
             }
         }
     }
+
+    suspend fun updateItemOrderEntity(
+        itemOrderEntity: ItemOrderEntity
+    ) = roomDb.updateItemOrderEntity(itemOrderEntity).collect {}
+
+
 
     suspend fun getAllOrderByRestaurantId (restaurantId: String) = roomDb.getAllOrderByRestaurantId(restaurantId).collect{
         when(it){
@@ -136,6 +129,20 @@ class CartRoomViewModel @Inject constructor(
 
 
     suspend fun deleteItems(restaurantId: String) = roomDb.deleteOrderItemByRestaurantId(restaurantId).collect{
+        when(it){
+            is UiEvent.Loading -> {
+                //Do something
+            }
+            is UiEvent.Success -> {
+                //Do something
+            }
+            is UiEvent.Error -> {
+                //Do something
+            }
+        }
+    }
+
+    suspend fun insertRecentLyViewed(business: RecentlyViewedEntity) = roomDb.insertRecentView(business).collect{
         when(it){
             is UiEvent.Loading -> {
                 //Do something

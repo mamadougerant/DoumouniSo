@@ -66,6 +66,7 @@ fun CoreItemContainer(
     shape: Shape = RoundedCornerShape(10.dp),
     quantity: Int = 0,
     onQuantityChange: (Int) -> Unit = {},
+    showButton: Boolean = true,
     topLeftIcon: @Composable (() -> Unit)? = null,
 ) {
     ImageContainer(
@@ -74,7 +75,7 @@ fun CoreItemContainer(
         imageUrl = imageUrl,
         color = color,
         shape = shape,
-        rightIcon = { PlusIcon(quantity, onQuantityChange) },
+        rightIcon = { if (showButton) PlusIcon(quantity, onQuantityChange) else {} },
         topLeftIcon = topLeftIcon
     )
 }
@@ -106,6 +107,7 @@ fun ItemContainer(
     onClick: () -> Unit = {},
     color: Color? = null,
     shape: Shape = RoundedCornerShape(10.dp),
+    showAddButton: Boolean = true,
     quantity: Int = 0,
     onQuantityChange: (Int) -> Unit = {},
     topLeftIcon: @Composable (() -> Unit)? = null,
@@ -125,7 +127,8 @@ fun ItemContainer(
             shape = shape,
             quantity = quantity,
             onQuantityChange = onQuantityChange,
-            topLeftIcon = topLeftIcon
+            topLeftIcon = topLeftIcon,
+            showButton = showAddButton,
         )
         TextDisposition(
             modifier = Modifier

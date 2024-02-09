@@ -5,6 +5,7 @@ import androidx.lifecycle.asFlow
 import com.malisoftware.local.db.AppDatabase
 import com.malisoftware.components.uiEvent.UiEvent
 import com.malisoftware.local.local.AddressEntity
+import com.malisoftware.local.local.BusinessEntity
 import com.malisoftware.local.local.ItemOrderEntity
 import com.malisoftware.local.local.ItemsEntity
 import com.malisoftware.local.local.RecentlyViewedEntity
@@ -34,7 +35,7 @@ class LocalRepository(
         emit(UiEvent.Success("Order added"))
     }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
 
-    fun updateOrder(order: ItemOrderEntity) = flow {
+    fun updateItemOrderEntity(order: ItemOrderEntity) = flow {
         emit(UiEvent.Loading())
         appDatabase.orderDao().upsert(order)
         emit(UiEvent.Success("Order updated"))
@@ -129,7 +130,7 @@ class LocalRepository(
     // favorite
 
 
-    fun getAlFavorite() = flow {
+    fun getAllFavorite() = flow {
         emit(UiEvent.Loading())
         val result = appDatabase.favoriteDao().getFavorite().asFlow()
         emit(UiEvent.Success(result))

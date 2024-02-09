@@ -26,3 +26,27 @@ fun BusinessData.toBusinessEntity () = BusinessEntity(
     sponsored = sponsored,
     isRestaurant = isRestaurant
 )
+
+fun BusinessEntity.toBusinessData () = BusinessData(
+    id = restaurantId,
+    title = title,
+    category = category,
+    minPrice = minPrice,
+    description = description,
+    feedback = feedback,
+    imageUrl = imageUrl,
+    promotion = promotion,
+    promotionDescription = promotionDescription,
+    deliveryTime = deliveryTime,
+    deliveryFee = deliveryFee,
+    isOpen = isOpen,
+    openingTime = openingTime,
+    closingTime = closingTime,
+    openingDays = openingDays,
+    raterCount = raterCount,
+    goodRate = goodRate,
+    badRate = badRate,
+    orderCount = orderCount,
+    sponsored = sponsored,
+    isRestaurant = isRestaurant
+)

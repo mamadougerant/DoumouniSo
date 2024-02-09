@@ -17,6 +17,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -29,7 +32,8 @@ import com.malisoftware.components.screens.OrderScreenInModalSheet
 import com.malisoftware.model.Items
 import com.malisoftware.theme.AppTheme
 import com.future.restaurant.viewModel.RestaurantOrderVM
-import com.future.restaurant.viewModel.RestaurantViewModel
+import com.malisoftware.local.mappers.toBusinessData
+import com.malisoftware.restaurant.viewModel.RestaurantViewModel
 import com.malisoftware.local.mappers.toItemEntity
 import com.malisoftware.restaurant.viewModel.RoomViewModel
 import kotlinx.coroutines.launch
@@ -50,12 +54,22 @@ fun RestaurantItem(
         orderViewModel.getRestaurantItems(id)
         roomVm.getAllOrderByRestaurantId(id)
     }
+    LaunchedEffect(key1 = roomVm.favorite, ){
+        roomVm.getFavorites()
+    }
 
     val restaurant by viewModel.restaurantById.collectAsState()
     val restaurantItems by orderViewModel.restaurantItems.collectAsState()
     val items = restaurantItems.map { it.items }.flatten()
     val promotionItems by orderViewModel.itemsInPromotion.collectAsState()
     val orderItem by roomVm.items.collectAsState()
+    val favorites by roomVm.favorite.collectAsState()
+
+    val favoritesIds = favorites.map { it.favoriteBusiness.restaurantId }
+
+
+
+    Log.d("RestaurantItem", "RestaurantItemfavor: ${favoritesIds}")
 
 
 
@@ -74,33 +88,55 @@ fun RestaurantItem(
         text = restaurant?.title!!,
         imageUrl = restaurant?.imageUrl!!,
         barExtraContent = {
-            ContentTabs(
-                list = items.map { it.title to null },
-                onIndexChange = {
-                    scope.launch {
-                        scrollState.animateScrollToItem(it)
-                    }
-                },
-                containerColor = Color.White
-            )
+            if (items.size > 2)
+                ContentTabs(
+                    list = items.map { it.title to null },
+                    onIndexChange = {
+                        scope.launch {
+                            scrollState.animateScrollToItem(it)
+                        }
+                    },
+                    containerColor = Color.White
+                )
         },
         onNavIconClick = { navController.navigateUp() },
-        showBarAtIndex = 1
+        showBarAtIndex = 1,
+        onHeartClick = {
+            addFavorite(scope, roomVm, restaurant!!, it)
+        },
+        isFavorite = restaurant!!.id in favoritesIds,
     ) {
         item {
             Card (
                 colors = CardDefaults.cardColors(AppTheme.colors.background),
                 shape = RoundedCornerShape(0.dp),
             ) {
+                val subCard1 = if (!restaurant?.isOpen!!){
+                    "Ce Etablissement est Fermé"
+                } else {
+                    "Temps de livraison\n" +restaurant?.formattedDeliveryTime!!
+                }
+                val promotion = buildAnnotatedString {
+                    withStyle(style = SpanStyle(color = Color.Red)) {
+                        append(if (restaurant?.promotion != "") "\n"+"* "+restaurant?.promotion+" *" else "")
+                    }
+                }
+
                 BusinessInfo(
                     modifier = Modifier
                         .fillMaxWidth(),
                     title = restaurant?.title!!,
-                    subtitle = restaurant?.formattedMinPrice + " - " + restaurant?.promotion,
-                    subInCard1 = restaurant?.formattedDeliveryTime!!,
+                    subtitle = restaurant?.feedback + " ⭐ - " + restaurant?.formattedMinPrice + promotion.toString(),
+                    subInCard1 = subCard1,
                     subInCard2 = restaurant?.formattedDeliveryFee!!,
                 )
-                ItemWithTitleBar(promotionItems)
+                ItemWithTitleBar(
+                    promotionItems,
+                    onClick = {
+                        openSheet = true
+                        sheetContent = it
+                    },
+                )
             }
         }
         items.forEachIndexed { _, it ->
@@ -144,20 +180,7 @@ fun RestaurantItem(
             }
         ) {
 
-            items.forEachIndexed { _, it ->
-                HorizontalItemList(
-                    items = it.items,
-                    title = it.title,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp),
-                    onClick = {
-                        openSheet = true
-                        sheetContent = it
-                    },
-                    //color = null
-                )
-            }
+
         }
     }
 }

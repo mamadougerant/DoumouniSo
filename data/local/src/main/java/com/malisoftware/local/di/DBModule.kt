@@ -23,7 +23,7 @@ object DBModule {
     ): AppDatabase {
         return Room.databaseBuilder(
             applicationContext,
-            AppDatabase::class.java, "order-database43"
+            AppDatabase::class.java, "order-database9"
         ).build()
     }
 

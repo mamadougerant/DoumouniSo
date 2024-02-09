@@ -36,7 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.TextDisposition
-import com.malisoftware.components.container.icons.NavigationIcon
+import com.malisoftware.components.icons.NavigationIcon
 import com.malisoftware.theme.AppTheme
 import com.doumounidron.theme.DoumouniDronTheme
 

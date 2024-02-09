@@ -59,7 +59,7 @@ fun BusinessInfo(
                 colors = CardDefaults.cardColors(Color.Unspecified),
             ) {
                 Text(
-                    text = "Temps de livraison     " + subInCard1,
+                    text = subInCard1,
                     style = AppTheme.typography.titleMedium,
                     modifier = Modifier
                         .fillMaxHeight()

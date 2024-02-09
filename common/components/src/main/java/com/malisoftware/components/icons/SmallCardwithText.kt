@@ -1,4 +1,4 @@
-package com.malisoftware.components.container.icons
+package com.malisoftware.components.icons
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape

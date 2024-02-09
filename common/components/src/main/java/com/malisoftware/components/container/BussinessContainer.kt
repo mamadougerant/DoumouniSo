@@ -20,9 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.TextDisposition
-import com.malisoftware.components.container.icons.FeedBackIcon
-import com.malisoftware.components.container.icons.HeartIcon
-import com.malisoftware.components.container.icons.SmallLeftIcon
+import com.malisoftware.components.icons.FeedBackIcon
+import com.malisoftware.components.icons.HeartIcon
+import com.malisoftware.components.icons.SmallLeftIcon
 import com.malisoftware.theme.AppTheme
 import kotlin.random.Random
 /**
@@ -60,6 +60,7 @@ fun BusinessContainer(
     topLeftText: String = "",
     smallBottomText: String = "4",
     isOpen: Boolean = true,
+    isFavorite: Boolean = false,
 ) {
     Column (
         modifier = modifier,
@@ -75,7 +76,7 @@ fun BusinessContainer(
             color = color,
             shape = shape,
             leftIcon = { if (smallBottomText!="") SmallLeftIcon(text = smallBottomText.toString(), modifier = Modifier.padding(10.dp), textColor = Color.Black) },
-            topRightIcon = { HeartIcon(onFavoriteClick) },
+            topRightIcon = { HeartIcon(onFavoriteClick,isFavorite) },
             topLeftIcon = { if (topLeftText.isNotEmpty())
                 SmallLeftIcon(
                     text = topLeftText,
@@ -94,7 +95,7 @@ fun BusinessContainer(
             h1Style = AppTheme.typography.titleLarge,
             h2 = subTitle,
             h2Style = AppTheme.typography.titleMedium,
-            h3 = deliveryFee.toString(),
+            h3 = deliveryFee,
             h3Style = AppTheme.typography.titleSmall,
             rightContent = {
                 FeedBackIcon(onClick = if (isOpen) onClick else {{}}, text = feedBack)

@@ -20,7 +20,8 @@ import com.malisoftware.theme.AppTheme
 
 @Composable
 fun ItemWithTitleBar(
-    data: List<Items> = List(2){ Items() }
+    data: List<Items> = List(2){ Items() },
+    onClick: (Items) -> Unit = {},
 ) {
     Row (
         modifier = Modifier
@@ -57,9 +58,7 @@ fun ItemWithTitleBar(
                     .weight(1f)
                     .height(150.dp),
                 rightIcon = { CustomCard(item = item) },
-                onClick = {
-
-                }
+                onClick = { onClick(item) }
             )
 
 

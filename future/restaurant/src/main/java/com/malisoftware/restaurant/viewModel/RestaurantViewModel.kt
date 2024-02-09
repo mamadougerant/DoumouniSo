@@ -1,5 +1,6 @@
-package com.future.restaurant.viewModel
+package com.malisoftware.restaurant.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.malisoftware.components.constants.FilterConstant
 import com.malisoftware.components.uiEvent.UiEvent
@@ -125,7 +126,6 @@ class RestaurantViewModel @Inject constructor(
     suspend fun getRestaurant(id: String) = dataUseCase.getRestaurant(id).collect {
         when(it){
             is UiEvent.Loading -> {
-
             }
             is UiEvent.Success -> {
                 _restaurantById.value = it.data!!

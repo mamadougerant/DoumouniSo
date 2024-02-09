@@ -25,7 +25,10 @@ class RestaurantOrderVM @Inject constructor(
 
     private val _itemsInPromotion = MutableStateFlow(emptyList<Items>())
     val itemsInPromotion = _itemsInPromotion.asStateFlow()
-    
+
+
+    private val _restaurantsItems = MutableStateFlow(emptyList<BusinessItems>())
+    val restaurantsItems = _restaurantsItems.asStateFlow()
     
     
     suspend fun getRestaurantItems(restaurantId: String) = dataUseCase.getRestaurantItems(restaurantId).collect {
@@ -44,5 +47,24 @@ class RestaurantOrderVM @Inject constructor(
             }
         }
     }
+
+    suspend fun getRestaurantsItems(restaurantId: List<String>){
+        val items = MutableStateFlow(emptyList<BusinessItems>())
+        restaurantId.forEach {
+            dataUseCase.getRestaurantItems(it).collect {
+                when (it) {
+                    is UiEvent.Loading -> {
+                    }
+                    is UiEvent.Success -> {
+                        items.value = items.value + it.data!!
+                    }
+                    is UiEvent.Error -> {
+                    }
+                }
+            }
+        }
+        _restaurantsItems.value = items.value.shuffled().take(1)
+    }
+
 
 }

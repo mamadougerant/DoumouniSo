@@ -21,6 +21,7 @@ interface DataApi {
 
     // Order
     fun getRestaurantItems(restaurantId: String): List<BusinessItems>
+
     fun getShopItems(shopId: String): List<BusinessItems>
 
 }

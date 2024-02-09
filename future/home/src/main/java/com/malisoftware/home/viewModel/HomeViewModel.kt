@@ -75,7 +75,7 @@ class HomeViewModel @Inject constructor(
                 _storeLoading.value = true
             }
             is UiEvent.Success -> {
-                _sponsors.value = it.data!!.shuffled(Random(1))
+                _sponsors.value = it.data!!.shuffled()
                 _storeLoading.value = false
             }
             is UiEvent.Error -> {

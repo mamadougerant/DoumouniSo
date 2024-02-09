@@ -23,6 +23,7 @@ fun ItemList(
     onClick: (Items) -> Unit = {},
     onQuantityChange: (Items) -> Unit = {},
     color: Color? = null,
+    showAddButton: Boolean = true,
     shape: Shape = RoundedCornerShape(10.dp),
     trailingContent: @Composable () -> Unit = {},
 ) {
@@ -40,6 +41,7 @@ fun ItemList(
                 onClick = { onClick.invoke(items[item]) },
                 color = color,
                 shape = shape,
+                showAddButton = showAddButton,
                 quantity = items[item].quantity,
                 onQuantityChange = { onQuantityChange.invoke(items[item].copy(quantity = it)) },
             )

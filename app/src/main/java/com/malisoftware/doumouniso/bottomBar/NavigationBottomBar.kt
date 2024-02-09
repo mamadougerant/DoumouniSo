@@ -1,6 +1,5 @@
 package com.malisoftware.doumouniso.bottomBar
 
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.height
@@ -35,7 +34,8 @@ fun NavigationBottomBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination
     if (currentRoute?.hierarchy?.any { it.route == MainFeatures.CART_ITEM + "/{id}" } == false &&
-        !currentRoute.hierarchy.any { it.route == "" /* dont show any other route   */ }
+        !currentRoute.hierarchy.any { it.route == MainFeatures.CART_CHECKOUT + "/{id}" } &&
+        !currentRoute.hierarchy.any { it.route == "" }
     ) {
         NavigationBar(
             modifier = Modifier
@@ -49,13 +49,12 @@ fun NavigationBottomBar(
         ) {
             bottomBarNavigationItems.forEach { bottomBarNavigation ->
                 val isSelected = currentRoute.hierarchy.any { it.route == bottomBarNavigation.route }
-                val badgeNum = orderCount //roomViewModel.orders().asFlow().collectAsState(initial = null).value?.filter { !it.completed }?.size
                 BottomBarItem(
                     navController = navController,
                     bottomBarNavigation = bottomBarNavigation,
                     isSelected = isSelected,
                     applyBadge = bottomBarNavigation == BottomBarNavigation.Cart,
-                    badgeNum = badgeNum
+                    badgeNum = orderCount
                 )
             }
         }

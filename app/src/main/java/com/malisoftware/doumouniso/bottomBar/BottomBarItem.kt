@@ -11,14 +11,18 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.doumounidron.DoumouniDron.bottomBar.BottomBarNavigation
+import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.theme.AppTheme
 import kotlinx.coroutines.launch
 
@@ -33,10 +37,16 @@ fun RowScope.BottomBarItem(
     badgeNum: Int = 0,
 ) {
     val scope = rememberCoroutineScope()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination
     NavigationBarItem(
         modifier = Modifier.background(if (isSystemInDarkTheme())Color.Black else Color.White),
         selected = isSelected,
         onClick = {
+            if (bottomBarNavigation.route==BottomBarNavigation.Home.route &&
+                currentRoute?.hierarchy?.any { it.route != BottomBarNavigation.Home.route } == true){
+                navController.navigateUp()
+            }
             scope.launch {
                 navController.navigate(bottomBarNavigation.route){
                     popUpTo(navController.graph.findStartDestination().id) {
@@ -78,7 +88,9 @@ fun RowScope.BottomBarItem(
                 }
             }
         },
-        label = { Text(bottomBarNavigation.title) },
+        label = {
+            Text(bottomBarNavigation.title)
+        },
         colors = NavigationBarItemDefaults.colors(
             selectedIconColor = if (isSystemInDarkTheme()) Color.White else Color.Black,
             selectedTextColor = if (isSystemInDarkTheme()) Color.White else Color.Black,

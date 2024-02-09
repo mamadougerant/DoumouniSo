@@ -32,7 +32,7 @@ import com.malisoftware.components.container.ImageContainer
 import com.malisoftware.components.container.RowListContainer
 import com.malisoftware.components.container.SmallBusinessContainer
 import com.malisoftware.components.container.StoreContainer
-import com.malisoftware.components.container.icons.ArrowForward
+import com.malisoftware.components.icons.ArrowForward
 import com.malisoftware.model.BusinessData
 import com.malisoftware.model.Items
 import com.doumounidron.theme.DoumouniDronTheme
@@ -200,6 +200,7 @@ fun MainHome(
             modifier = Modifier,
             businessData = if (sponsoredRestaurants.isNotEmpty()) listOf(sponsoredRestaurants[0]) else listOf(),
             title = { Divider() },
+            onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") }
         )
 
 
@@ -268,15 +269,16 @@ fun MainHome(
                 trailingContent = {
                     ArrowForward(onClick = { })
                 },
-                navController = navController,
+                navController = navController
 
-                )
+            )
         }
         // Check if the restaurant is open
         ColumnBusinessList(
             modifier = Modifier,
             businessData = if (sponsoredRestaurants.isNotEmpty() && sponsoredRestaurants.size > 1) listOf(sponsoredRestaurants[1]) else listOf(),
             title = { Divider() },
+            onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
         )
         item {
             RowBusinessListWithNav(
@@ -295,12 +297,15 @@ fun MainHome(
                 )
         }
         // Check if it is open
+        val openRestaurants = restaurantList.filter { it.isOpen }
+        val closeRestaurant = restaurantList.filter { !it.isOpen }
         ColumnBusinessList(
             modifier = Modifier,
-            businessData = restaurantList,
+            businessData = openRestaurants + closeRestaurant,
             title = { TextWithIcon(title = "Tous les Restaurants", modifier = Modifier.fillMaxWidth() ){
                 ArrowForward(){navController.navigate(Roots.RESTAURANT_ROOT)}
             } },
+            onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
         )
         ColumnBusinessList(
             modifier = Modifier,
@@ -320,6 +325,8 @@ fun RowBusinessListWithNav(
     businessData: List<BusinessData>,
     onClick: (BusinessData) -> Unit = {},
     color: Color? = null,
+    favoriteBusiness: List<BusinessData> = emptyList(),
+    onFavoriteClick: (BusinessData,Boolean) -> Unit = { _,_ -> },
     trailingContent: @Composable () -> Unit = {},
 ) {
     if (businessData.isEmpty()) return
@@ -330,6 +337,8 @@ fun RowBusinessListWithNav(
         onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}"); onClick(it) },
         color = color,
         trailingContent = trailingContent,
+        favoriteBusiness = favoriteBusiness,
+        onFavoriteClick = onFavoriteClick,
     )
 }
 

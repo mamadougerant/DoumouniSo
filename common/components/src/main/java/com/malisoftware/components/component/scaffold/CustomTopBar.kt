@@ -25,8 +25,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.malisoftware.components.container.icons.HeartIcon
-import com.malisoftware.components.container.icons.NavigationIcon
+import com.malisoftware.components.icons.HeartIcon
+import com.malisoftware.components.icons.NavigationIcon
 import com.malisoftware.theme.AppTheme
 
 /**
@@ -58,6 +58,7 @@ fun CustomTopBar(
     barColor: Color = AppTheme.colors.background,
     navIcon: (@Composable () -> Unit)? = null,
     onNavIconClick: () -> Unit = {},
+    isFavorite: Boolean = false,
     onSearch: () -> Unit = {},
     onHeartClick: (Boolean) -> Unit = {},
     barExtraContent: (@Composable () -> Unit)? = null,
@@ -83,7 +84,8 @@ fun CustomTopBar(
                 HeartIcon(
                     onClick = onHeartClick,
                     size = 40.dp,
-                    color = if (color == Color.Unspecified) Color.LightGray else color
+                    color = if (color == Color.Unspecified) Color.LightGray else color,
+                    isFavorite = isFavorite
                 )
             }
             IconButton(

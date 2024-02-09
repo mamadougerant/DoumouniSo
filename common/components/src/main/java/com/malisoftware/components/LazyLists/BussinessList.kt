@@ -29,6 +29,8 @@ fun RowBusinessList(
     onClick: (BusinessData) -> Unit = {},
     color: Color? = null,
     trailingContent: @Composable () -> Unit = {},
+    favoriteBusiness: List<BusinessData>,
+    onFavoriteClick: (BusinessData, Boolean) -> Unit,
 ) {
     RowListContainer(
         modifier = modifier,
@@ -51,7 +53,8 @@ fun RowBusinessList(
                     onClick(businessData[it])
                     hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                 },
-                onFavoriteClick = {  },
+                onFavoriteClick = { fav-> onFavoriteClick(businessData[it],fav) },
+                isFavorite = favoriteBusiness.contains(businessData[it]),
                 color = color,
                 shape = RoundedCornerShape(10.dp),
                 topLeftText = businessData[it].promotion,
@@ -65,8 +68,10 @@ fun RowBusinessList(
 fun LazyListScope.ColumnBusinessList(
     modifier: Modifier = Modifier,
     businessData: List<BusinessData>,
+    favoriteBusiness: List<BusinessData> = emptyList(),
     title: @Composable (() -> Unit)? = null,
     onClick: (BusinessData) -> Unit = {},
+    onFavoriteClick: (BusinessData,Boolean) -> Unit = { businessData: BusinessData, b: Boolean -> },
     color: Color? = null,
 ) {
 
@@ -93,12 +98,13 @@ fun LazyListScope.ColumnBusinessList(
                 onClick(businessData[it]);
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
             },
-            onFavoriteClick = {  },
+            onFavoriteClick = { fav-> onFavoriteClick(businessData[it],fav) },
             color = color,
             shape = RoundedCornerShape(10.dp),
             topLeftText = businessData[it].promotion,
             smallBottomText = businessData[it].formattedDeliveryTime,
             isOpen = businessData[it].isOpen,
+            isFavorite = favoriteBusiness.contains(businessData[it]),
         )
     }
 

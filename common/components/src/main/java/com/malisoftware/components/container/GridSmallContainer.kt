@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.malisoftware.components.container.icons.OutlinedButtonWithText
+import com.malisoftware.components.icons.OutlinedButtonWithText
 
 @Composable
 fun GridSmallContainer(

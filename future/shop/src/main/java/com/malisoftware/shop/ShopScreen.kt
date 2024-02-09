@@ -44,8 +44,8 @@ import com.malisoftware.components.component.RangeSliderWithData
 import com.malisoftware.components.component.RangeSliderWithGraph
 import com.malisoftware.components.component.scaffold.HomeScaffoldWithBar
 import com.malisoftware.components.constants.FilterConstant
-import com.malisoftware.components.container.icons.ArrowForward
-import com.malisoftware.components.container.icons.NavigationIcon
+import com.malisoftware.components.icons.ArrowForward
+import com.malisoftware.components.icons.NavigationIcon
 import com.malisoftware.components.formatPrice
 import com.malisoftware.model.BusinessData
 import com.malisoftware.model.CategoryData
@@ -239,16 +239,20 @@ fun RowBusinessListWithShopNav(
     title: String,
     trailingContent: @Composable () -> Unit,
     color: Color? = null,
+    favoriteBusiness: List<BusinessData> = emptyList(),
+    onFavoriteClick: (BusinessData, Boolean) -> Unit = { _,_ -> },
     navController: NavHostController,
 ) {
     if (businessData.isEmpty()) return
     RowBusinessList(
         modifier = modifier,
-        businessData = businessData,
         title = title,
-        trailingContent = trailingContent,
-        color = color,
+        businessData = businessData,
         onClick = { navController.navigate(MainFeatures.SHOP_ITEM+"/${it.id}") },
+        color = color,
+        trailingContent = trailingContent,
+        favoriteBusiness = favoriteBusiness,
+        onFavoriteClick = onFavoriteClick,
     )
 }
 

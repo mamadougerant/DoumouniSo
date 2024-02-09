@@ -1,4 +1,4 @@
-package com.malisoftware.components.container.icons
+package com.malisoftware.components.icons
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack

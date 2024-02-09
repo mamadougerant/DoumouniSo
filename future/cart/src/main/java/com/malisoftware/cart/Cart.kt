@@ -37,10 +37,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.malisoftware.components.TextWithIcon
+import com.malisoftware.components.component.DeleteActionModal
 import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.container.SmallBusinessContainer
 import com.malisoftware.local.local.BusinessEntity
-import com.malisoftware.model.Items
+import com.malisoftware.local.local.ItemOrderEntity
 import com.malisoftware.theme.AppTheme
 import kotlinx.coroutines.launch
 
@@ -55,7 +56,7 @@ fun Cart(
         cartVm.getOrders()
     }
     var openSheet by remember { mutableStateOf(false) }
-    var sheetContent by remember { mutableStateOf(Items()) }
+    var sheetContent by remember { mutableStateOf(ItemOrderEntity()) }
 
     val orders by cartVm.orders.collectAsState()
 
@@ -81,9 +82,8 @@ fun Cart(
                         .padding(10.dp),
                     business = order.restaurant,
                     onClear = {
-                        scope.launch {
-                            cartVm.deleteOrder(order,order.id)
-                        }
+                        sheetContent = order
+                        openSheet = true
                     },
                     onConfirm = {
                         navController.navigate(MainFeatures.CART_ITEM + "/${order.id}")
@@ -96,8 +96,23 @@ fun Cart(
 
             }
         }
+        if (openSheet) {
+            DeleteActionModal(
+                onDismissRequest = { openSheet = false },
+                onConfirm = {
+                    scope.launch {
+                        cartVm.deleteOrder(sheetContent, sheetContent.id)
+                        openSheet = false
+                    }
+                },
+                text = "Voulez-vous vraiment supprimer ce panier?",
+                onCancel = { openSheet = false }
+            )
+        }
     }
 }
+
+
 
 @Composable
 fun CartItemContainer(

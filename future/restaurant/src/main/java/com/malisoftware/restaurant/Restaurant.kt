@@ -30,7 +30,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,17 +52,13 @@ import com.malisoftware.components.icons.NavigationIcon
 import com.malisoftware.components.formatPrice
 import com.malisoftware.model.BusinessData
 import com.malisoftware.model.CategoryData
-import com.malisoftware.model.Items
 import com.malisoftware.theme.AppTheme
 import com.doumounidron.theme.DoumouniDronTheme
 import com.future.restaurant.RestaurantShimmer
-import com.future.restaurant.viewModel.RestaurantOrderVM
-import com.malisoftware.components.container.ItemContainer
-import com.malisoftware.components.container.RowListContainer
+import com.malisoftware.components.container.ContinueOrder
+import com.malisoftware.restaurant.viewModel.RestaurantOrderVM
 import com.malisoftware.restaurant.viewModel.RestaurantViewModel
 import com.malisoftware.local.mappers.toBusinessData
-import com.malisoftware.local.mappers.toItemEntity
-import com.malisoftware.model.BusinessItems
 import com.malisoftware.restaurant.viewModel.RoomViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -113,7 +108,7 @@ fun Restaurant(
     // use for the filter
     val filteredRestaurantList by viewModel.restaurantsByCategory.collectAsState()
 
-    val orderList = orders.shuffled().take(1)
+    val orderList = orders.filter { it.restaurant.isRestaurant }.shuffled().take(1)
 
 
     val loading by viewModel.loading.collectAsState(true)
@@ -130,57 +125,48 @@ fun Restaurant(
         ),
         onQueryChange = { },
         navIcon = {
-            Row (
-                modifier = Modifier
-                    .padding(horizontal = 0.dp)
-                    .padding(top = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ){
-                NavigationIcon(
-                    modifier = Modifier.height(30.dp),
-                    onClick = { navController.navigateUp() },
-                    color = Color.Unspecified
-                )
-                TextWithIcon(
-                    title = "Restaurant",
-                    modifier = Modifier.fillMaxWidth()
-                ) {}
-            }
+            TextWithIcon(
+                title = "Restaurant",
+                modifier = Modifier,
+                leadingIcon = {
+                    NavigationIcon(
+                        modifier = Modifier.height(30.dp),
+                        onClick = { navController.navigateUp() },
+                        color = Color.Unspecified
+                    )
+                }
+            ) {}
         },
         shimmerContent = if (loading) { { RestaurantShimmer(Modifier.padding(it)) } } else null,
 
         filterContents = if ((filteredRestaurantList != null) && !loading) {{
-            if (filteredRestaurantList != null) {
-                categoryAndChips(
-                    categories = restaurantCategories,
-                    viewModel = viewModel,
-                    scope = scope,
-                    onClick = { }
-                )
-                ColumnBusinessList(
-                    modifier = Modifier,
-                    businessData = filteredRestaurantList!!,
-                    title = {
-                        ColumnBusinessListFilterTitle(
-                            filteredRestaurantList = filteredRestaurantList,
-                            viewModel = viewModel,
-                            scope = scope,
-                        )
-                    },
-                    onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
-                    favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
-                    onFavoriteClick = { businessData, b ->
-                        addFavorite(scope, roomVm, businessData, b)
-                    }
-                )
-                if (filteredRestaurantList!!.isEmpty()) {
-                    item {
-                        Text(
-                            text = "No result found",
-                            modifier = Modifier.fillMaxSize(),
-                            textAlign = TextAlign.Center,
-                        )
-                    }
+            categoryAndChips(
+                categories = restaurantCategories,
+                viewModel = viewModel,
+                scope = scope,
+                onClick = { }
+            )
+            ColumnBusinessList(
+                modifier = Modifier,
+                businessData = filteredRestaurantList ?: emptyList(),
+                title = {
+                    ColumnBusinessListFilterTitle(
+                        filteredRestaurantList = filteredRestaurantList,
+                        viewModel = viewModel,
+                        scope = scope,
+                    )
+                },
+                onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+                onFavoriteClick = { businessData, b -> addFavorite(scope, roomVm, businessData, b) }
+            )
+            if ((filteredRestaurantList ?: emptyList()).isEmpty()) {
+                item {
+                    Text(
+                        text = "No result found",
+                        modifier = Modifier.fillMaxSize(),
+                        textAlign = TextAlign.Center,
+                    )
                 }
             }
          }
@@ -207,22 +193,13 @@ fun Restaurant(
         item {
 
             if (orderList.isNotEmpty()){
-                TextWithIcon(
-                    title = "Continue Order",
-                    modifier = Modifier.fillMaxWidth()
-                ) {}
-                OutlinedCard() {
-                    SmallBusinessContainer(
-                        modifier = Modifier.padding(5.dp),
-                        imageUrl = orderList[0].restaurant.imageUrl,
-                        title = orderList[0].restaurant.title,
-                        subtitle = orderList[0].restaurant.category,
-                    ) {
-                        ArrowForward(onClick = {
-                            navController.navigate(MainFeatures.CART)
-                        })
-                    }
-                }
+                val order = orderList[0]
+                ContinueOrder(
+                    imageUrl = order.restaurant.imageUrl,
+                    title = order.restaurant.title,
+                    subtitle = order.restaurant.category,
+                    arrowForward = { navController.navigate(MainFeatures.CART_ITEM + "/${order.id}") },
+                )
             }
         }
 
@@ -266,7 +243,7 @@ fun Restaurant(
             }
         }
         item {
-            val favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() }
+            val favoriteBusiness = favorites.map { it.favoriteBusiness }.filter { it.isRestaurant }.map { it.toBusinessData() }
             RowBusinessListWithNav(
                 modifier = Modifier,
                 businessData = favoriteBusiness,

@@ -1,7 +1,7 @@
 package com.data.backend.repository
 
-import com.data.backend.TestItemObject
-import com.data.backend.TestObjects
+import com.malisoftware.backend.TestItemObject
+import com.malisoftware.backend.TestObjects
 import com.malisoftware.backend.remote.DataApi
 import com.malisoftware.model.BusinessData
 import com.malisoftware.model.BusinessItems
@@ -92,12 +92,13 @@ class Repository : DataApi {
     }
 
     // Order
+    //TODO: Implement the order out of stock
     override fun getRestaurantItems(restaurantId: String): List<BusinessItems> {
         return TestItemObject.restaurantItems.filter { it.businessId == restaurantId }
     }
 
     override fun getShopItems(shopId: String): List<BusinessItems> {
-        return listOf()
+        return TestItemObject.shopItems.filter { it.businessId == shopId }
     }
 
 }

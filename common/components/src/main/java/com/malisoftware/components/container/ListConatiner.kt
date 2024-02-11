@@ -8,8 +8,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,6 +55,7 @@ fun RowListContainer(
     loading: Boolean = false,
     content: LazyListScope.() -> Unit,
 ) {
+
     CoreListContainer(
         modifier = modifier,
         title = title,
@@ -112,6 +118,29 @@ fun ColumnListContainer(
 }
 
 @Composable
+fun GridListContainer(
+    modifier: Modifier = Modifier,
+    title: String? = "Categories",
+    trailingContent: @Composable () -> Unit = {},
+    columns: Int = 3,
+    content: LazyGridScope.() -> Unit,
+) {
+    CoreListContainer(
+        modifier = modifier,
+        title = title,
+        trailingContent = trailingContent,
+    ){
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(columns),
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ){
+            content()
+        }
+    }
+}
+
+@Composable
 fun CoreListContainer(
     modifier: Modifier = Modifier,
     title: String? = "Categories",
@@ -128,10 +157,12 @@ fun CoreListContainer(
             TextWithIcon(
                 title = if (loading)"" else title,
                 modifier = Modifier
-                    .fillMaxWidth().shimmerEffect(secondModifier = Modifier.width(150.dp)
-                        .height(30.dp)
-                        .clip(RoundedCornerShape(50))
-                        ,
+                    .fillMaxWidth()
+                    .shimmerEffect(
+                        secondModifier = Modifier
+                            .width(150.dp)
+                            .height(30.dp)
+                            .clip(RoundedCornerShape(50)),
                         enabled = loading
                     )
             ) { trailingContent() }

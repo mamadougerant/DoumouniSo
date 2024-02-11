@@ -32,6 +32,9 @@ class ShopViewModel @Inject constructor(
     private val _sponsorShopList = MutableStateFlow<List<BusinessData>>((emptyList()))
     val sponsorShopList = _sponsorShopList.asStateFlow()
 
+    private val _shopById = MutableStateFlow<BusinessData?>(null)
+    val shopById = _shopById.asStateFlow()
+
     private val _shopByCategory = MutableStateFlow<List<BusinessData>?>(null)
     val shopByCategory = _shopByCategory.asStateFlow()
 
@@ -102,8 +105,20 @@ class ShopViewModel @Inject constructor(
     }
 
 
-    suspend fun getShop(id: String) = dataUseCase.getShop(id).collect {
+    suspend fun getShopById(id: String) = dataUseCase.getShop(id).collect {
 
+        when(it){
+            is UiEvent.Loading -> {
+                _shopLoading.value = true
+            }
+            is UiEvent.Success -> {
+                _shopById.value = it.data!!
+                _shopLoading.value = false
+            }
+            is UiEvent.Error -> {
+                _shopLoading.value = false
+            }
+        }
     }
 
 

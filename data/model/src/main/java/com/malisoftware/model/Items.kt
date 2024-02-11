@@ -29,5 +29,6 @@ data class ItemsList(
 
 data class BusinessItems(
     val businessId: String = "restaurantId",
-    val items: List<ItemsList> = emptyList()
+    val items: List<ItemsList> = emptyList(),
+    val isRestaurant: Boolean = false
 )

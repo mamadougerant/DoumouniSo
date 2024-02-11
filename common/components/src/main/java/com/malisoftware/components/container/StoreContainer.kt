@@ -1,6 +1,7 @@
 package com.malisoftware.components.container
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,7 +26,7 @@ import com.malisoftware.theme.AppTheme
 @Composable
 fun StoreContainer(
     modifier: Modifier = Modifier,
-    imageHeight: Dp = 126.dp,
+    imageHeight: Dp = 136.dp,
     imageUrl1: String = "",
     imageUrl2: String = "",
     text1: String = "",
@@ -46,14 +47,15 @@ fun StoreContainer(
                 imageUrl = imageUrl1,
                 modifier = Modifier
                     .weight(1f)
-                    .height(imageHeight),
+                    .height(imageHeight)
+                    .border(1.dp, Color.LightGray.copy(0.4f), RoundedCornerShape(10.dp)),
                 topLeftIcon = {
                     Text(
                         text = text1,
                         style = AppTheme.typography.titleLarge,
                         modifier = Modifier
                             .padding(5.dp)
-                            .background(Color.White.copy(0.4f), RoundedCornerShape(5.dp))
+                            //.background(Color.White.copy(0.4f), RoundedCornerShape(5.dp))
                     )
                 },
                 onClick = {
@@ -63,18 +65,21 @@ fun StoreContainer(
                 loading = loading,
 
             )
+
             ImageContainer(
                 imageUrl = imageUrl2,
                 modifier = Modifier
                     .weight(1f)
-                    .height(imageHeight),
+                    .height(imageHeight)
+                    .border(1.dp, Color.LightGray.copy(0.4f), RoundedCornerShape(10.dp)),
                 topLeftIcon = {
                     Text(
                         text = text2,
                         style = AppTheme.typography.titleLarge,
                         modifier = Modifier
                             .padding(5.dp)
-                            .background(Color.White.copy(0.4f), RoundedCornerShape(5.dp))
+                            //.background(Color.White.copy(0.4f), RoundedCornerShape(5.dp)),
+
                     )
                 },
                 onClick = {

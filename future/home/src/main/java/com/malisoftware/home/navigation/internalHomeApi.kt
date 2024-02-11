@@ -7,7 +7,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.constants.NavConstant.Roots
-import com.future.home.MainHome
+import com.malisoftware.home.MainHome
+import com.malisoftware.home.viewModel.HomeRoomViewModel
 import com.malisoftware.home.viewModel.HomeViewModel
 
 internal object InternalHomeApi: HomeApi {
@@ -21,7 +22,12 @@ internal object InternalHomeApi: HomeApi {
         ){
             composable(MainFeatures.HOME){
                 val homeViewModel: HomeViewModel = hiltViewModel()
-                MainHome(navController = navController,homeViewModel = homeViewModel)
+                val homeRoomViewModel: HomeRoomViewModel = hiltViewModel()
+                MainHome(
+                    navController = navController,
+                    homeViewModel = homeViewModel,
+                    homeRoomViewModel = homeRoomViewModel
+                )
             }
         }
 

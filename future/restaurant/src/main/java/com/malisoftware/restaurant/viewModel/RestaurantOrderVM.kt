@@ -1,4 +1,4 @@
-package com.future.restaurant.viewModel
+package com.malisoftware.restaurant.viewModel
 
 import androidx.lifecycle.ViewModel
 import com.malisoftware.backend.dataUseCase.DataUseCase

@@ -1,11 +1,15 @@
 package com.malisoftware.cart
 
+import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,9 +28,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.malisoftware.components.TextWithIcon
 import com.malisoftware.components.component.DeleteActionModal
+import com.malisoftware.components.component.scaffold.ContentTabs
+import com.malisoftware.components.component.scaffold.NoScrollableContentTabs
 import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.container.SmallBusinessContainer
 import com.malisoftware.local.local.BusinessEntity
@@ -60,13 +68,41 @@ fun Cart(
 
     val orders by cartVm.orders.collectAsState()
 
+    val restaurants = orders.filter { it.restaurant.isRestaurant }
+    val shops = orders.filter { !it.restaurant.isRestaurant }
+
+    var index by rememberSaveable { mutableIntStateOf(0) }
+
+    var orderByBusiness by remember(index,orders) { mutableStateOf(if (index == 0) restaurants else shops) }
+
     val scope = rememberCoroutineScope()
 
     Scaffold (
         topBar = {
-            TopAppBar(
-                title = { TextWithIcon(title = "Cart") {}},
-            )
+            Column(
+                modifier = Modifier,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(0.dp)
+            ) {
+                TopAppBar(
+                    title = { TextWithIcon(
+                        title = "Cart"
+                    ) {} },
+                )
+                NoScrollableContentTabs(
+                    list = listOf(
+                        "Restaurants (${restaurants.size})" to null,
+                        "Shops (${shops.size})" to null,
+                    ),
+                    onIndexChange = {
+                        index = it
+                    },
+                    indexInitial = index,
+                    modifier = Modifier
+                        .padding(horizontal = 50.dp)
+                        .offset(y = (-10).dp)
+                )
+            }
         },
     ) { paddingValues ->
         LazyColumn (
@@ -74,8 +110,10 @@ fun Cart(
                 .fillMaxSize()
                 .padding(paddingValues)
         ){
-            items (orders.size ){
-                val order = orders[it]
+
+            items (orderByBusiness.size ){ orderPosition ->
+
+                val order = orderByBusiness[orderPosition]
                 CartItemContainer(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -89,8 +127,11 @@ fun Cart(
                         navController.navigate(MainFeatures.CART_ITEM + "/${order.id}")
                     },
                     onBusinessForward = {
-                        navController.navigate(MainFeatures.HOME)
-                        navController.navigate(MainFeatures.RESTAURANT_ITEM + "/${order.id}")
+                        //navController.navigate(MainFeatures.HOME)
+                        navController.navigate(
+                            route = (if (it.isRestaurant)MainFeatures.RESTAURANT_ITEM
+                            else MainFeatures.SHOP_ITEM) +  "/${order.id}"
+                        )
                     }
                 )
 
@@ -119,7 +160,7 @@ fun CartItemContainer(
     modifier: Modifier = Modifier,
     business: BusinessEntity = BusinessEntity(),
     onClear: () -> Unit = {},
-    onBusinessForward: () -> Unit = {},
+    onBusinessForward: (BusinessEntity) -> Unit = {},
     onConfirm: () -> Unit = {},
 ) {
     OutlinedCard (
@@ -163,7 +204,7 @@ fun CartItemContainer(
             )
         }
         Button(
-            onClick = onBusinessForward,
+            onClick = { onBusinessForward.invoke(business) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp)
@@ -174,7 +215,7 @@ fun CartItemContainer(
             contentPadding = PaddingValues(0.dp)
         ) {
             Text(
-                text = "Voir le restaurant",
+                text = "Voir l'etablissement",
                 style = AppTheme.typography.titleMedium,
                 modifier = Modifier
                     .fillMaxHeight()

@@ -1,6 +1,7 @@
-package com.future.home
+package com.malisoftware.home
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,15 +37,17 @@ import com.malisoftware.components.icons.ArrowForward
 import com.malisoftware.model.BusinessData
 import com.malisoftware.model.Items
 import com.doumounidron.theme.DoumouniDronTheme
+import com.future.home.HomeShimmer
 import com.malisoftware.home.viewModel.HomeViewModel
 import com.future.search.RestaurantSearchContent
+import com.malisoftware.home.viewModel.HomeRoomViewModel
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainHome(
     navController: NavController,
     homeViewModel: HomeViewModel,
-    //categories: List<CategoryData>,
-    //searchTabList: List<Pair<String, @Composable () -> Unit>>,
+    homeRoomViewModel: HomeRoomViewModel,
 ) {
     LaunchedEffect(key1 = homeViewModel){
         homeViewModel.getSponsors()
@@ -115,7 +118,6 @@ fun MainHome(
     ){
         item {
             val storeRestaurant = stores.filter { it.name == "Restaurant" }
-            Log.d("MainHome", "MainHome: $storeRestaurant")
             val storeMarket = stores.filter { it.name == "Market" }
             StoreContainer(
                 modifier = Modifier,
@@ -127,6 +129,7 @@ fun MainHome(
                 onImage2Click = { navController.navigate(Roots.SHOP_ROOT) },
             )
         }
+        // RESTARANT  category
         item {
             CategoryList (
                 modifier = Modifier,
@@ -134,6 +137,8 @@ fun MainHome(
                 trailingContent = {},
             )
         }
+
+        // orders in the cart
         item {
             Column (
                 modifier = Modifier,
@@ -157,6 +162,8 @@ fun MainHome(
             }
         }
 
+        // mix of the restaurants and shops
+        //navigate to the restaurant and shop on click
         item {
             RowBusinessListWithNav(
                 navController = navController,
@@ -182,6 +189,7 @@ fun MainHome(
             )
         }
 
+        // Market category
         item {
             RoundedCategoryList(
                 title = "Market",
@@ -193,9 +201,8 @@ fun MainHome(
             )
 
         }
-        // Check if it is open
 
-        Log.d("MainHome1", "MainHome: $restaurantList")
+        // Sponsored restaurant
         ColumnBusinessList(
             modifier = Modifier,
             businessData = if (sponsoredRestaurants.isNotEmpty()) listOf(sponsoredRestaurants[0]) else listOf(),
@@ -203,7 +210,7 @@ fun MainHome(
             onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") }
         )
 
-
+        // Sponsored shop
         item {
             if (sponsoredShops.isNotEmpty())
                 SmallBusinessList(
@@ -224,15 +231,17 @@ fun MainHome(
         }
         if (sponsors.isNotEmpty()) {
             item {
+                //TODO : implement auto scroll
                 RowListContainer(
                     title = "Sponsored",
                 ) {
-                    items(sponsors.size) {
+                    items(sponsors.size, key = { sponsors[it].id }) {
                         val sponsor = sponsors[it]
                         ImageContainer(
                             modifier = Modifier
                                 .fillParentMaxWidth(0.95f)
-                                .height(170.dp),
+                                .height(170.dp)
+                                .animateItemPlacement(),
                             imageUrl = sponsor.imageUrl ?: "",
                             leftIcon = {}
                         )
@@ -259,6 +268,8 @@ fun MainHome(
                 )
         }
 
+
+        // restaurants with promotion
         item {
             RowBusinessListWithNav(
                 modifier = Modifier,
@@ -273,13 +284,14 @@ fun MainHome(
 
             )
         }
-        // Check if the restaurant is open
+        // and other sponsored restaurants
         ColumnBusinessList(
             modifier = Modifier,
             businessData = if (sponsoredRestaurants.isNotEmpty() && sponsoredRestaurants.size > 1) listOf(sponsoredRestaurants[1]) else listOf(),
             title = { Divider() },
             onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
         )
+        // not implemented yet
         item {
             RowBusinessListWithNav(
                 businessData = listOf(
@@ -296,7 +308,12 @@ fun MainHome(
 
                 )
         }
-        // Check if it is open
+
+        //TODO : thinks about mixing the restaurant
+        // and shop in case the restaurnt list is so
+        // long when will user see shops too
+
+        // the list of all the restaurants
         val openRestaurants = restaurantList.filter { it.isOpen }
         val closeRestaurant = restaurantList.filter { !it.isOpen }
         ColumnBusinessList(
@@ -307,9 +324,12 @@ fun MainHome(
             } },
             onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
         )
+        // the list of all the shops
+        val openShop = shopList.filter { it.isOpen }
+        val closeShop = shopList.filter { !it.isOpen }
         ColumnBusinessList(
             modifier = Modifier,
-            businessData = shopList,
+            businessData = openShop + closeShop,
             title = { TextWithIcon(title = "Tous les Market", modifier = Modifier.fillMaxWidth() ){
                 ArrowForward(){navController.navigate(Roots.SHOP_ROOT)}
             } },

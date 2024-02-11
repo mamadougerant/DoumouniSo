@@ -26,7 +26,7 @@ fun SmallBusinessList(
     imageUrl: String = "",
     title: String = "Boissons",
     subtitle: String = "null",
-    trailingContent: @Composable () -> Unit = {},
+    trailingContent: @Composable (List<Items>) -> Unit = {},
     onQuantityChange: (Items) -> Unit = {},
 ) {
     Column (

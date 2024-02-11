@@ -27,12 +27,12 @@ import com.malisoftware.components.LazyLists.HorizontalItemList
 import com.malisoftware.components.component.scaffold.BusinessScreenScaffold
 import com.malisoftware.components.component.scaffold.ContentTabs
 import com.malisoftware.components.container.BusinessInfo
+import com.malisoftware.components.container.ItemHeader
 import com.malisoftware.components.container.ItemWithTitleBar
 import com.malisoftware.components.screens.OrderScreenInModalSheet
 import com.malisoftware.model.Items
 import com.malisoftware.theme.AppTheme
-import com.future.restaurant.viewModel.RestaurantOrderVM
-import com.malisoftware.local.mappers.toBusinessData
+import com.malisoftware.restaurant.viewModel.RestaurantOrderVM
 import com.malisoftware.restaurant.viewModel.RestaurantViewModel
 import com.malisoftware.local.mappers.toItemEntity
 import com.malisoftware.restaurant.viewModel.RoomViewModel
@@ -93,7 +93,7 @@ fun RestaurantItem(
                     list = items.map { it.title to null },
                     onIndexChange = {
                         scope.launch {
-                            scrollState.animateScrollToItem(it)
+                            scrollState.animateScrollToItem(it+1)
                         }
                     },
                     containerColor = Color.White
@@ -106,49 +106,19 @@ fun RestaurantItem(
         },
         isFavorite = restaurant!!.id in favoritesIds,
     ) {
-        item {
-            Card (
-                colors = CardDefaults.cardColors(AppTheme.colors.background),
-                shape = RoundedCornerShape(0.dp),
-            ) {
-                val subCard1 = if (!restaurant?.isOpen!!){
-                    "Ce Etablissement est Fermé"
-                } else {
-                    "Temps de livraison\n" +restaurant?.formattedDeliveryTime!!
-                }
-                val promotion = buildAnnotatedString {
-                    withStyle(style = SpanStyle(color = Color.Red)) {
-                        append(if (restaurant?.promotion != "") "\n"+"* "+restaurant?.promotion+" *" else "")
-                    }
-                }
-
-                BusinessInfo(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    title = restaurant?.title!!,
-                    subtitle = restaurant?.feedback + " ⭐ - " + restaurant?.formattedMinPrice + promotion.toString(),
-                    subInCard1 = subCard1,
-                    subInCard2 = restaurant?.formattedDeliveryFee!!,
-                )
-                ItemWithTitleBar(
-                    promotionItems,
-                    onClick = {
-                        openSheet = true
-                        sheetContent = it
-                    },
-                )
+        ItemHeader(
+            shop = restaurant,
+            itemsInPromotion = promotionItems,
+            onClick = {
+                openSheet = true
+                sheetContent = it
             }
-        }
+        )
         items.forEachIndexed { _, it ->
             val item = (it.items).map {
                 val order = orderItem.find { order -> order.title == it.title && order.price == it.price }
-                if (order != null) {
-                    it.copy(quantity = order.quantity)
-                } else {
-                    it
-                }
+                if (order != null) { it.copy(quantity = order.quantity) } else { it }
             }
-
             HorizontalItemList(
                 items = item,
                 title = it.title,

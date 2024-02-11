@@ -69,6 +69,7 @@ fun BusinessScreenScaffold(
     showBarAtIndex: Int? = 2,
     contentPaddingValues: (PaddingValues)->Unit = {  },
     searchText: String = "Search",
+    filterContents: (LazyListScope.() -> Unit)? = null,
     searchContent: LazyListScope.() -> Unit = {},
     content: LazyListScope.() -> Unit = {},
 ) {
@@ -89,7 +90,7 @@ fun BusinessScreenScaffold(
             barExtraContent = barExtraContent,
             showBarAtIndex = showBarAtIndex,
             contentPaddingValues = contentPaddingValues,
-            content = content
+            content = filterContents ?: content
         )
         AnimatedVisibility(
             visible = showSearchResult,

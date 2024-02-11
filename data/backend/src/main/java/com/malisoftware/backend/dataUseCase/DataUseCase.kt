@@ -2,6 +2,7 @@ package com.malisoftware.backend.dataUseCase
 
 import com.malisoftware.components.uiEvent.UiEvent
 import com.malisoftware.backend.remote.DataApi
+import com.malisoftware.model.BusinessItems
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
@@ -110,6 +111,15 @@ class DataUseCase(
         emit(UiEvent.Error(message = it.message.toString()))
     }.flowOn(ioDispatcher)
 
+
+    // Shop
+    fun getShopItems(shopId: String) = flow {
+        emit(UiEvent.Loading())
+        val result = dataApi.getShopItems(shopId)
+        emit(UiEvent.Success(result))
+    }.catch {
+        emit(UiEvent.Error(message = it.message.toString()))
+    }.flowOn(ioDispatcher)
 
 
 }

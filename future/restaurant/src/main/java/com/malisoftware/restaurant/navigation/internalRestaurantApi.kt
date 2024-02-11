@@ -11,7 +11,7 @@ import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.constants.NavConstant.Roots
 import com.malisoftware.restaurant.Restaurant
 import com.malisoftware.restaurant.RestaurantItem
-import com.future.restaurant.viewModel.RestaurantOrderVM
+import com.malisoftware.restaurant.viewModel.RestaurantOrderVM
 import com.malisoftware.restaurant.viewModel.RestaurantViewModel
 import com.malisoftware.restaurant.viewModel.RoomViewModel
 

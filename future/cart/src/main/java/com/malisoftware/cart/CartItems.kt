@@ -54,6 +54,7 @@ fun CartItems(
     navController: NavController,
     viewModel: CartRoomViewModel,
 ) {
+    Log.d("CartItems", "CartItems: $id")
     // update the item object
     LaunchedEffect(key1 = viewModel.items.collectAsState()) {
         viewModel.getAllOrderByRestaurantId(id)
@@ -76,6 +77,7 @@ fun CartItems(
 
     val total = items.sumOf { it.price * it.quantity }
     val minPrice = business?.restaurant?.minPrice ?: 0.0
+
 
     Scaffold (
         topBar = {
@@ -168,8 +170,10 @@ fun CartItems(
             item {
                 TextButton(
                     onClick = {
-                        navController.navigate(MainFeatures.HOME)
-                        navController.navigate(MainFeatures.RESTAURANT_ITEM + "/${id}")
+                        //navController.navigate(MainFeatures.HOME)
+                        navController.navigate(
+                            route =( if (business?.restaurant?.isRestaurant!!) MainFeatures.RESTAURANT_ITEM
+                            else MainFeatures.SHOP_ITEM )+ "/${id}")
                     },
                     modifier = Modifier
                         .fillMaxWidth()

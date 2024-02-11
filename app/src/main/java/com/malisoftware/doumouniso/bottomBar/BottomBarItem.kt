@@ -47,6 +47,10 @@ fun RowScope.BottomBarItem(
                 currentRoute?.hierarchy?.any { it.route != BottomBarNavigation.Home.route } == true){
                 navController.navigateUp()
             }
+            if (bottomBarNavigation.route==BottomBarNavigation.Cart.route &&
+                currentRoute?.hierarchy?.any { it.route != BottomBarNavigation.Cart.route } == true){
+                navController.navigateUp()
+            }
             scope.launch {
                 navController.navigate(bottomBarNavigation.route){
                     popUpTo(navController.graph.findStartDestination().id) {

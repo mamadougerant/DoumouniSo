@@ -5,20 +5,84 @@ import androidx.lifecycle.asFlow
 import com.malisoftware.local.db.AppDatabase
 import com.malisoftware.components.uiEvent.UiEvent
 import com.malisoftware.local.local.AddressEntity
-import com.malisoftware.local.local.BusinessEntity
 import com.malisoftware.local.local.ItemOrderEntity
 import com.malisoftware.local.local.ItemsEntity
 import com.malisoftware.local.local.RecentlyViewedEntity
 import com.malisoftware.local.local.UserFavoritesEntity
+import com.malisoftware.local.mappers.toRealmBusiness
+import com.malisoftware.local.mappers.toRealmItems
+import com.malisoftware.local.reamlModel.RealmItemOrder
+import io.realm.kotlin.Realm
+import io.realm.kotlin.UpdatePolicy
+import io.realm.kotlin.ext.query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import java.time.LocalDateTime
 
 class LocalRepository(
-    private val appDatabase: AppDatabase
+    private val appDatabase: AppDatabase,
+    private val realm: Realm
 ) {
     private val ioDispatcher = Dispatchers.IO
+    // Realm
+    fun getAllCompletedOrder() = flow {
+        emit(UiEvent.Loading())
+        val result = realm
+            .query<RealmItemOrder>()
+            .asFlow()
+            .map { it.list.toList() }
+        emit(UiEvent.Success(result))
+    }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
+
+    fun insertCompletedOrder(order: ItemOrderEntity, items: List<ItemsEntity>) = flow {
+        emit(UiEvent.Loading())
+        realm.write {
+            val orderToInsert = RealmItemOrder().apply {
+                this.restaurant = order.restaurant.toRealmBusiness()
+                this.items.addAll(items.map { it.toRealmItems() })
+                this.dateTime = LocalDateTime.now().toString()
+                this.status = order.status.value
+            }
+            copyToRealm(orderToInsert, UpdatePolicy.ALL)
+        }
+        emit(UiEvent.Success("Order added"))
+    }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
+
+
+    fun deleteCompletedOrder(order: ItemOrderEntity) = flow {
+        emit(UiEvent.Loading())
+        realm.write {
+            val orderToDelete = realm.query<RealmItemOrder>("id == $0", order.id).find().firstOrNull()
+            if (orderToDelete != null) {
+               this.delete(orderToDelete)
+            }
+        }
+        emit(UiEvent.Success("Order deleted"))
+    }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
+
+    fun deleteAllCompletedOrder() = flow {
+        emit(UiEvent.Loading())
+        realm.write {
+            deleteAll()
+        }
+        emit(UiEvent.Success("All orders deleted"))
+    }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
+
+    fun updateCompletedOrder(order: ItemOrderEntity) = flow {
+        emit(UiEvent.Loading())
+        realm.write {
+            val orderToUpdate = realm.query<RealmItemOrder>("id == $0", order.id).find().firstOrNull()
+            if (orderToUpdate != null) {
+                orderToUpdate.status = order.status.value
+                //orderToUpdate.items = order.items.map { it.toRealmItems() }
+            }
+        }
+        emit(UiEvent.Success("Order updated"))
+    }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
+
     // ORDER
 
     fun getAllOrder() = flow {

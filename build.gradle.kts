@@ -5,5 +5,6 @@ plugins {
     id("com.google.dagger.hilt.android") version "2.50" apply false
     kotlin("plugin.serialization") version "1.9.20"
     kotlin("kapt") version "1.9.20"
+    id("io.realm.kotlin") version "1.11.0" apply false
 
 }

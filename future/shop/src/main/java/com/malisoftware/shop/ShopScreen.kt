@@ -20,7 +20,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -53,9 +52,7 @@ import com.malisoftware.model.CategoryData
 import com.malisoftware.theme.AppTheme
 import com.future.shop.viewModel.ShopViewModel
 import com.malisoftware.components.container.ContinueOrder
-import com.malisoftware.components.container.SmallBusinessContainer
-import com.malisoftware.local.local.ItemOrderEntity
-import com.malisoftware.local.mappers.toBusinessData
+import com.malisoftware.local.mappers.toBusinessEntity
 import com.malisoftware.local.mappers.toItemEntity
 import com.malisoftware.shop.viewModel.ShopOrderVm
 import com.malisoftware.shop.viewModel.ShopRoomVm
@@ -145,7 +142,7 @@ fun ShopScreen(
                     )
                 },
                 onClick = { navController.navigate(MainFeatures.SHOP_ITEM + "/${it.id}") },
-                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
                 onFavoriteClick = { businessData, b -> addFavorite(scope, shopRoomVm, businessData, b) }
             )
             if ((filteredShopList ?: listOf() )!!.isEmpty()) {
@@ -208,7 +205,7 @@ fun ShopScreen(
             businessData = sponsorShopList,
             title = { Divider() },
             onClick = { navController.navigate(MainFeatures.SHOP_ITEM + "/${it.id}") },
-            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
             onFavoriteClick = { businessData, b -> addFavorite(scope, shopRoomVm, businessData, b) }
         )
         item {
@@ -248,7 +245,7 @@ fun ShopScreen(
 
 
         item {
-            val favorite = favorites.map { it.favoriteBusiness }.filter { !it.isRestaurant }.map { it.toBusinessData() }
+            val favorite = favorites.map { it.favoriteBusiness }.filter { !it.isRestaurant }.map { it.toBusinessEntity() }
             RowBusinessListWithShopNav(
                 modifier = Modifier,
                 businessData = favorite,
@@ -257,7 +254,7 @@ fun ShopScreen(
                     ArrowForward(onClick = { viewModel.setShopByCategory(favorite) })
                 },
                 navController = navController,
-                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
                 onFavoriteClick = { businessData, b -> addFavorite(scope, shopRoomVm, businessData, b) }
 
             )
@@ -271,7 +268,7 @@ fun ShopScreen(
                     ArrowForward(onClick = { viewModel.setShopByCategory(shopInPromotion) })
                 },
                 navController = navController,
-                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
                 onFavoriteClick = { businessData, b -> addFavorite(scope, shopRoomVm, businessData, b) }
             )
         }
@@ -282,7 +279,7 @@ fun ShopScreen(
                 ArrowForward()
             } },
             onClick = { navController.navigate(MainFeatures.SHOP_ITEM + "/${it.id}") },
-            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
             onFavoriteClick = { businessData, b -> addFavorite(scope, shopRoomVm, businessData, b) }
         )
 

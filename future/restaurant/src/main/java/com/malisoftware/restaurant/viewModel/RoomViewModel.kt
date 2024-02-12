@@ -3,14 +3,12 @@ package com.malisoftware.restaurant.viewModel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
-import androidx.lifecycle.viewModelScope
 import com.malisoftware.components.uiEvent.UiEvent
 import com.malisoftware.local.local.ItemOrderEntity
 import com.malisoftware.local.local.ItemsEntity
 import com.malisoftware.local.local.OrderStatus
 import com.malisoftware.local.local.RecentlyViewedEntity
 import com.malisoftware.local.local.UserFavoritesEntity
-import com.malisoftware.local.mappers.toBusinessData
 import com.malisoftware.local.mappers.toBusinessEntity
 import com.malisoftware.local.repository.LocalRepository
 import com.malisoftware.model.BusinessData
@@ -18,7 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel

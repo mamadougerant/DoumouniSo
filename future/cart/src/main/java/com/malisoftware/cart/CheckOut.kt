@@ -23,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,6 +42,7 @@ import com.malisoftware.components.icons.NavigationIcon
 import com.malisoftware.local.mappers.toItems
 import com.malisoftware.model.format.formatPrice
 import com.malisoftware.theme.AppTheme
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,6 +69,9 @@ fun CheckOut(
     
     var openSheet by remember { mutableStateOf(false) }
     var showOrderCompletedScreen by remember { mutableStateOf(false) }
+
+    val scope = rememberCoroutineScope()
+
     Scaffold (
         topBar = {
             TopAppBar(
@@ -91,18 +96,20 @@ fun CheckOut(
             Button(
                 onClick = {
                     showOrderCompletedScreen = true
+                    scope.launch {
+                        if (business != null) {
+                            cartVm.insertCompletedOrder(business, orders)
+                            cartVm.deleteOrder(business, restaurantId)
+                        }
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp)
                     .padding(bottom = 10.dp)
-                    .height(50.dp)
-                ,
+                    .height(50.dp),
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                )
+                colors = ButtonDefaults.buttonColors(Color.Black,Color.White)
             ) {
                 Text(text = "Terminer", style = AppTheme.typography.titleLarge)
             }
@@ -201,6 +208,7 @@ fun CheckOut(
         if (showOrderCompletedScreen) {
             OrderCompletedScreen(
                 onFinished = {
+                    //TODO : navigate to commandes
                     showOrderCompletedScreen = !it
                     navController.navigateUp()
                 }

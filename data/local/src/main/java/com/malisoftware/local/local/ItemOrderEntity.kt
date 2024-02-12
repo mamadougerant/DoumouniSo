@@ -6,13 +6,13 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
-enum class OrderStatus() {
-    PENDING,
-    ACCEPTED,
-    REJECTED,
-    DELIVERED,
-    CANCELLED,
-    UNKNOWN
+enum class OrderStatus(val value: String) {
+    PENDING("pending"),
+    ACCEPTED("accepted"),
+    REJECTED("rejected"),
+    DELIVERED("delivered"),
+    CANCELLED("cancelled"),
+    UNKNOWN("unknown")
 }
 
 

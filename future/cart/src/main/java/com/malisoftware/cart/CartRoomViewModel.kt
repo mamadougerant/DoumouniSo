@@ -51,22 +51,7 @@ class CartRoomViewModel @Inject constructor(
             return
         }
         val orderItem = item.toItemEntity(restaurantId).copy(quantity = quantity)
-        roomDb.insertOrderItem(orderItem).collect {
-            when (it) {
-                is UiEvent.Loading -> {
-                    Log.d("CartRoomViewModel1", "ab $item")
-                    Log.d("RoomViewModel", "Loading")
-                }
-
-                is UiEvent.Success -> {
-                    Log.d("RoomViewModel", "Success")
-                }
-
-                is UiEvent.Error -> {
-                    Log.d("RoomViewModel", "Error")
-                }
-            }
-        }
+        roomDb.insertOrderItem(orderItem).collect {}
     }
 
     suspend fun deleteOrder(order: ItemOrderEntity, id: String) {
@@ -75,19 +60,7 @@ class CartRoomViewModel @Inject constructor(
 
     }
 
-    suspend fun deleteOrderItem (itemsEntity: ItemsEntity) = roomDb.deleteOrderItem(itemsEntity).collect{
-        when(it){
-            is UiEvent.Loading -> {
-                //Do something
-            }
-            is UiEvent.Success -> {
-                //Do something
-            }
-            is UiEvent.Error -> {
-                //Do something
-            }
-        }
-    }
+    suspend fun deleteOrderItem (itemsEntity: ItemsEntity) = roomDb.deleteOrderItem(itemsEntity).collect{}
 
     suspend fun updateItemOrderEntity(
         itemOrderEntity: ItemOrderEntity
@@ -113,7 +86,44 @@ class CartRoomViewModel @Inject constructor(
         }
     }
 
-    suspend fun deleteOrderItemByItemId(itemId: String) = roomDb.deleteOrderItemByItemId(itemId).collect{
+    suspend fun deleteOrderItemByItemId(itemId: String) = roomDb.deleteOrderItemByItemId(itemId)
+
+
+    suspend fun deleteItems(restaurantId: String) = roomDb.deleteOrderItemByRestaurantId(restaurantId)
+
+    suspend fun insertRecentLyViewed(business: RecentlyViewedEntity) = roomDb.insertRecentView(business)
+
+    suspend fun insertCompletedOrder(order: ItemOrderEntity,itemsEntity: List<ItemsEntity>) =
+        roomDb.insertCompletedOrder(order,itemsEntity).collect{
+        when(it){
+            is UiEvent.Loading -> {
+                //Do something
+            }
+            is UiEvent.Success -> {
+                // TODO Fectch the id and send the order with that id
+                //Do something
+            }
+            is UiEvent.Error -> {
+                //Do something
+            }
+        }
+    }
+
+    suspend fun deleteAllCompletedOrder() = roomDb.deleteAllCompletedOrder().collect{
+        when(it){
+            is UiEvent.Loading -> {
+                //Do something
+            }
+            is UiEvent.Success -> {
+                //Do something
+            }
+            is UiEvent.Error -> {
+                //Do something
+            }
+        }
+    }
+
+    suspend fun updateCompletedOrder(order: ItemOrderEntity) = roomDb.updateCompletedOrder(order).collect{
         when(it){
             is UiEvent.Loading -> {
                 //Do something
@@ -128,31 +138,4 @@ class CartRoomViewModel @Inject constructor(
     }
 
 
-    suspend fun deleteItems(restaurantId: String) = roomDb.deleteOrderItemByRestaurantId(restaurantId).collect{
-        when(it){
-            is UiEvent.Loading -> {
-                //Do something
-            }
-            is UiEvent.Success -> {
-                //Do something
-            }
-            is UiEvent.Error -> {
-                //Do something
-            }
-        }
-    }
-
-    suspend fun insertRecentLyViewed(business: RecentlyViewedEntity) = roomDb.insertRecentView(business).collect{
-        when(it){
-            is UiEvent.Loading -> {
-                //Do something
-            }
-            is UiEvent.Success -> {
-                //Do something
-            }
-            is UiEvent.Error -> {
-                //Do something
-            }
-        }
-    }
 }

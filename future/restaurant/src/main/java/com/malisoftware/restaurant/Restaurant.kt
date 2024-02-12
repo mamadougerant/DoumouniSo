@@ -20,14 +20,12 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -46,7 +44,6 @@ import com.malisoftware.components.component.RangeSliderWithData
 import com.malisoftware.components.component.RangeSliderWithGraph
 import com.malisoftware.components.component.scaffold.HomeScaffoldWithBar
 import com.malisoftware.components.constants.FilterConstant
-import com.malisoftware.components.container.SmallBusinessContainer
 import com.malisoftware.components.icons.ArrowForward
 import com.malisoftware.components.icons.NavigationIcon
 import com.malisoftware.components.formatPrice
@@ -58,7 +55,7 @@ import com.future.restaurant.RestaurantShimmer
 import com.malisoftware.components.container.ContinueOrder
 import com.malisoftware.restaurant.viewModel.RestaurantOrderVM
 import com.malisoftware.restaurant.viewModel.RestaurantViewModel
-import com.malisoftware.local.mappers.toBusinessData
+import com.malisoftware.local.mappers.toBusinessEntity
 import com.malisoftware.restaurant.viewModel.RoomViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -157,7 +154,7 @@ fun Restaurant(
                     )
                 },
                 onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
-                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
                 onFavoriteClick = { businessData, b -> addFavorite(scope, roomVm, businessData, b) }
             )
             if ((filteredRestaurantList ?: emptyList()).isEmpty()) {
@@ -182,7 +179,7 @@ fun Restaurant(
             RowBusinessListWithNav(
                 navController = navController,
                 modifier = Modifier,
-                businessData = recentlyViewed.map { it.business }.map { it.toBusinessData() },
+                businessData = recentlyViewed.map { it.business }.map { it.toBusinessEntity() },
                 title = "Recently Viewed",
                 trailingContent = {
                     ArrowForward(onClick = { })
@@ -208,7 +205,7 @@ fun Restaurant(
             businessData = sponsoredRestaurants,
             title = { Divider() },
             onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
-            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
             onFavoriteClick = { businessData, b ->
                 addFavorite(scope, roomVm, businessData, b)
             }
@@ -243,7 +240,7 @@ fun Restaurant(
             }
         }
         item {
-            val favoriteBusiness = favorites.map { it.favoriteBusiness }.filter { it.isRestaurant }.map { it.toBusinessData() }
+            val favoriteBusiness = favorites.map { it.favoriteBusiness }.filter { it.isRestaurant }.map { it.toBusinessEntity() }
             RowBusinessListWithNav(
                 modifier = Modifier,
                 businessData = favoriteBusiness,
@@ -255,7 +252,7 @@ fun Restaurant(
                 },
                 navController = navController,
                 onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
-                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
                 onFavoriteClick = { businessData, b ->
                     addFavorite(scope, roomVm, businessData, b)
                 }
@@ -273,7 +270,7 @@ fun Restaurant(
                 },
                 navController = navController,
                 onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
-                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
                 onFavoriteClick = { businessData, b ->
                     addFavorite(scope, roomVm, businessData, b)
                 }
@@ -287,7 +284,7 @@ fun Restaurant(
             businessData = openRestaurant + closeRestaurant,
             title = { TextWithIcon(title = "Tous les Restaurants", modifier = Modifier.fillMaxWidth() ){} },
             onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
-            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
             onFavoriteClick = { businessData, b ->
                 addFavorite(scope, roomVm, businessData, b)
             }

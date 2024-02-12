@@ -32,7 +32,9 @@ data class BusinessEntity(
     val orderCount: Long = 5000,
     val sponsored: Boolean = false,
     val isRestaurant: Boolean = true,
-)
+) {
+
+}
 
 
 

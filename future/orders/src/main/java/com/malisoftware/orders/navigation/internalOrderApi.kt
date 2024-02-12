@@ -1,5 +1,6 @@
 package com.malisoftware.orders.navigation
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -8,6 +9,7 @@ import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.constants.NavConstant.Roots
 import com.future.orders.navigation.OrderApi
 import com.malisoftware.orders.Order
+import com.malisoftware.orders.OrderViewModel
 
 internal object InternalOrderApi: OrderApi {
     override fun registerGraph(
@@ -19,7 +21,8 @@ internal object InternalOrderApi: OrderApi {
             route = Roots.ORDER_ROOT
         ){
             composable(MainFeatures.ORDER){
-                Order(navController = navController,)
+                val orderViewModel: OrderViewModel = hiltViewModel()
+                Order(navController = navController,orderViewModel = orderViewModel)
             }
 
         }

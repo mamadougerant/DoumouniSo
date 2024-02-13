@@ -10,8 +10,10 @@ import com.malisoftware.local.local.OrderStatus
 import com.malisoftware.local.local.RecentlyViewedEntity
 import com.malisoftware.local.local.UserFavoritesEntity
 import com.malisoftware.local.mappers.toBusinessEntity
+import com.malisoftware.local.mappers.toItemEntity
 import com.malisoftware.local.repository.LocalRepository
 import com.malisoftware.model.BusinessData
+import com.malisoftware.model.Items
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -81,7 +83,17 @@ class ShopRoomVm  @Inject constructor(
 
         roomDb.updateItemOrderEntity(order).collect{}
     }
-    suspend fun insertOrderItem(item: ItemsEntity,) = roomDb.insertOrderItem(item).collect{}
+    //suspend fun insertOrderItem(item: ItemsEntity,) = roomDb.insertOrderItem(item).collect{}
+    suspend fun insertOrderItem(item: ItemsEntity, quantity: Int ) {
+        // the quantity is updated in the container
+        if (quantity == 0) {
+            deleteOrderItem(item)
+            return
+        }
+        roomDb.insertOrderItem(item).collect {}
+    }
+
+    suspend fun deleteOrderItem (itemsEntity: ItemsEntity) = roomDb.deleteOrderItem(itemsEntity).collect{}
 
 
     suspend fun getFavorites() {

@@ -25,6 +25,7 @@ fun TextDisposition(
     h2Style: TextStyle? = null,
     h3: String? = null,
     h3Style: TextStyle? = null,
+    h1Overflow: TextOverflow = TextOverflow.Visible,
     rightContent: @Composable () -> Unit = {},
 
 ) {
@@ -41,6 +42,7 @@ fun TextDisposition(
             h2Style = h2Style,
             h3 = h3,
             h3Style = h3Style,
+            h1Overflow = h1Overflow,
         )
         rightContent()
     }
@@ -56,6 +58,7 @@ private fun TextColumn(
     h2Style: TextStyle? = null,
     h3: String? = "H3",
     h3Style: TextStyle? = null,
+    h1Overflow: TextOverflow = TextOverflow.Visible,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
 ) {
     Column (
@@ -68,6 +71,7 @@ private fun TextColumn(
                 text = h1.replaceFirstChar { it.titlecaseChar() },
                 style = h1Style ?: TextStyle(),
                 maxLines = 1,
+                overflow = h1Overflow,
                 //modifier = Modifier.fillMaxWidth(),
             )
         }

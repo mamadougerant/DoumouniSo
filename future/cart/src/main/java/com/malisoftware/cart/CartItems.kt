@@ -81,6 +81,7 @@ fun CartItems(
     val total = items.sumOf { it.price * it.quantity }
     val minPrice = business?.restaurant?.minPrice ?: 0.0
 
+
     Scaffold (
         topBar = {
             CustomTopBar(
@@ -129,6 +130,7 @@ fun CartItems(
                         title = "Ajouter des plats pour atteindre le minimum de commande"
                     )
                 }
+                Log.d("CartItems", "Business: ${business}")
                 AnimatedVisibility (
                     business?.restaurant?.isOpen == false,
                     enter = expandVertically(),

@@ -2,7 +2,7 @@ package com.malisoftware.backend.di
 
 import com.malisoftware.backend.dataUseCase.DataUseCase
 import com.malisoftware.backend.remote.DataApi
-import com.data.backend.repository.Repository
+import com.malisoftware.backend.repository.Repository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
 import com.malisoftware.theme.AppTheme
 
 @Composable
@@ -22,11 +23,17 @@ fun TextWithIcon(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        leadingIcon?.invoke()
-        Text(
-            text = title,
-            style = customStyle ?: AppTheme.typography.headlineLarge
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            leadingIcon?.invoke()
+            Text(
+                text = title,
+                style = customStyle ?: AppTheme.typography.headlineLarge
+            )
+
+        }
         icon()
     }
 }

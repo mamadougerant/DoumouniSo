@@ -134,7 +134,14 @@ class HomeRoomViewModel @Inject constructor(
         }
     }
 
-    suspend fun insertOrderItem(item: ItemsEntity,) = roomDb.insertOrderItem(item).collect{}
+    suspend fun insertOrderItem(item: ItemsEntity, quantity: Int) {
+        if (quantity == 0) {
+            deleteOrderItem(item)
+            return
+        }
+        roomDb.insertOrderItem(item).collect {}
+    }
+    suspend fun deleteOrderItem (itemsEntity: ItemsEntity) = roomDb.deleteOrderItem(itemsEntity).collect{}
 
     suspend fun insertOrder(
         shopData: BusinessData,

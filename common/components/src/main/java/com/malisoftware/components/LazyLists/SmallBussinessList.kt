@@ -27,7 +27,7 @@ fun SmallBusinessList(
     title: String = "Boissons",
     subtitle: String = "null",
     trailingContent: @Composable (List<Items>) -> Unit = {},
-    onQuantityChange: (Items) -> Unit = {},
+    onQuantityChange: (Items,Int) -> Unit = { items: Items, i: Int -> },
 ) {
     Column (
         modifier = modifier,

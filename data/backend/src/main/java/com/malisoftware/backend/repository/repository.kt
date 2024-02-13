@@ -1,5 +1,6 @@
-package com.data.backend.repository
+package com.malisoftware.backend.repository
 
+import android.util.Log
 import com.malisoftware.backend.TestItemObject
 import com.malisoftware.backend.TestObjects
 import com.malisoftware.backend.remote.DataApi
@@ -53,7 +54,37 @@ class Repository : DataApi {
     }
 
     override fun getRestaurantListBySearch(search: String): List<BusinessData> {
-        return checkIfBusinessesAreOpen(TestObjects.restaurants.filter { it.title.contains(search) || it.description.contains(search) })
+        val splitSearch = search.split(" ").filter { it.isNotEmpty() && it.isNotBlank() }
+        return checkIfBusinessesAreOpen(TestObjects.restaurants.filter { businessData ->
+            businessData.title == search
+                     || businessData.category == search
+                     || businessData.description == search
+                     || businessData.promotion.contains(search,true)
+                     || businessData.title.contains(search,true)
+                     || businessData.description.contains(search,true)
+                     || businessData.category.contains(search,true)
+                     || splitSearch.any { it in businessData.title }
+                     || splitSearch.any { it in businessData.description }
+                     || splitSearch.any { it in businessData.category }
+
+        })
+    }
+
+    override fun getShopListBySearch(search: String): List<BusinessData> {
+        val splitSearch = search.split(" ").filter { it.isNotEmpty() && it.isNotBlank() }
+        return checkIfBusinessesAreOpen(TestObjects.shops.filter { businessData ->
+            businessData.title == search
+                    || businessData.category == search
+                    || businessData.description == search
+                    || businessData.promotion.contains(search,true)
+                    || businessData.title.contains(search,true)
+                    || businessData.description.contains(search,true)
+                    || businessData.category.contains(search,true)
+                    || splitSearch.any { it in businessData.title }
+                    || splitSearch.any { it in businessData.description }
+                    || splitSearch.any { it in businessData.category }
+
+        })
     }
 
 

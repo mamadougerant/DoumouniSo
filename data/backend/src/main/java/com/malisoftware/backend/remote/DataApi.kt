@@ -18,6 +18,7 @@ interface DataApi {
     fun getRestaurantCategoryList(): List<CategoryData>
     fun getShopCategoryList(): List<CategoryData>
     fun getRestaurantListBySearch(search: String): List<BusinessData>
+    fun getShopListBySearch(search: String): List<BusinessData>
 
     // Order
     fun getRestaurantItems(restaurantId: String): List<BusinessItems>

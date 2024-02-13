@@ -127,7 +127,7 @@ object TestObjects {
             deliveryFee = 2000.00,
             isOpen = true,
             openingTime = "01:00:00.000000",
-            closingTime = "20:00:00.000000",
+            closingTime = "23:00:00.000000",
             openingDays = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
             raterCount = 5000,
             goodRate = 4000,
@@ -1236,7 +1236,7 @@ object TestItemObject{
             items = listOf(
                 Items(
                     id = 132,
-                    title = "Poulet",
+                    title = "Mamadou et Bineta",
                     imageUrl = "https://upload.wikimedia.org/wikipedia/commons/d/d2/Mamadou_et_Bineta%28nouveau_syllabaire_%29.jpg",
                     price = 2500.00,
                     description = "",

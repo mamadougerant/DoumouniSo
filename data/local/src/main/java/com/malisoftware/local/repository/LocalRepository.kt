@@ -12,6 +12,7 @@ import com.malisoftware.local.local.UserFavoritesEntity
 import com.malisoftware.local.mappers.toRealmBusiness
 import com.malisoftware.local.mappers.toRealmItems
 import com.malisoftware.local.reamlModel.RealmItemOrder
+import com.malisoftware.local.reamlModel.SearchQuery
 import io.realm.kotlin.Realm
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
@@ -27,6 +28,37 @@ class LocalRepository(
     private val realm: Realm
 ) {
     private val ioDispatcher = Dispatchers.IO
+
+    // search query
+    fun insertSearchQuery(query: String) = flow {
+        emit(UiEvent.Loading())
+        realm.write {
+            val searchQuery = SearchQuery().apply { this.query = query }
+            copyToRealm(searchQuery, UpdatePolicy.ALL)
+        }
+        emit(UiEvent.Success("Query added"))
+    }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
+
+    fun deleteSearchQuery(query: String) = flow {
+        emit(UiEvent.Loading())
+        realm.write {
+            val searchQuery = realm.query<SearchQuery>("query == $0", query).find().firstOrNull()
+            if (searchQuery != null) {
+                this.delete(searchQuery)
+            }
+        }
+        emit(UiEvent.Success("Query deleted"))
+    }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
+
+    fun getSearchQuery() = flow {
+        emit(UiEvent.Loading())
+        val result = realm
+            .query<SearchQuery>()
+            .asFlow()
+            .map { it.list.toList() }
+        emit(UiEvent.Success(result))
+    }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
+
     // Realm
     fun getAllCompletedOrder() = flow {
         emit(UiEvent.Loading())

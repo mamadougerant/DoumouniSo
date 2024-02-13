@@ -109,10 +109,16 @@ fun ShopItem(
             val item = updateQuantity((((shopFilterContents ?: ("" to listOf()))).second), orderItem)
 
             GridItemList (
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(0.dp),
                 items = item,
                 title = (shopFilterContents ?: ("" to listOf())).first,
-                onQuantityChange = { },
+                onQuantityChange = { item, quantity ->
+                    scope.launch {
+                        shopRoomVm.insertOrderItem(item = item.toItemEntity(shop!!.id), quantity)
+                        shopRoomVm.insertOrder(shopData = shop!!, id = shop!!.id,)
+                        //Log.d("ShopItem", "OrderItem: ${item.quantity}")
+                    }
+                },
                 onClick = {
                     openSheet = true
                     sheetContent = it
@@ -129,6 +135,9 @@ fun ShopItem(
                 }
             )
         } } else null,
+        onHeartClick = {
+            addFavorite(scope, shopRoomVm, shop!!, it)
+        },
         isFavorite = shop!!.id in favoritesIds,
 
     ) {
@@ -162,11 +171,11 @@ fun ShopItem(
                     trailingContent = {
                         ArrowForward(onClick = { shopOrderVM.setFilterContent(title,it) })
                     },
-                    onQuantityChange = {
-                        if (it.quantity == 0) return@ItemList
+                    onQuantityChange = { item,quantiy ->
                         scope.launch {
-                            shopRoomVm.insertOrderItem(item = it.toItemEntity(shop!!.id))
+                            shopRoomVm.insertOrderItem(item = item.toItemEntity(shop!!.id), quantiy)
                             shopRoomVm.insertOrder(shopData = shop!!, id = shop!!.id,)
+                            Log.d("ShopItem", "OrderItem: ${item.quantity}")
                         }
                     }
                 )
@@ -183,7 +192,7 @@ fun ShopItem(
             onBottomBarClick = {
                 scope.launch {
                     openSheet = false
-                    shopRoomVm.insertOrderItem(item = it.toItemEntity(shop!!.id))
+                    shopRoomVm.insertOrderItem(item = it.toItemEntity(shop!!.id), it.quantity)
                     shopRoomVm.insertOrder(shopData = shop!!, shop!!.id )
                 }
             },

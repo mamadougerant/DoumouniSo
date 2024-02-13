@@ -25,7 +25,7 @@ internal object InternalRestaurantApi: RestaurantApi {
             startDestination = MainFeatures.RESTAURANT,
             route = Roots.RESTAURANT_ROOT
         ){
-            composable(MainFeatures.RESTAURANT){
+            composable(MainFeatures.RESTAURANT){backStack->
                 val viewModel: RestaurantViewModel = hiltViewModel()
                 val orderViewModel: RestaurantOrderVM = hiltViewModel()
                 val roomVm: RoomViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
@@ -33,7 +33,7 @@ internal object InternalRestaurantApi: RestaurantApi {
                     navController = navController,
                     viewModel = viewModel,
                     roomVm = roomVm,
-                    orderViewModel = orderViewModel
+                    orderViewModel = orderViewModel,
                 )
             }
             composable(MainFeatures.RESTAURANT_ITEM + "/{id}"){ backStack->

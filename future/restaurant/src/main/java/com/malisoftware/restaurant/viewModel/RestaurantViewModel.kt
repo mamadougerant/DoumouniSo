@@ -71,6 +71,14 @@ class RestaurantViewModel @Inject constructor(
     val restaurantById = _restaurantById.asStateFlow()
 
 
+    suspend fun fetchAllData(){
+        getSponsors()
+        getRestaurantCategoryList()
+        getRestaurantList()
+        getSponsoredRestaurant()
+        getDiscountedRestaurant()
+    }
+
 
     fun getSponsoredRestaurant(){
         val sponsoredRestaurant = _restaurantList.value.filter { it.sponsored && it.isOpen }

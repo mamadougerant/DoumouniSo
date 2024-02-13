@@ -1,5 +1,6 @@
 package com.malisoftware.components.container
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +28,9 @@ fun BusinessInfo(
     subtitle: String = "Subtitle",
     subInCard1: String = "subInCard1",
     subInCard2: String = "subInCard2",
+    subInCard2Color: Color = Color.Unspecified,
+    subInCard1Color: Color = Color.Unspecified
+
 ) {
     Column(
         modifier = modifier
@@ -56,7 +60,7 @@ fun BusinessInfo(
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp),
-                colors = CardDefaults.cardColors(Color.Unspecified),
+                colors = CardDefaults.cardColors(subInCard1Color),
             ) {
                 Text(
                     text = subInCard1,
@@ -72,7 +76,8 @@ fun BusinessInfo(
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp),
-                colors = CardDefaults.cardColors(Color.Unspecified),
+                colors = CardDefaults.cardColors(subInCard2Color),
+
             ) {
                 Text(
                     text = subInCard2,

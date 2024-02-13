@@ -1,21 +1,19 @@
 package com.malisoftware.home
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,7 +30,6 @@ import com.malisoftware.components.TextWithIcon
 import com.malisoftware.components.component.scaffold.HomeScaffoldWithBar
 import com.malisoftware.components.container.ImageContainer
 import com.malisoftware.components.container.RowListContainer
-import com.malisoftware.components.container.SmallBusinessContainer
 import com.malisoftware.components.container.StoreContainer
 import com.malisoftware.components.icons.ArrowForward
 import com.malisoftware.model.BusinessData
@@ -40,11 +37,11 @@ import com.malisoftware.model.Items
 import com.doumounidron.theme.DoumouniDronTheme
 import com.future.home.HomeShimmer
 import com.malisoftware.home.viewModel.HomeViewModel
-import com.future.search.RestaurantSearchContent
 import com.malisoftware.components.container.ContinueOrder
 import com.malisoftware.home.viewModel.HomeRoomViewModel
 import com.malisoftware.local.mappers.toBusinessData
 import com.malisoftware.local.mappers.toItemEntity
+import com.malisoftware.search.SearchContent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -55,6 +52,7 @@ fun MainHome(
     homeViewModel: HomeViewModel,
     homeRoomViewModel: HomeRoomViewModel,
 ) {
+    // TODO add empty card pic and empty command pic
     LaunchedEffect(key1 = homeViewModel){
         homeViewModel.fetchAllData()
         homeRoomViewModel.getRecentlyViewed()
@@ -76,7 +74,7 @@ fun MainHome(
     val favorites by homeRoomViewModel.favorites.collectAsState()
 
     val orders by homeRoomViewModel.orders.collectAsState()
-    val orderList = orders.shuffled().take(1)
+    val orderList = orders.filter { it.restaurant.isOpen }.shuffled().take(1)
 
     val sponsoredRestaurants by homeViewModel.sponsorRestaurantList.collectAsState()
     val sponsoredShops by homeViewModel.sponsorShopList.collectAsState()
@@ -87,27 +85,34 @@ fun MainHome(
 
     val scope = rememberCoroutineScope()
 
-    Log.d("MainHome3", "loading: $loading")
+    var searchQuery by remember { mutableStateOf("") }
 
     HomeScaffoldWithBar (
         modifier = Modifier.padding(horizontal = 10.dp),
         text = "Rechercher ",
         searchTabList = listOf(
-            "Restaurant" to { RestaurantSearchContent(
+            "Restaurant" to { SearchContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
-            ) },
-            "Market" to { RestaurantSearchContent(
+                onSearchResultClick = {searchQuery = it },
+                query = searchQuery
+            ) { navigateToItem(navController, it) }
+            },
+            "Market" to { SearchContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
-                searchResult = emptyList()
-
-            ) },
+                isRestaurant = false,
+                onSearchResultClick = {searchQuery = it },
+                query = searchQuery
+            ) { navigateToItem(navController, it) }
+            },
 
         ),
-        onQueryChange = { },
+        initialQuery = searchQuery,
+        onSearch = { searchQuery = it  },
+        onQueryChange = { searchQuery = it },
         navIcon = {
             /*
             Column (
@@ -150,6 +155,10 @@ fun MainHome(
                 modifier = Modifier,
                 categories = restaurantCategories,
                 trailingContent = {},
+                onClick = {
+                    //TODO : handle the click an other way
+                    navController.navigate(MainFeatures.RESTAURANT)
+                }
             )
         }
 
@@ -193,6 +202,10 @@ fun MainHome(
                 trailingContent = {
                     ArrowForward(onClick = { navController.navigate(Roots.SHOP_ROOT) })
                 },
+                onClick = {
+                    //TODO : handle the click an other way
+                    navController.navigate(MainFeatures.SHOP)
+                }
 
             )
 
@@ -221,9 +234,9 @@ fun MainHome(
                     onClick = { },
                     items = item,
                     onForward = { navigateToItem(navController, shopToPromote) },
-                    onQuantityChange = {
+                    onQuantityChange = { item, quantity ->
                         scope.launch {
-                            homeRoomViewModel.insertOrderItem(item = it.toItemEntity(shopToPromote.id))
+                            homeRoomViewModel.insertOrderItem(item = item.toItemEntity(shopToPromote.id),quantity)
                             homeRoomViewModel.insertOrder(shopData = shopToPromote, id = shopToPromote.id,)
                         }
                     },
@@ -262,9 +275,9 @@ fun MainHome(
                     onClick = { },
                     items = item,
                     onForward = { navigateToItem(navController, shopToPromote)  },
-                    onQuantityChange = {
+                    onQuantityChange = { item, quantity ->
                         scope.launch {
-                            homeRoomViewModel.insertOrderItem(item = it.toItemEntity(shopToPromote.id))
+                            homeRoomViewModel.insertOrderItem(item = item.toItemEntity(shopToPromote.id),quantity)
                             homeRoomViewModel.insertOrder(shopData = shopToPromote, id = shopToPromote.id,)
                         }
                     },

@@ -45,13 +45,15 @@ object DBModule {
     @Singleton
     fun provideRealmDB() : Realm {
         return Realm.open(
-            configuration = RealmConfiguration.create(
+            configuration = RealmConfiguration.Builder(
                 schema = setOf(
                     RealmBusiness::class,
                     RealmItems::class,
                     RealmItemOrder::class
                 )
             )
+                .schemaVersion(2)
+                .build()
 
         )
     }

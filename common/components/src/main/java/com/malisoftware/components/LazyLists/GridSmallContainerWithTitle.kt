@@ -20,6 +20,7 @@ fun GridSmallContainerWithTitle(
     list: List<String> = List(7) { "Hellovvh" },
     onClick: (String) -> Unit = { }
 ) {
+    if (list.isEmpty()) return
     Column (
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(10.dp),

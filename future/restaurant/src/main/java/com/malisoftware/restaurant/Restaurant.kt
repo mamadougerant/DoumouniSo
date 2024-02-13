@@ -1,21 +1,14 @@
 package com.malisoftware.restaurant
 
-import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,7 +18,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -40,16 +36,12 @@ import com.malisoftware.components.LazyLists.ItemList
 import com.malisoftware.components.LazyLists.RoundedCategoryList
 import com.malisoftware.components.LazyLists.RowBusinessList
 import com.malisoftware.components.TextWithIcon
-import com.malisoftware.components.component.RangeSliderWithData
-import com.malisoftware.components.component.RangeSliderWithGraph
 import com.malisoftware.components.component.scaffold.HomeScaffoldWithBar
 import com.malisoftware.components.constants.FilterConstant
 import com.malisoftware.components.icons.ArrowForward
 import com.malisoftware.components.icons.NavigationIcon
-import com.malisoftware.components.formatPrice
 import com.malisoftware.model.BusinessData
 import com.malisoftware.model.CategoryData
-import com.malisoftware.theme.AppTheme
 import com.doumounidron.theme.DoumouniDronTheme
 import com.future.restaurant.RestaurantShimmer
 import com.malisoftware.components.component.PriceSlider
@@ -58,8 +50,8 @@ import com.malisoftware.components.container.ContinueOrder
 import com.malisoftware.local.mappers.toBusinessData
 import com.malisoftware.restaurant.viewModel.RestaurantOrderVM
 import com.malisoftware.restaurant.viewModel.RestaurantViewModel
-import com.malisoftware.local.mappers.toBusinessEntity
 import com.malisoftware.restaurant.viewModel.RoomViewModel
+import com.malisoftware.search.SearchContent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -69,16 +61,12 @@ fun Restaurant(
     navController: NavHostController,
     viewModel: RestaurantViewModel,
     roomVm: RoomViewModel,
-    orderViewModel: RestaurantOrderVM
+    orderViewModel: RestaurantOrderVM,
 ) {
 
     // TODO: solve price filter issues
     LaunchedEffect(key1 = viewModel){
-        viewModel.getSponsors()
-        viewModel.getRestaurantCategoryList()
-        viewModel.getRestaurantList()
-        viewModel.getSponsoredRestaurant()
-        viewModel.getDiscountedRestaurant()
+        viewModel.fetchAllData()
         roomVm.getRecentlyViewed()
     }
     LaunchedEffect(key1 = roomVm.favorite, ){
@@ -87,6 +75,7 @@ fun Restaurant(
     LaunchedEffect(key1 = roomVm.orders, ){
         roomVm.getOrders()
     }
+
 
     val orders by roomVm.orders.collectAsState()
 
@@ -108,22 +97,31 @@ fun Restaurant(
     // use for the filter
     val filteredRestaurantList by viewModel.restaurantsByCategory.collectAsState()
 
-    val orderList = orders.filter { it.restaurant.isRestaurant }.shuffled().take(1)
+    val orderList = orders.filter { it.restaurant.isRestaurant && it.restaurant.isOpen }.shuffled().take(1)
 
 
     val loading by viewModel.loading.collectAsState(true)
 
     val scope = rememberCoroutineScope()
 
-    Log.d("Restaurant", "filteredRestaurantList: $filteredRestaurantList")
+    var searchQuery by remember { mutableStateOf("") }
 
     HomeScaffoldWithBar (
         modifier = Modifier.padding(horizontal = 10.dp),
         text = "Rechercher ",
         searchTabList = listOf(
-            "Restaurant" to { },
+            "Restaurant" to { SearchContent(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                onSearchResultClick = {searchQuery = it },
+                query = searchQuery
+            ) { MainFeatures.RESTAURANT_ITEM+"/${it.id}" }
+            }
         ),
-        onQueryChange = { },
+        initialQuery = searchQuery,
+        onSearch = { searchQuery = it  },
+        onQueryChange = { searchQuery = it },
         navIcon = {
             TextWithIcon(
                 title = "Restaurant",

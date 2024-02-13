@@ -49,18 +49,19 @@ fun CustomSearchBar(
     text: String = "Search",
     onSearch: (String) -> Unit = {},
     tabList: List<Pair<String,@Composable () -> Unit>>,
+    initialQuery: String = "",
     activeContainerColor: Color = Color.Unspecified,
     onQueryChange: (String) -> Unit = {},
     onActiveChange: (Boolean) -> Unit = {},
     onGoBack: () -> Unit = {},
 ) {
-    var query by remember{ mutableStateOf("") }
+    var query by remember (initialQuery) { mutableStateOf(initialQuery) }
     var active by remember{ mutableStateOf(false) }
     val containerColor = if (!active) Color.LightGray else Color.LightGray
     SearchBar(
         modifier = modifier
             .padding(horizontal = if (active) 0.dp else 10.dp),
-        query = query,
+        query = if (active) query else "",
         onQueryChange = { query = it; onQueryChange(it) },
         onSearch = onSearch,
         active = active,
@@ -84,7 +85,10 @@ fun CustomSearchBar(
         placeholder = { Text(text = text, style = MaterialTheme.typography.titleSmall) },
         trailingIcon = {
             ClearIcon(onClick = {
-                if (active && query.isNotEmpty()) query = "" else onGoBack()
+                if (active && query.isNotEmpty()) {
+                    onQueryChange("")
+                    query = ""
+                } else onGoBack()
             })
         },
         shape = CircleShape,

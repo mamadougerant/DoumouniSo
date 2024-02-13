@@ -30,14 +30,14 @@ val CustomTypography = Typography(
     ),
     headlineLarge = TextStyle(
         fontWeight = FontWeight.Bold,
-        fontSize = 24.sp,
+        fontSize = 22.sp,
         lineHeight = 18.sp,
         letterSpacing = 0.sp,
         fontFamily = montSerrat,
     ),
     titleLarge = TextStyle(
         fontWeight = FontWeight.Bold,
-        fontSize = 20.sp,
+        fontSize = 18.sp,
         fontFamily = montSerrat,
     ),
     titleMedium = TextStyle(

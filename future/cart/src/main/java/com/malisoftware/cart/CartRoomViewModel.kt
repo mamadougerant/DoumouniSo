@@ -60,6 +60,12 @@ class CartRoomViewModel @Inject constructor(
 
     }
 
+    suspend fun deleteOrderAllItem(order: List<ItemsEntity>, ) {
+        order.forEach {
+            roomDb.deleteOrderItem(it).collect{}
+        }
+    }
+
     suspend fun deleteOrderItem (itemsEntity: ItemsEntity) = roomDb.deleteOrderItem(itemsEntity).collect{}
 
     suspend fun updateItemOrderEntity(

@@ -140,7 +140,7 @@ fun Order(
                     },
                     indexInitial = index,
                     modifier = Modifier
-                        .padding(horizontal = 50.dp)
+                        .padding(horizontal = 20.dp)
                         .offset(y = (-10).dp)
                 )
             }

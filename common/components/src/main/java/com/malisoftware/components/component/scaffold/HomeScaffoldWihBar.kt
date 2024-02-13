@@ -37,6 +37,8 @@ fun HomeScaffoldWithBar(
     actions: (@Composable (Color) -> Unit)? = null,
     onQueryChange: (String) -> Unit = {},
     searchBarActiveColor: Color = Color.White,
+    onSearch: (String) -> Unit = {},
+    initialQuery: String = "",
     shimmerContent: (@Composable (PaddingValues) -> Unit)? = null,
     filterContents: (LazyListScope.() -> Unit)? = null,
     content: LazyListScope.() -> Unit = {},
@@ -68,7 +70,9 @@ fun HomeScaffoldWithBar(
                     tabList = searchTabList,
                     onQueryChange = onQueryChange,
                     activeContainerColor = searchBarActiveColor,
-                    onActiveChange = { isSearchActive = it }
+                    onActiveChange = { isSearchActive = it },
+                    onSearch = onSearch,
+                    initialQuery = initialQuery
                 )
             }
         }

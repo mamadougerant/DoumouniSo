@@ -76,6 +76,7 @@ dependencies {
     implementation(project(":common:theme"))
     implementation(project(":data:model"))
     implementation(project(":common:futureapi"))
+    implementation(project(":future:search"))
 //    implementation(project(":ai:gpt"))
     implementation(project(":data:backend"))
     implementation(project(":data:local"))

@@ -35,6 +35,8 @@ import androidx.navigation.NavController
 import com.malisoftware.components.OrderCompletedScreen
 import com.malisoftware.components.TextDisposition
 import com.malisoftware.components.TextWithIcon
+import com.malisoftware.components.constants.NavConstant.MainFeatures
+import com.malisoftware.components.constants.NavConstant.Roots
 import com.malisoftware.components.container.AddressIcon
 import com.malisoftware.components.container.AddressModal
 import com.malisoftware.components.container.RadioColumn
@@ -100,6 +102,7 @@ fun CheckOut(
                         if (business != null) {
                             cartVm.insertCompletedOrder(business, orders)
                             cartVm.deleteOrder(business, restaurantId)
+                            cartVm.deleteOrderAllItem(orders)
                         }
                     }
                 },
@@ -208,9 +211,9 @@ fun CheckOut(
         if (showOrderCompletedScreen) {
             OrderCompletedScreen(
                 onFinished = {
-                    //TODO : navigate to commandes
                     showOrderCompletedScreen = !it
-                    navController.navigateUp()
+                    navController.navigate(MainFeatures.CART)
+                    navController.navigate(Roots.ORDER_ROOT)
                 }
             )
         }

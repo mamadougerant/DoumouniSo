@@ -31,6 +31,7 @@ import com.malisoftware.components.component.scaffold.NoScrollableContentTabs
 import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.container.CartItemContainer
 import com.malisoftware.local.local.ItemOrderEntity
+import com.malisoftware.local.local.ItemsEntity
 import com.malisoftware.local.mappers.toBusinessData
 import com.malisoftware.local.mappers.toBusinessEntity
 import kotlinx.coroutines.launch
@@ -41,12 +42,14 @@ fun Cart(
     navController: NavController,
     cartVm: CartRoomViewModel,
 ) {
-
+    // TODO add the ability to move from restaurant to shop and vice versa
+    // TODO prevent the paysage mode
     LaunchedEffect(key1 = cartVm,) {
         cartVm.getOrders()
     }
     var openSheet by remember { mutableStateOf(false) }
     var sheetContent by remember { mutableStateOf(ItemOrderEntity()) }
+    val sheetItems by cartVm.items.collectAsState()
 
     val orders by cartVm.orders.collectAsState()
 
@@ -81,7 +84,7 @@ fun Cart(
                     },
                     indexInitial = index,
                     modifier = Modifier
-                        .padding(horizontal = 50.dp)
+                        .padding(horizontal = 20.dp)
                         .offset(y = (-10).dp)
                 )
             }
@@ -103,6 +106,7 @@ fun Cart(
                     business = order.restaurant.toBusinessData(),
                     onClear = {
                         sheetContent = order
+                        scope.launch { cartVm.getAllOrderByRestaurantId(order.id) }
                         openSheet = true
                     },
                     onConfirm = {
@@ -124,7 +128,9 @@ fun Cart(
                 onDismissRequest = { openSheet = false },
                 onConfirm = {
                     scope.launch {
+                        //TODO: items are not deleted
                         cartVm.deleteOrder(sheetContent, sheetContent.id)
+                        cartVm.deleteOrderAllItem(sheetItems)
                         openSheet = false
                     }
                 },

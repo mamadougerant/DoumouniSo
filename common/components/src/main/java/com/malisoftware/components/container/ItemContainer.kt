@@ -181,6 +181,7 @@ private fun ColumnScope.AnimatedPlusMinusIcon(
             .align(Alignment.CenterHorizontally)
     ) {
         AnimatedVisibility(visible = num > 0) {
+            Log.d("ShopItem", "num: $num")
             IconButton(
                 onClick = { if (num in 1..9 ) { num-- ; onQuantityChange(num) }  },
                 colors = IconButtonDefaults.iconButtonColors(Color.Unspecified, Color.Black),

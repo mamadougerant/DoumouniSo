@@ -25,7 +25,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -58,6 +61,7 @@ import com.malisoftware.local.mappers.toBusinessData
 import com.malisoftware.local.mappers.toBusinessEntity
 import com.malisoftware.local.mappers.toItemEntity
 import com.malisoftware.model.Items
+import com.malisoftware.search.SearchContent
 import com.malisoftware.shop.viewModel.ShopOrderVm
 import com.malisoftware.shop.viewModel.ShopRoomVm
 import kotlinx.coroutines.CoroutineScope
@@ -104,9 +108,9 @@ fun ShopScreen(
 
 
 
-    val orderList = orders.filter { !it.restaurant.isRestaurant }.shuffled().take(1)
+    val orderList = orders.filter { !it.restaurant.isRestaurant && it.restaurant.isOpen  }.shuffled().take(1)
 
-
+    var searchQuery by remember { mutableStateOf("") }
 
     val filteredShopList by viewModel.shopByCategory.collectAsState()
 
@@ -114,9 +118,20 @@ fun ShopScreen(
         modifier = Modifier.padding(horizontal = 10.dp),
         text = "Rechercher ",
         searchTabList = listOf(
-            "Market" to { },
+            "Market" to { SearchContent(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                isRestaurant = false,
+                onSearchResultClick = {searchQuery = it },
+                query = searchQuery
+            ) { MainFeatures.SHOP_ITEM + "/${it.id}" }
+            }
+
         ),
-        onQueryChange = { },
+        initialQuery = searchQuery,
+        onSearch = { searchQuery = it  },
+        onQueryChange = { searchQuery = it },
         navIcon = {
             TextWithIcon(
                 title = "Market",
@@ -215,9 +230,9 @@ fun ShopScreen(
                     onClick = { },
                     items = item,
                     onForward = { navController.navigate(MainFeatures.SHOP_ITEM + "/${shopInPromotion[0].id}") },
-                    onQuantityChange = {
+                    onQuantityChange = { item , quantity ->
                         scope.launch {
-                            shopRoomVm.insertOrderItem(item = it.toItemEntity(shopInPromotionRandom.id))
+                            shopRoomVm.insertOrderItem(item = item.toItemEntity(shopInPromotionRandom.id),quantity)
                             shopRoomVm.insertOrder(shopData = shopInPromotionRandom, id = shopInPromotionRandom.id,)
                         }
                     },
@@ -257,9 +272,7 @@ fun ShopScreen(
         ColumnBusinessList(
             modifier = Modifier,
             businessData = shopList,
-            title = { TextWithIcon(title = "Tous les Market", modifier = Modifier.fillMaxWidth() ){
-                ArrowForward()
-            } },
+            title = { TextWithIcon(title = "Tous les Market", modifier = Modifier.fillMaxWidth() ){} },
             onClick = { navController.navigate(MainFeatures.SHOP_ITEM + "/${it.id}") },
             favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
             onFavoriteClick = { businessData, b -> addFavorite(scope, shopRoomVm, businessData, b) }

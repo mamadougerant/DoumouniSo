@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -130,6 +131,7 @@ fun OrderScreen(
                     h1 = item.title,
                     h2 = item.formattedPrice,
                     h3 = item.description,
+                    h1Overflow = TextOverflow.Ellipsis,
                     h1Style = AppTheme.typography.headlineLarge,
                     h2Style = AppTheme.typography.titleMedium,
                     h3Style = AppTheme.typography.titleSmall,
@@ -166,7 +168,7 @@ fun OrderBottomBar(
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Row (
                 modifier = Modifier.weight(1f),
@@ -189,7 +191,7 @@ fun OrderBottomBar(
             TextButton(
                 onClick = { onAddClick(number) },
                 modifier = Modifier
-                    .weight(2f)
+                    .weight(1.8f)
                     .height(75.dp)
                     .padding(vertical = 10.dp),
                 contentPadding = PaddingValues(5.dp),

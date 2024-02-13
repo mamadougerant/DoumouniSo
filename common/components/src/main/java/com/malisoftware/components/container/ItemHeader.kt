@@ -42,9 +42,11 @@ fun LazyListScope.ItemHeader(
                 title = shop.title,
                 subtitle = shop.feedback + " ⭐ - " + shop.formattedMinPrice + promotion.toString(),
                 subInCard1 = subCard1,
-                subInCard2 = shop.formattedDeliveryFee
+                subInCard2 = shop.formattedDeliveryFee,
+                subInCard1Color = if (!shop.isOpen) Color.Red else Color.Unspecified,
+                subInCard2Color = if (shop.deliveryFee == 0.0 && shop.isOpen ) Color.Green else Color.Unspecified,
 
-                )
+            )
             ItemWithTitleBar(
                 data = itemsInPromotion,
                 onClick = {

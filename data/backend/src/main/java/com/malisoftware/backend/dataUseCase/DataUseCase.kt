@@ -96,12 +96,19 @@ class DataUseCase(
 
     fun getRestaurantListBySearch(search: String) = flow {
         emit(UiEvent.Loading())
-        delay(1000)
+        delay(500)
         val result = dataApi.getRestaurantListBySearch(search)
         emit(UiEvent.Success(result))
     }.catch {
         emit(UiEvent.Error(message = it.message.toString()))
     }.flowOn(ioDispatcher)
+
+    fun getShopListBySearch(search: String) = flow {
+        emit(UiEvent.Loading())
+        delay(500)
+        val result = dataApi.getShopListBySearch(search)
+        emit(UiEvent.Success(result))
+    }.catch { emit(UiEvent.Error(message = it.message.toString())) }.flowOn(ioDispatcher)
 
     fun getRestaurantItems(restaurantId: String) = flow {
         emit(UiEvent.Loading())

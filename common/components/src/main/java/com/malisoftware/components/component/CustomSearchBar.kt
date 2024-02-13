@@ -23,11 +23,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.component.scaffold.ContentTabs
+import com.malisoftware.components.component.scaffold.NoScrollableContentTabs
 
 /**
  * A composable function that creates a custom search bar with tabs.
@@ -88,6 +90,13 @@ fun CustomSearchBar(
         shape = CircleShape,
     ) {
         if (tabList.size == 1) tabList[0].second()
+        else if (tabList.size < 3) NoScrollableContentTabs(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
+                .padding(horizontal = 20.dp),
+            list = tabList
+        )
         else ContentTabs(tabList)
     }
 }

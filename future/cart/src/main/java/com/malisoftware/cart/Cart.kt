@@ -31,6 +31,7 @@ import com.malisoftware.components.component.scaffold.NoScrollableContentTabs
 import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.container.CartItemContainer
 import com.malisoftware.local.local.ItemOrderEntity
+import com.malisoftware.local.mappers.toBusinessData
 import com.malisoftware.local.mappers.toBusinessEntity
 import kotlinx.coroutines.launch
 
@@ -99,7 +100,7 @@ fun Cart(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
-                    business = order.restaurant.toBusinessEntity(),
+                    business = order.restaurant.toBusinessData(),
                     onClear = {
                         sheetContent = order
                         openSheet = true

@@ -3,6 +3,7 @@ package com.malisoftware.shop.viewModel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.malisoftware.components.uiEvent.UiEvent
+import com.malisoftware.local.local.BusinessEntity
 import com.malisoftware.local.local.ItemOrderEntity
 import com.malisoftware.local.local.ItemsEntity
 import com.malisoftware.local.local.OrderStatus
@@ -27,7 +28,7 @@ class ShopRoomVm  @Inject constructor(
     private val _orders = MutableStateFlow<List<ItemOrderEntity>>(emptyList())
     val orders = _orders.asStateFlow()
 
-    private val _recentlyViewed = MutableStateFlow<List<RecentlyViewedEntity>>(emptyList())
+    private val _recentlyViewed = MutableStateFlow<List<BusinessEntity>>(emptyList())
     val recentlyViewed = _recentlyViewed.asStateFlow()
 
     private val _favorites = MutableStateFlow<List<UserFavoritesEntity>>(emptyList())
@@ -78,33 +79,9 @@ class ShopRoomVm  @Inject constructor(
             status = OrderStatus.PENDING
         )
 
-        roomDb.updateItemOrderEntity(order).collect{
-            when(it){
-                is UiEvent.Loading -> {
-                    Log.d("RoomViewModel", "Loading")
-                }
-                is UiEvent.Success -> {
-                    Log.d("RoomViewModel", "Success")
-                }
-                is UiEvent.Error -> {
-                    Log.d("RoomViewModel", "Error")
-                }
-            }
-        }
+        roomDb.updateItemOrderEntity(order).collect{}
     }
-    suspend fun insertOrderItem(item: ItemsEntity,) = roomDb.insertOrderItem(item).collect{
-        when(it){
-            is UiEvent.Loading -> {
-                Log.d("RoomViewModel", "Loading")
-            }
-            is UiEvent.Success -> {
-                Log.d("RoomViewModel", "Success")
-            }
-            is UiEvent.Error -> {
-                Log.d("RoomViewModel", "Error")
-            }
-        }
-    }
+    suspend fun insertOrderItem(item: ItemsEntity,) = roomDb.insertOrderItem(item).collect{}
 
 
     suspend fun getFavorites() {
@@ -156,6 +133,25 @@ class ShopRoomVm  @Inject constructor(
         )
         roomDb.deleteFavorite(userFavorite).collect{
 
+        }
+    }
+
+    suspend fun getRecentlyViewed() = roomDb.getAllCompletedOrder().collect{
+        when(it){
+            is UiEvent.Loading -> {
+                //Do something
+            }
+            is UiEvent.Success -> {
+                it.data?.collectLatest { value ->
+                    val list = value.map { it.restaurant }.map { it?.toBusinessEntity() ?: BusinessEntity() }
+                    _recentlyViewed.value = list.filter {
+                        it != BusinessEntity() && !it.isRestaurant
+                    }.toSet().toList().take(5)
+                }
+            }
+            is UiEvent.Error -> {
+                //Do something
+            }
         }
     }
 }

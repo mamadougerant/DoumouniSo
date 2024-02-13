@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.malisoftware.components.TextWithIcon
 import com.malisoftware.components.component.scaffold.NoScrollableContentTabs
+import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.container.ImageContainer
 import com.malisoftware.components.container.SmallBusinessContainer
 import com.malisoftware.components.icons.SmallLeftIcon
@@ -62,7 +63,7 @@ fun Order(
     orderViewModel: OrderViewModel
 ) {
 
-    LaunchedEffect(key1 = orderViewModel.orderedItem , ){
+    LaunchedEffect(key1 = orderViewModel.orderedItem){
         orderViewModel.getCompletedOrder()
     }
 
@@ -117,7 +118,7 @@ fun Order(
                                 completedScreen = !completedScreen
                             }
                         ){
-                            val text = if (completedScreen) "En cours" else "Terminée"
+                            val text = if (completedScreen) "En cours" else "Recommander"
                             Text(
                                 text = text,
                                 style = AppTheme.typography.titleMedium,
@@ -157,7 +158,15 @@ fun Order(
                             .fillMaxWidth()
                             .padding(10.dp),
                         business = business,
-                        items = order.items
+                        items = order.items,
+                        onClick = {
+                            // Give the user the ability to reorder the items
+                            // ask if he want to reorder the items or see the restaurant in a bottom sheet
+                            navController.navigate(
+                                (if (business.isRestaurant) MainFeatures.RESTAURANT_ITEM
+                                   else MainFeatures.SHOP_ITEM ) + "/${business.restaurantId}"
+                            )
+                        }
                     )
                     if (it != orderByBusiness.size -1 )Divider()
                 }
@@ -166,17 +175,20 @@ fun Order(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompletedOrderContainer(
     modifier: Modifier = Modifier,
     business: BusinessEntity = BusinessEntity(),
     onReorder: (BusinessEntity,RealmSet<RealmItems>) -> Unit = {_,_->},
     items: RealmSet<RealmItems>,
-    showReorder: Boolean = false
+    showReorder: Boolean = false,
+    onClick: () -> Unit = {}
 ) {
-    Column (
+    OutlinedCard (
         modifier = modifier
             .fillMaxWidth(),
+        onClick = onClick
     ) {
         val total = items.sumOf { it.price * it.quantity } + business.deliveryFee
         SmallBusinessContainer(

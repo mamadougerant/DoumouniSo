@@ -8,6 +8,8 @@ import com.malisoftware.model.CategoryData
 import com.malisoftware.model.Sponsors
 import com.malisoftware.model.Store
 import com.malisoftware.components.uiEvent.UiEvent
+import com.malisoftware.model.BusinessItems
+import com.malisoftware.model.Items
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,6 +46,15 @@ class HomeViewModel @Inject constructor(
     private val _sponsorShopList = MutableStateFlow<List<BusinessData>>((emptyList()))
     val sponsorShopList = _sponsorShopList.asStateFlow()
 
+    private val _shopItems1 = MutableStateFlow<List<BusinessItems>>(emptyList())
+    val shopItems1 = _shopItems1.asStateFlow()
+
+    private val _shopItems2 = MutableStateFlow<List<BusinessItems>>(emptyList())
+    val shopItems2 = _shopItems2.asStateFlow()
+
+    private val _shopItemsInPromotion = MutableStateFlow<List<Items>>(emptyList())
+    val shopItemsInPromotion = _shopItemsInPromotion.asStateFlow()
+
     private val _restaurantLoading = MutableStateFlow(true)
     private val _restaurantCategoryLoading = MutableStateFlow(true)
     private val _storeLoading = MutableStateFlow(true)
@@ -53,7 +64,16 @@ class HomeViewModel @Inject constructor(
         storeLoading || restaurantCategoryLoading
     }
 
-
+    suspend fun fetchAllData () {
+        getSponsors()
+        getStoreList()
+        getRestaurantCategoryList()
+        getShopCategoryList()
+        getRestaurantList()
+        getShopList()
+        getSponsoredRestaurant()
+        getSponsoredShop()
+    }
 
     fun getSponsoredRestaurant(){
         val sponsoredRestaurant = _restaurantList.value.filter { it.sponsored && it.isOpen }
@@ -182,5 +202,23 @@ class HomeViewModel @Inject constructor(
     suspend fun getRestaurantListBySearch(search: String) = dataUseCase.getRestaurantListBySearch(search).collect {
 
     }
+
+    suspend fun getShopItems(shopId: String, key: Int) {
+        dataUseCase.getShopItems(shopId).collect {
+            when (it) {
+                is UiEvent.Loading -> {
+                }
+                is UiEvent.Success -> {
+                    if (key == 1) _shopItems1.value = it.data!!
+                    else _shopItems2.value = it.data!!
+                    val items = it.data!!.map { it.items }.flatten().map { it.items }.flatten().shuffled()
+                    _shopItemsInPromotion.value = items.filter { it.promotion != "" }.take(2)
+                }
+                is UiEvent.Error -> {
+                }
+            }
+        }
+    }
+
 
 }

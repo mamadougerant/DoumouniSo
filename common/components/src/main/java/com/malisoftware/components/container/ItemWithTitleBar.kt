@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -28,39 +29,19 @@ fun ItemWithTitleBar(
     onClick: (Items) -> Unit = {},
 ) {
     if (data.isEmpty()) return
-    Row (
+    LazyRow (
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(15.dp),
     ){
-        @Composable
-        fun CustomCard(
-            item: Items
-        ) {
-            Card (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                shape = RoundedCornerShape(topEnd = 0.dp, topStart =0.dp, bottomEnd = 10.dp, bottomStart = 10.dp),
-                colors = CardDefaults.cardColors(AppTheme.colors.background.copy(alpha = 0.7f)),
-            ){
-                TextDisposition(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 10.dp),
-                    h1 = item.title,
-                    h3 = item.formattedPrice,
-                    h1Style = AppTheme.typography.titleMedium,
-                ) {}
-            }
-        }
-        data.forEachIndexed { _, item ->
+        items(data.size) {
+            val item = data[it]
             ImageContainer(
                 imageUrl = item.imageUrl,
                 modifier = Modifier
-                    .weight(1f)
+                    .fillParentMaxWidth(0.48f)
                     .height(150.dp),
                 rightIcon = { CustomCard(item = item) },
                 onClick = { onClick(item) },
@@ -74,12 +55,30 @@ fun ItemWithTitleBar(
                             textColor = Color.Black,
                             shape = CircleShape,
                             color = Color.LightGray
-
                         )
                 }
             )
-
-
         }
+    }
+}
+@Composable
+fun CustomCard(
+    item: Items
+) {
+    Card (
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp),
+        shape = RoundedCornerShape(topEnd = 0.dp, topStart =0.dp, bottomEnd = 10.dp, bottomStart = 10.dp),
+        colors = CardDefaults.cardColors(AppTheme.colors.background.copy(alpha = 0.7f)),
+    ){
+        TextDisposition(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 10.dp),
+            h1 = item.title,
+            h3 = item.formattedPrice,
+            h1Style = AppTheme.typography.titleMedium,
+        ) {}
     }
 }

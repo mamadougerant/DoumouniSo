@@ -58,7 +58,7 @@ fun CheckOut(
     LaunchedEffect(key1 = cartVm.items.collectAsState(),) {
         cartVm.getAllOrderByRestaurantId(restaurantId)
     }
-    LaunchedEffect(key1 = true){
+    LaunchedEffect(key1 = cartVm.orders){
         cartVm.getOrders()
     }
     // fetch the items updeted in LaunchedEffect

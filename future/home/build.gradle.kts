@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
+    id("io.realm.kotlin")
 }
 
 android {
@@ -78,4 +79,8 @@ dependencies {
     implementation(project(":future:search"))
     implementation(project(":common:futureapi"))
     implementation(project(":data:backend"))
+
+    implementation ("io.realm.kotlin:library-base:1.11.0")
+    //implementation ("io.realm.kotlin:library-sync:1.11.0")// If using Device Sync
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
 }

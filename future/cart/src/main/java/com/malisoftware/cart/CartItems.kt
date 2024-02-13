@@ -59,6 +59,9 @@ fun CartItems(
     LaunchedEffect(key1 = viewModel.items.collectAsState()) {
         viewModel.getAllOrderByRestaurantId(id)
     }
+    LaunchedEffect(key1 = viewModel.orders){
+        viewModel.getOrders()
+    }
     // fetch the items updeted in LaunchedEffect
     val orders by viewModel.items.collectAsState()
     // fecth the businesses and find the one with the id
@@ -77,7 +80,6 @@ fun CartItems(
 
     val total = items.sumOf { it.price * it.quantity }
     val minPrice = business?.restaurant?.minPrice ?: 0.0
-
 
     Scaffold (
         topBar = {

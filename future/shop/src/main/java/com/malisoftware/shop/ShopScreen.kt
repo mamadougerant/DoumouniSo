@@ -51,9 +51,13 @@ import com.malisoftware.model.BusinessData
 import com.malisoftware.model.CategoryData
 import com.malisoftware.theme.AppTheme
 import com.future.shop.viewModel.ShopViewModel
+import com.malisoftware.components.component.PriceSlider
+import com.malisoftware.components.component.PriceSliderWithText
 import com.malisoftware.components.container.ContinueOrder
+import com.malisoftware.local.mappers.toBusinessData
 import com.malisoftware.local.mappers.toBusinessEntity
 import com.malisoftware.local.mappers.toItemEntity
+import com.malisoftware.model.Items
 import com.malisoftware.shop.viewModel.ShopOrderVm
 import com.malisoftware.shop.viewModel.ShopRoomVm
 import kotlinx.coroutines.CoroutineScope
@@ -72,6 +76,7 @@ fun ShopScreen(
         viewModel.getSponsors()
         viewModel.getSponsoredShop()
         viewModel.getShopInPromotion()
+        shopRoomVm.getRecentlyViewed()
     }
 
     LaunchedEffect(key1 = shopRoomVm.favorite, ){
@@ -91,6 +96,7 @@ fun ShopScreen(
     val shopInPromotion by viewModel.shopInPromotions.collectAsState()
 
     val favorites by shopRoomVm.favorite.collectAsState()
+    val recentlyViewed by shopRoomVm.recentlyViewed.collectAsState()
 
     val loading by viewModel.loading.collectAsState(true)
     val scope = rememberCoroutineScope()
@@ -142,7 +148,7 @@ fun ShopScreen(
                     )
                 },
                 onClick = { navController.navigate(MainFeatures.SHOP_ITEM + "/${it.id}") },
-                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
                 onFavoriteClick = { businessData, b -> addFavorite(scope, shopRoomVm, businessData, b) }
             )
             if ((filteredShopList ?: listOf() )!!.isEmpty()) {
@@ -168,24 +174,13 @@ fun ShopScreen(
             RowBusinessListWithShopNav(
                 navController = navController,
                 modifier = Modifier,
-                businessData = listOf(
-                    BusinessData(
-                        id  = "10",
-                    ),
-                    BusinessData(
-                        id  = "11",
-                    ),
-                    BusinessData(
-                        id  = "12",
-                    ),
-                    BusinessData(
-                        id  = "13",
-                    ),
-                ),
+                businessData = recentlyViewed.map { it.toBusinessData() },
                 title = "Recently Viewed",
                 trailingContent = {
                     ArrowForward(onClick = { })
                 },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
+                onFavoriteClick = { businessData, b -> addFavorite(scope, shopRoomVm, businessData, b) }
 
             )
         }
@@ -205,26 +200,13 @@ fun ShopScreen(
             businessData = sponsorShopList,
             title = { Divider() },
             onClick = { navController.navigate(MainFeatures.SHOP_ITEM + "/${it.id}") },
-            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
+            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
             onFavoriteClick = { businessData, b -> addFavorite(scope, shopRoomVm, businessData, b) }
         )
         item {
             if (shopInPromotion.isNotEmpty()) {
-                val items by shopOrderVM.shopItems.collectAsState()
                 val shopInPromotionRandom = shopInPromotion.random()
-                LaunchedEffect(key1 = shopOrderVM.shopsItems){
-                    shopOrderVM.getShopItems(shopInPromotionRandom.id)
-                    shopRoomVm.getAllOrderByShopId(shopInPromotionRandom.id)
-
-                }
-                val orderItem by shopRoomVm.items.collectAsState()
-                val shopItems = items.map { it.items }.flatten().map { it.items }.flatten().take(8)
-
-                val item = (shopItems).map {
-                    val order = orderItem.find { order -> order.title == it.title && order.price == it.price }
-                    Log.d("ShopScreen", "ShopScreen: $orderItem")
-                    if (order != null) { it.copy(quantity = order.quantity) } else { it }
-                }
+                val item = getAShopsItem(shopOrderVM,shopRoomVm,shopInPromotionRandom)
                 SmallBusinessList(
                     modifier = Modifier,
                     title = shopInPromotionRandom.title,
@@ -245,7 +227,7 @@ fun ShopScreen(
 
 
         item {
-            val favorite = favorites.map { it.favoriteBusiness }.filter { !it.isRestaurant }.map { it.toBusinessEntity() }
+            val favorite = favorites.map { it.favoriteBusiness }.filter { !it.isRestaurant }.map { it.toBusinessData() }
             RowBusinessListWithShopNav(
                 modifier = Modifier,
                 businessData = favorite,
@@ -254,7 +236,7 @@ fun ShopScreen(
                     ArrowForward(onClick = { viewModel.setShopByCategory(favorite) })
                 },
                 navController = navController,
-                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
                 onFavoriteClick = { businessData, b -> addFavorite(scope, shopRoomVm, businessData, b) }
 
             )
@@ -268,7 +250,7 @@ fun ShopScreen(
                     ArrowForward(onClick = { viewModel.setShopByCategory(shopInPromotion) })
                 },
                 navController = navController,
-                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
                 onFavoriteClick = { businessData, b -> addFavorite(scope, shopRoomVm, businessData, b) }
             )
         }
@@ -279,10 +261,32 @@ fun ShopScreen(
                 ArrowForward()
             } },
             onClick = { navController.navigate(MainFeatures.SHOP_ITEM + "/${it.id}") },
-            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
+            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
             onFavoriteClick = { businessData, b -> addFavorite(scope, shopRoomVm, businessData, b) }
         )
 
+    }
+}
+
+@Composable
+fun getAShopsItem(
+    shopOrderVM: ShopOrderVm,
+    shopRoomVm: ShopRoomVm,
+    shopInPromotionRandom: BusinessData
+): List<Items> {
+    val items by shopOrderVM.shopItems.collectAsState()
+    LaunchedEffect(key1 = shopOrderVM.shopsItems){
+        shopOrderVM.getShopItems(shopInPromotionRandom.id)
+        shopRoomVm.getAllOrderByShopId(shopInPromotionRandom.id)
+
+    }
+    val orderItem by shopRoomVm.items.collectAsState()
+    val shopItems = items.map { it.items }.flatten().map { it.items }.flatten().take(8)
+
+    return (shopItems).map {
+        val order = orderItem.find { order -> order.title == it.title && order.price == it.price }
+        Log.d("ShopScreen", "ShopScreen: $orderItem")
+        if (order != null) { it.copy(quantity = order.quantity) } else { it }
     }
 }
 
@@ -399,95 +403,12 @@ fun LazyListScope.categoryAndChips(
 
 
         )
-        @Composable
-        fun PriceSlider(
-            steps: Int = 10,
-            onClick: (Float,Float) -> Unit = { _, _ -> }
-        ) {
-            RangeSliderWithGraph(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 30.dp)
-                    .padding(bottom = 30.dp),
-                startValue = 100f,
-                endValue = 10000f,
-                size = 42,
-                steps = steps,
-                onValueChangeFinished = { },
-                content = { start, end ->
-                    Column {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(text = "Min: ${formatPrice(start.toDouble())}")
-                            Text(text = "Max: ${formatPrice(end.toDouble())}")
-                        }
-                        Button(
-                            onClick = { onClick(start, end) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 10.dp),
-                            shape = RoundedCornerShape(10.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                AppTheme.colors.onBackground
-                            )
-                        ){
-                            Text(
-                                text = "Appliquer" ,
-                                modifier = Modifier.padding(10.dp),
-                                textAlign = TextAlign.Center,
-                                color = AppTheme.colors.background,
-                                style = AppTheme.typography.titleLarge
-                            )
-                        }
-                    }
-                }
-            )
-        }
-
-        @Composable
-        fun PriceSliderWithText(
-            data: List<String> = listOf("1","2","3","4",),
-            onClick: (Float,Float) -> Unit = { _, _ -> }
-        ) {
-            RangeSliderWithData(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 30.dp)
-                    .padding(bottom = 30.dp),
-                data = data,
-                dataModifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 5.dp),
-                content = { start, end ->
-                    Button(
-                        onClick = { onClick(start, end) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 10.dp),
-                        shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            AppTheme.colors.onBackground
-                        )
-                    ){
-                        Text(
-                            text = "Appliquer" ,
-                            modifier = Modifier.padding(10.dp),
-                            textAlign = TextAlign.Center,
-                            color = AppTheme.colors.background,
-                            style = AppTheme.typography.titleLarge
-                        )
-                    }
-                }
-
-            )
-        }
 
         if (openSheet && chipList.isNotEmpty()) {
             ModalBottomSheet(
-                onDismissRequest = { viewModel.closeSheet() },
+                onDismissRequest = {
+                    viewModel.removeFilter(chipList.last())
+                },
                 dragHandle = {
                     TextWithIcon(
                         title = chipList.last(),

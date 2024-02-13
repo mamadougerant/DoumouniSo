@@ -171,6 +171,11 @@ class ShopViewModel @Inject constructor(
     fun closeSheet() {
         _openSheet.value = false
     }
+
+    fun removeFilter(filter: String){
+        _filterList.value = _filterList.value.filter { it != filter }
+        _openSheet.value = false
+    }
     fun addFilter(filter: String){
         if (_filterList.value.contains(filter)){
             _filterList.value = _filterList.value.filter { it != filter }

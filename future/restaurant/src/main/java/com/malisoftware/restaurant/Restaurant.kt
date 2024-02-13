@@ -52,7 +52,10 @@ import com.malisoftware.model.CategoryData
 import com.malisoftware.theme.AppTheme
 import com.doumounidron.theme.DoumouniDronTheme
 import com.future.restaurant.RestaurantShimmer
+import com.malisoftware.components.component.PriceSlider
+import com.malisoftware.components.component.PriceSliderWithText
 import com.malisoftware.components.container.ContinueOrder
+import com.malisoftware.local.mappers.toBusinessData
 import com.malisoftware.restaurant.viewModel.RestaurantOrderVM
 import com.malisoftware.restaurant.viewModel.RestaurantViewModel
 import com.malisoftware.local.mappers.toBusinessEntity
@@ -154,7 +157,7 @@ fun Restaurant(
                     )
                 },
                 onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
-                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
                 onFavoriteClick = { businessData, b -> addFavorite(scope, roomVm, businessData, b) }
             )
             if ((filteredRestaurantList ?: emptyList()).isEmpty()) {
@@ -177,13 +180,13 @@ fun Restaurant(
         )
         item {
             RowBusinessListWithNav(
-                navController = navController,
-                modifier = Modifier,
-                businessData = recentlyViewed.map { it.business }.map { it.toBusinessEntity() },
-                title = "Recently Viewed",
-                trailingContent = {
-                    ArrowForward(onClick = { })
-                },
+                    navController = navController,
+                    modifier = Modifier,
+                    businessData = recentlyViewed.map{ it.toBusinessData() },
+                    title = "Recently Viewed",
+                    trailingContent = {
+                        ArrowForward(onClick = { })
+                    },
 
             )
         }
@@ -205,23 +208,11 @@ fun Restaurant(
             businessData = sponsoredRestaurants,
             title = { Divider() },
             onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
-            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
+            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
             onFavoriteClick = { businessData, b ->
                 addFavorite(scope, roomVm, businessData, b)
             }
         )
-        item {
-            RowBusinessListWithNav(
-                navController = navController,
-                modifier = Modifier,
-                businessData = List(4){ BusinessData() },
-                title = "Recently Viewed",
-                trailingContent = {
-                    ArrowForward(onClick = { })
-                },
-
-                )
-        }
         item {
             (restaurantsItems).forEachIndexed { index, _ ->
                 val oneRestaurantsItems = restaurantsItems.random()
@@ -240,7 +231,7 @@ fun Restaurant(
             }
         }
         item {
-            val favoriteBusiness = favorites.map { it.favoriteBusiness }.filter { it.isRestaurant }.map { it.toBusinessEntity() }
+            val favoriteBusiness = favorites.map { it.favoriteBusiness }.filter { it.isRestaurant }.map { it.toBusinessData() }
             RowBusinessListWithNav(
                 modifier = Modifier,
                 businessData = favoriteBusiness,
@@ -252,7 +243,7 @@ fun Restaurant(
                 },
                 navController = navController,
                 onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
-                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
                 onFavoriteClick = { businessData, b ->
                     addFavorite(scope, roomVm, businessData, b)
                 }
@@ -270,7 +261,7 @@ fun Restaurant(
                 },
                 navController = navController,
                 onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
-                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
+                favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
                 onFavoriteClick = { businessData, b ->
                     addFavorite(scope, roomVm, businessData, b)
                 }
@@ -284,7 +275,7 @@ fun Restaurant(
             businessData = openRestaurant + closeRestaurant,
             title = { TextWithIcon(title = "Tous les Restaurants", modifier = Modifier.fillMaxWidth() ){} },
             onClick = { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") },
-            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessEntity() },
+            favoriteBusiness = favorites.map { it.favoriteBusiness }.map { it.toBusinessData() },
             onFavoriteClick = { businessData, b ->
                 addFavorite(scope, roomVm, businessData, b)
             }
@@ -411,128 +402,41 @@ fun LazyListScope.categoryAndChips(
 
 
         )
-        @Composable
-        fun PriceSlider(
-            steps: Int = 50,
-            onClick: (Float,Float) -> Unit = { _, _ -> }
-        ) {
-            RangeSliderWithGraph(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 30.dp)
-                    .padding(bottom = 30.dp),
-                startValue = 100f,
-                endValue = 10000f,
-                size = 42,
-                steps = steps,
-                onValueChangeFinished = { },
-                content = { start, end ->
-                    Column {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(text = "Min: ${formatPrice(start.toDouble())}")
-                            Text(text = "Max: ${formatPrice(end.toDouble())}")
-                        }
-                        Button(
-                            onClick = { onClick(start, end) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 10.dp),
-                            shape = RoundedCornerShape(10.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                AppTheme.colors.onBackground
-                            )
-                        ){
-                            Text(
-                                text = "Appliquer" ,
-                                modifier = Modifier.padding(10.dp),
-                                textAlign = TextAlign.Center,
-                                color = AppTheme.colors.background,
-                                style = AppTheme.typography.titleLarge
-                            )
-                        }
-                    }
-                }
-            )
-        }
-
-        @Composable
-        fun PriceSliderWithText(
-            data: List<String> = listOf("1","2","3","4",),
-            onClick: (Float,Float) -> Unit = { _, _ -> }
-        ) {
-            RangeSliderWithData(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 30.dp)
-                    .padding(bottom = 30.dp),
-                data = data,
-                dataModifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 5.dp),
-                content = { start, end ->
-                    Button(
-                        onClick = { onClick(start, end) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 10.dp),
-                        shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            AppTheme.colors.onBackground
-                        )
-                    ){
-                        Text(
-                            text = "Appliquer" ,
-                            modifier = Modifier.padding(10.dp),
-                            textAlign = TextAlign.Center,
-                            color = AppTheme.colors.background,
-                            style = AppTheme.typography.titleLarge
-                        )
-                    }
-                }
-
-            )
-        }
-
         if (openSheet && chipList.isNotEmpty()) {
             ModalBottomSheet(
-                onDismissRequest = { viewModel.closeSheet() },
+                onDismissRequest = { viewModel.removeFilter(chipList.last()) },
                 dragHandle = {
                     TextWithIcon(
                         title = chipList.last(),
                         modifier = Modifier
                             .padding(10.dp)
-                            .padding(top = 20.dp),
-                ) {} },
-
+                            .padding(top = 20.dp)
+                    ) {  }
+                },
             ) {
                 when (chipList.last()){
-                    FilterConstant.PRICE.title -> { PriceSlider(
-                        onClick = { start, end ->
-                            viewModel.filterPrice(start.toDouble(), end.toDouble())
-                            viewModel.closeSheet()
-                            Log.d("Restaurant", "PriceSlider: $start, $end")
-                        }
-
-                    ) }
-                    FilterConstant.DELIVERY_FEE.title -> {PriceSlider(
-                        onClick = { start, end ->
-                            viewModel.filterDeliveryFee(start.toDouble(), end.toDouble())
-                            viewModel.closeSheet()
-                            Log.d("Restaurant", "PriceSlider: $start, $end")
-                        }
-
-                    )}
+                    FilterConstant.PRICE.title -> {
+                        PriceSlider(
+                            onClick = { start, end ->
+                                viewModel.filterPrice(start.toDouble(), end.toDouble())
+                                viewModel.closeSheet()
+                            }
+                        )
+                    }
+                    FilterConstant.DELIVERY_FEE.title -> {
+                        PriceSlider(
+                            onClick = { start, end ->
+                                viewModel.filterDeliveryFee(start.toDouble(), end.toDouble())
+                                viewModel.closeSheet()
+                            }
+                        )
+                    }
                     FilterConstant.DELIVERY_TIME.title -> {
                         PriceSliderWithText(
                             data = listOf("10","20","30","40","50"),
                             onClick = { start, end ->
                                 viewModel.filterDeliveryTime(start.toInt(), end.toInt())
                                 viewModel.closeSheet()
-                                Log.d("Restaurant", "PriceSlider: $start, $end")
                             }
                         )
                     }
@@ -542,7 +446,6 @@ fun LazyListScope.categoryAndChips(
                             onClick = { start, end ->
                                 viewModel.filterRating(start.toDouble()*0.05, end.toDouble()*0.05)
                                 viewModel.closeSheet()
-                                Log.d("Restaurant", "RATING: $start, $end")
                             }
                         )
                     }
@@ -552,6 +455,8 @@ fun LazyListScope.categoryAndChips(
         }
     }
 }
+
+
 
 @Preview
 @Composable

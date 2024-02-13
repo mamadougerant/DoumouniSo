@@ -27,7 +27,7 @@ fun BusinessData.toBusinessEntity () = BusinessEntity(
     isRestaurant = isRestaurant
 )
 
-fun BusinessEntity.toBusinessEntity () = BusinessData(
+fun BusinessEntity.toBusinessData () = BusinessData(
     id = restaurantId,
     title = title,
     category = category,

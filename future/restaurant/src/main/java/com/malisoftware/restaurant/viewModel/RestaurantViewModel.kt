@@ -196,6 +196,10 @@ class RestaurantViewModel @Inject constructor(
             _openSheet.value = true
         }
     }
+    fun removeFilter(filter: String){
+        _filterList.value = _filterList.value.filter { it != filter }
+        _openSheet.value = false
+    }
 
     private fun filterOpenNow(){
         if (_restaurantsByCategory.value != null){
@@ -222,7 +226,6 @@ class RestaurantViewModel @Inject constructor(
         }else {
             _restaurantsByCategory.value = _restaurantList.value.filter { it.minPrice in min..max }
         }
-
     }
 
     fun filterRating(min: Double, max: Double){

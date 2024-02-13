@@ -41,7 +41,7 @@ class ShopOrderVm @Inject constructor(
                 is UiEvent.Success -> {
                     _shopItems.value = it.data!!
                     val items = it.data!!.map { it.items }.flatten().map { it.items }.flatten().shuffled()
-                    _itemsInPromotion.value = items.filter { it.promotion != "" }.take(2)
+                    _itemsInPromotion.value = items.filter { it.promotion != "" }
                     _loading.value = false
                 }
                 is UiEvent.Error -> {

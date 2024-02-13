@@ -15,7 +15,7 @@ fun ContinueOrder(
     title: String,
     subtitle: String,
     arrowForward: () -> Unit = {},
-    text: String = "Continue Order",
+    text: String = "Panier",
 ) {
     TextWithIcon(
         title = text,

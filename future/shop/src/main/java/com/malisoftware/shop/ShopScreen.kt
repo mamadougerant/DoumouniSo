@@ -125,7 +125,7 @@ fun ShopScreen(
                 isRestaurant = false,
                 onSearchResultClick = {searchQuery = it },
                 query = searchQuery
-            ) { MainFeatures.SHOP_ITEM + "/${it.id}" }
+            ) { navController.navigate(MainFeatures.SHOP_ITEM + "/${it.id}") }
             }
 
         ),

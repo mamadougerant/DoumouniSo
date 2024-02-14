@@ -55,6 +55,7 @@ fun ShopItem(
         shopRoomVm.getFavorites()
     }
 
+
     val shop by viewModel.shopById.collectAsState()
     val shopItems by shopOrderVM.shopItems.collectAsState()
     val items = shopItems.map { it.items }.flatten()
@@ -65,8 +66,6 @@ fun ShopItem(
     val orderItem by shopRoomVm.items.collectAsState()
     val favorites by shopRoomVm.favorite.collectAsState()
     val favoritesIds = favorites.map { it.favoriteBusiness.restaurantId }
-    //TODO make the card in vertical grid as a filter content of the scaffold
-    //  il ya unep petite confusion les shops sont categorifie mais un shop peut vouloir vendre eveerything
 
     val scrollState = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -76,6 +75,10 @@ fun ShopItem(
     var instruction by remember { mutableStateOf("") }
 
 
+
+
+
+    val searchItems by shopOrderVM.searchItems.collectAsState()
 
     if (shop == null) { return }
 
@@ -87,14 +90,32 @@ fun ShopItem(
         barExtraContent = {
             ContentTabs(
                 list = items.map { it.title to null },
-                onIndexChange = {
-                    scope.launch {
-                        scrollState.animateScrollToItem(it+1)
-                    }
-                },
+                onIndexChange = { scope.launch { scrollState.animateScrollToItem(it+1) } },
                 containerColor = Color.White
             )
         },
+        searchContent = {
+            val searchItem = updateQuantity(searchItems, orderItem)
+            GridItemList (
+                modifier = Modifier.padding(10.dp),
+                items = searchItem,
+                title = "Resultat",
+                onQuantityChange = { item, quantity ->
+                    scope.launch {
+                        shopRoomVm.insertOrderItem(item = item.toItemEntity(shop!!.id), quantity)
+                        shopRoomVm.insertOrder(shopData = shop!!, id = shop!!.id,)
+                    }
+                },
+                textsColor = Color.Black,
+                onClick = {
+                    openSheet = true
+                    sheetContent = it
+                },
+                isShopItems = true,
+                trailingContent = {}
+            )
+        },
+        onSearch = { shopOrderVM.searchItems(it) },
         onNavIconClick = { navController.navigateUp() },
         showBarAtIndex = 1,
         filterContents = if (shopFilterContents != null) {{

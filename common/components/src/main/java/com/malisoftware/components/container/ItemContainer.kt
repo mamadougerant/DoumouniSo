@@ -106,6 +106,7 @@ fun ItemContainer(
     imageUrl: String? = null,
     onClick: () -> Unit = {},
     color: Color? = null,
+    textsColor: Color? = null,
     shape: Shape = RoundedCornerShape(10.dp),
     showAddButton: Boolean = true,
     quantity: Int = 0,
@@ -135,9 +136,9 @@ fun ItemContainer(
                 .width(115.dp)
                 .padding(start = 10.dp,),
             h1 = title,
-            h1Style = AppTheme.typography.titleMedium,
+            h1Style = AppTheme.typography.titleMedium.copy(color = textsColor ?: Color.Unspecified),
             h2 = subtitle,
-            h2Style = AppTheme.typography.titleSmall,
+            h2Style = AppTheme.typography.titleSmall.copy(color = textsColor ?: Color.Unspecified),
         )
     }
 }

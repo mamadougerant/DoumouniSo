@@ -18,6 +18,7 @@ import com.malisoftware.components.TextWithIcon
 import com.malisoftware.components.container.ItemContainer
 import com.malisoftware.components.container.RowListContainer
 import com.malisoftware.model.Items
+import com.malisoftware.theme.AppTheme
 
 @Composable
 fun ItemList(
@@ -29,6 +30,7 @@ fun ItemList(
     color: Color? = null,
     showAddButton: Boolean = true,
     isShopItems: Boolean = false,
+    textsColor: Color? = null,
     shape: Shape = RoundedCornerShape(10.dp),
     trailingContent: @Composable (List<Items>) -> Unit = {},
 ) {
@@ -47,6 +49,7 @@ fun ItemList(
                 onClick = { onClick.invoke(items[item]) },
                 color = color,
                 shape = shape,
+                textsColor = textsColor,
                 showAddButton = showAddButton,
                 quantity = items[item].quantity,
                 onQuantityChange = { onQuantityChange.invoke(items[item].copy(quantity = it),it) },
@@ -65,6 +68,7 @@ fun LazyListScope.GridItemList(
     color: Color? = null,
     showAddButton: Boolean = true,
     isShopItems: Boolean = false,
+    textsColor: Color? = null,
     shape: Shape = RoundedCornerShape(10.dp),
     trailingContent: @Composable (List<Items>) -> Unit = {},
 ) {
@@ -77,13 +81,14 @@ fun LazyListScope.GridItemList(
                 .fillMaxWidth()
                 .padding(10.dp)
                 .padding(horizontal = 10.dp),
+            customStyle = AppTheme.typography.titleLarge.copy(color = textsColor ?: Color.Unspecified )
         ){ trailingContent.invoke(items) }
     }
     items(gridItems.size) {item->
         val gridItem = gridItems[item]
         ItemList(
             modifier = modifier
-                .padding(horizontal = 10.dp),
+                .padding(horizontal = 10.dp, vertical = 5.dp),
             title = null,
             items = gridItem,
             onClick = onClick,
@@ -92,6 +97,7 @@ fun LazyListScope.GridItemList(
             showAddButton = showAddButton,
             isShopItems = isShopItems,
             shape = shape,
+            textsColor = textsColor,
             trailingContent = trailingContent,
         )
     }

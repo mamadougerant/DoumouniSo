@@ -90,6 +90,7 @@ fun MainHome(
     HomeScaffoldWithBar (
         modifier = Modifier.padding(horizontal = 10.dp),
         text = "Rechercher ",
+        tabTextColor = Color.Black,
         searchTabList = listOf(
             "Restaurant" to { SearchContent(
                 modifier = Modifier

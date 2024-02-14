@@ -123,7 +123,7 @@ fun SearchResultContainer(
 
     ) {
         IconButton(onClick = { onClick(businessData) }) {
-            Icon(Icons.Default.ArrowOutward, null )
+            Icon(Icons.Default.ArrowOutward, null , tint = Color.Black)
         }
     }
 }

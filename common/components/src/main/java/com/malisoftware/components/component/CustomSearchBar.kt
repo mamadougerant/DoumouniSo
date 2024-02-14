@@ -50,6 +50,7 @@ fun CustomSearchBar(
     onSearch: (String) -> Unit = {},
     tabList: List<Pair<String,@Composable () -> Unit>>,
     initialQuery: String = "",
+    tabTextColor: Color? = null,
     activeContainerColor: Color = Color.Unspecified,
     onQueryChange: (String) -> Unit = {},
     onActiveChange: (Boolean) -> Unit = {},
@@ -99,7 +100,8 @@ fun CustomSearchBar(
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = 20.dp),
-            list = tabList
+            list = tabList,
+            textColor = tabTextColor,
         )
         else ContentTabs(tabList)
     }

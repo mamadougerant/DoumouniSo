@@ -2,6 +2,8 @@ package com.malisoftware.cart
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -30,10 +32,12 @@ import com.malisoftware.components.component.DeleteActionModal
 import com.malisoftware.components.component.scaffold.NoScrollableContentTabs
 import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.container.CartItemContainer
+import com.malisoftware.components.screens.EmptyCard
 import com.malisoftware.local.local.ItemOrderEntity
 import com.malisoftware.local.local.ItemsEntity
 import com.malisoftware.local.mappers.toBusinessData
 import com.malisoftware.local.mappers.toBusinessEntity
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,39 +94,38 @@ fun Cart(
             }
         },
     ) { paddingValues ->
-        LazyColumn (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ){
-
-            items (orderByBusiness.size ){ orderPosition ->
-
-                val order = orderByBusiness[orderPosition]
-                CartItemContainer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    business = order.restaurant.toBusinessData(),
-                    onClear = {
-                        sheetContent = order
-                        scope.launch { cartVm.getAllOrderByRestaurantId(order.id) }
-                        openSheet = true
-                    },
-                    onConfirm = {
-                        navController.navigate(MainFeatures.CART_ITEM + "/${order.id}")
-                    },
-                    onBusinessForward = {
-                        //navController.navigate(MainFeatures.HOME)
-                        navController.navigate(
-                            route = (if (it.isRestaurant)MainFeatures.RESTAURANT_ITEM
-                            else MainFeatures.SHOP_ITEM) +  "/${order.id}"
-                        )
-                    }
-                )
-
-            }
+        if (index == 0 && restaurants.isEmpty()) {
+            EmptyCard(
+                modifier = Modifier
+                    .fillMaxHeight(),
+                action = {
+                    navController.navigate(MainFeatures.RESTAURANT)
+                }
+            )
         }
+        else if (index == 1 && shops.isEmpty()) {
+            EmptyCard(
+                modifier = Modifier
+                    .fillMaxHeight(),
+                action = {
+                    navController.navigate(MainFeatures.SHOP)
+                }
+
+            )
+        }
+        else{
+            CartContent(
+                paddingValues = paddingValues,
+                navController = navController,
+                orderByBusiness = orderByBusiness,
+                onClear = {
+                    sheetContent = it
+                    scope.launch { cartVm.getAllOrderByRestaurantId(it.id) }
+                    openSheet = true
+                }
+            )
+        }
+
         if (openSheet) {
             DeleteActionModal(
                 onDismissRequest = { openSheet = false },
@@ -137,6 +140,45 @@ fun Cart(
                 text = "Voulez-vous vraiment supprimer ce panier?",
                 onCancel = { openSheet = false }
             )
+        }
+    }
+}
+
+@Composable
+fun CartContent(
+    paddingValues: PaddingValues,
+    navController: NavController,
+    orderByBusiness: List<ItemOrderEntity>,
+    onClear: (ItemOrderEntity) -> Unit,
+) {
+    LazyColumn (
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ){
+        items (orderByBusiness.size ){ orderPosition ->
+
+            val order = orderByBusiness[orderPosition]
+            CartItemContainer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                business = order.restaurant.toBusinessData(),
+                onClear = {
+                    onClear(order)
+                },
+                onConfirm = {
+                    navController.navigate(MainFeatures.CART_ITEM + "/${order.id}")
+                },
+                onBusinessForward = {
+                    //navController.navigate(MainFeatures.HOME)
+                    navController.navigate(
+                        route = (if (it.isRestaurant)MainFeatures.RESTAURANT_ITEM
+                        else MainFeatures.SHOP_ITEM) +  "/${order.id}"
+                    )
+                }
+            )
+
         }
     }
 }

@@ -48,9 +48,11 @@ import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.container.ImageContainer
 import com.malisoftware.components.container.SmallBusinessContainer
 import com.malisoftware.components.icons.SmallLeftIcon
+import com.malisoftware.components.screens.EmptyCard
 import com.malisoftware.local.local.BusinessEntity
 import com.malisoftware.local.local.OrderStatus
 import com.malisoftware.local.mappers.toBusinessEntity
+import com.malisoftware.local.reamlModel.RealmItemOrder
 import com.malisoftware.local.reamlModel.RealmItems
 import com.malisoftware.model.format.formatPrice
 import com.malisoftware.theme.AppTheme
@@ -146,6 +148,40 @@ fun Order(
             }
         },
     ) {
+
+        if (index == 0 && restaurants.isEmpty() && !completedScreen) {
+            EmptyCardImpl(
+                isRestaurant = true,
+                navController = navController
+            )
+        }
+        else if (index == 1 && shops.isEmpty() && !completedScreen) {
+            EmptyCardImpl(
+                isRestaurant = false,
+                navController = navController
+            )
+        }
+        else if (index == 1 && competedShopsOrder.isEmpty() && completedScreen) {
+            EmptyCardImpl(
+                isRestaurant = false,
+                navController = navController,
+                text = "Pas de commande terminée"
+            )
+        }
+        else if (index == 0 && competedRestaurantsOrder.isEmpty() && completedScreen) {
+            EmptyCardImpl(
+                isRestaurant = true,
+                navController = navController,
+                text = "Pas de commande terminée",
+            )
+        }
+        else{
+            OrderContent(
+                it,
+                navController,
+                orderByBusiness
+            )
+        }
         LazyColumn(
             contentPadding = it
         ) {
@@ -170,6 +206,61 @@ fun Order(
                     )
                     if (it != orderByBusiness.size -1 )Divider()
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun EmptyCardImpl(
+    navController: NavHostController,
+    text: String = "Pas de commande en cours",
+    actionText: String = "Ajouter des articles",
+    isRestaurant: Boolean
+) {
+    EmptyCard(
+        text = text,
+        actionText = actionText,
+        modifier = Modifier
+            .fillMaxHeight(),
+        action = {
+            navController.navigate(
+                if (isRestaurant) MainFeatures.RESTAURANT
+                else MainFeatures.SHOP
+            )
+        }
+    )
+}
+
+@Composable
+fun OrderContent(
+    it: PaddingValues,
+    navController: NavHostController,
+    orderByBusiness: List<RealmItemOrder>,
+) {
+    LazyColumn(
+        contentPadding = it
+    ) {
+        items(orderByBusiness.size){
+            val order = orderByBusiness[it]
+            val business = order.restaurant?.toBusinessEntity()
+            if (business != null) {
+                CompletedOrderContainer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    business = business,
+                    items = order.items,
+                    onClick = {
+                        // Give the user the ability to reorder the items
+                        // ask if he want to reorder the items or see the restaurant in a bottom sheet
+                        navController.navigate(
+                            (if (business.isRestaurant) MainFeatures.RESTAURANT_ITEM
+                            else MainFeatures.SHOP_ITEM ) + "/${business.restaurantId}"
+                        )
+                    }
+                )
+                if (it != orderByBusiness.size -1 )Divider()
             }
         }
     }

@@ -30,6 +30,7 @@ import com.malisoftware.components.container.BusinessInfo
 import com.malisoftware.components.container.ItemHeader
 import com.malisoftware.components.container.ItemWithTitleBar
 import com.malisoftware.components.screens.OrderScreenInModalSheet
+import com.malisoftware.local.local.ItemsEntity
 import com.malisoftware.model.Items
 import com.malisoftware.theme.AppTheme
 import com.malisoftware.restaurant.viewModel.RestaurantOrderVM
@@ -47,8 +48,6 @@ fun RestaurantItem(
     roomVm: RoomViewModel,
 ) {
 
-    // TODO: check if the restaurant is open before ordering
-
     LaunchedEffect(key1 = viewModel, ){
         viewModel.getRestaurant(id)
         orderViewModel.getRestaurantItems(id)
@@ -58,19 +57,16 @@ fun RestaurantItem(
         roomVm.getFavorites()
     }
 
-    val restaurant by viewModel.restaurantById.collectAsState()
-    val restaurantItems by orderViewModel.restaurantItems.collectAsState()
-    val items = restaurantItems.map { it.items }.flatten()
-    val promotionItems by orderViewModel.itemsInPromotion.collectAsState()
+    val uiState by orderViewModel.state.collectAsState()
+    val vmState by viewModel.vmState.collectAsState()
+
+    //val restaurant by viewModel.restaurantById.collectAsState()
+
+
     val orderItem by roomVm.items.collectAsState()
     val favorites by roomVm.favorite.collectAsState()
 
     val favoritesIds = favorites.map { it.favoriteBusiness.restaurantId }
-
-
-
-    Log.d("RestaurantItem", "RestaurantItemfavor: ${favoritesIds}")
-
 
 
     val scrollState = rememberLazyListState()
@@ -80,17 +76,17 @@ fun RestaurantItem(
 
     var instruction by remember { mutableStateOf("") }
 
-    if (restaurant == null) { return }
+    if (vmState.restaurantById == null) { return }
 
     BusinessScreenScaffold(
         scrollState = scrollState,
         modifier = Modifier,
-        text = restaurant?.title!!,
-        imageUrl = restaurant?.imageUrl!!,
+        text = vmState.restaurantById?.title!!,
+        imageUrl = vmState.restaurantById?.imageUrl!!,
         barExtraContent = {
-            if (items.size > 2)
+            if (uiState.restaurantItems.size > 2)
                 ContentTabs(
-                    list = items.map { it.title to null },
+                    list = uiState.restaurantItems.map { it.title to null },
                     onIndexChange = {
                         scope.launch {
                             scrollState.animateScrollToItem(it+1)
@@ -99,26 +95,40 @@ fun RestaurantItem(
                     containerColor = Color.White
                 )
         },
+        searchContent = {
+            val item = uiState.searchResults.updateQuantity(orderItem)
+            HorizontalItemList(
+                items = item,
+                title = "",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp),
+                onClick = {
+                    openSheet = true
+                    sheetContent = it
+                },
+                color = Color.Unspecified,
+                textsColor = Color.Black,
+            )
+        },
+        onSearch = { orderViewModel.searchItems(it) },
         onNavIconClick = { navController.navigateUp() },
         showBarAtIndex = 1,
         onHeartClick = {
-            addFavorite(scope, roomVm, restaurant!!, it)
+            addFavorite(scope, roomVm, vmState.restaurantById!!, it)
         },
-        isFavorite = restaurant!!.id in favoritesIds,
+        isFavorite = vmState.restaurantById!!.id in favoritesIds,
     ) {
         ItemHeader(
-            shop = restaurant,
-            itemsInPromotion = promotionItems,
+            shop = vmState.restaurantById,
+            itemsInPromotion = uiState.itemsInPromotion,
             onClick = {
                 openSheet = true
                 sheetContent = it
             }
         )
-        items.forEachIndexed { _, it ->
-            val item = (it.items).map {
-                val order = orderItem.find { order -> order.title == it.title && order.price == it.price }
-                if (order != null) { it.copy(quantity = order.quantity) } else { it }
-            }
+        uiState.restaurantItems.forEachIndexed { _, it ->
+            val item = (it.items).updateQuantity(orderItem)
             HorizontalItemList(
                 items = item,
                 title = it.title,
@@ -141,8 +151,8 @@ fun RestaurantItem(
             onBottomBarClick = {
                 scope.launch {
                     openSheet = false
-                    roomVm.insertOrderItem(item = it.toItemEntity(restaurant!!.id))
-                    roomVm.insertOrder(restaurant = restaurant!!, restaurant!!.id )
+                    roomVm.insertOrderItem(item = it.toItemEntity(vmState.restaurantById!!.id))
+                    roomVm.insertOrder(restaurant = vmState.restaurantById!!, vmState.restaurantById!!.id )
                 }
             },
             onValueChange = {
@@ -155,6 +165,12 @@ fun RestaurantItem(
     }
 }
 
+fun List<Items>.updateQuantity (orderItem:  List<ItemsEntity>): List<Items> {
+    return (this).map {
+        val order = orderItem.find { order -> order.title == it.title && order.price == it.price }
+        if (order != null) { it.copy(quantity = order.quantity) } else { it }
+    }
+}
 
 
 @Preview

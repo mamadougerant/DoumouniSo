@@ -1,8 +1,12 @@
 package com.malisoftware.components.component.scaffold
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +20,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +31,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.component.CustomSearchBar
+import kotlinx.coroutines.delay
+import kotlin.math.pow
 
 /**
  * CustomScaffoldWithSearchBar is a composable function that creates a custom scaffold with a scrollable top app bar
@@ -74,6 +81,13 @@ fun BusinessScreenScaffold(
     content: LazyListScope.() -> Unit = {},
 ) {
     var showSearchResult by rememberSaveable { mutableStateOf(false) }
+    var isBarActive by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = showSearchResult, key2 = !isBarActive){
+        delay(3000)
+        if (showSearchResult && !isBarActive) showSearchResult = false
+    }
+
     Box {
         CustomScaffold(
             modifier = modifier,
@@ -105,7 +119,8 @@ fun BusinessScreenScaffold(
                     onGoBack = { showSearchResult = false ; },
                     onQueryChange = onSearch,
                     onSearch = onSearch,
-                    text = searchText
+                    text = searchText,
+                    onActiveChange = { isBarActive = it }
                 )
             }
         }

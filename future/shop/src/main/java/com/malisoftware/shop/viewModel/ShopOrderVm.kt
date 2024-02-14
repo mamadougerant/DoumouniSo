@@ -31,6 +31,9 @@ class ShopOrderVm @Inject constructor(
     private val _shopFilterContent = MutableStateFlow<Pair<String,List<Items>>?>(null)
     val shopFilterContent = _shopFilterContent.asStateFlow()
 
+    private val _searchItems = MutableStateFlow<List<Items>>(emptyList())
+    val searchItems = _searchItems.asStateFlow()
+
 
     suspend fun getShopItems(shopId: String) {
         dataUseCase.getShopItems(shopId).collect {
@@ -72,6 +75,12 @@ class ShopOrderVm @Inject constructor(
     fun setFilterContent(title: String = "", items: List<Items>?){
         if (items.isNullOrEmpty()) _shopFilterContent.value = null
         else _shopFilterContent.value = title to items
+    }
+
+    fun searchItems(query: String){
+        val items = _shopItems.value.map { it.items }.flatten().map { it.items }.flatten()
+        val result = items.filter { it.title.contains(query, ignoreCase = true) }
+        _searchItems.value = result
     }
 
 }

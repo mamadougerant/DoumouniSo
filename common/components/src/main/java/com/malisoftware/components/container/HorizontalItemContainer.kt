@@ -29,6 +29,7 @@ import com.malisoftware.theme.AppTheme
 fun HorizontalItemContainer(
     modifier: Modifier = Modifier,
     customIcon: (@Composable () -> Unit)? = null,
+    textsColors: Color? = null,
     title: String = "title title title",
     price: String = "price",
     quantity: Int = 0,
@@ -57,7 +58,9 @@ fun HorizontalItemContainer(
             h1 = title,
             h2 = price,
             h3 = description,
-            h1Style = MaterialTheme.typography.titleLarge,
+            h1Style = AppTheme.typography.titleLarge.copy(color = textsColors ?: Color.Unspecified),
+            h2Style = AppTheme.typography.titleSmall.copy(color = textsColors ?: Color.Unspecified),
+            h3Style = AppTheme.typography.titleSmall.copy(color = textsColors ?: Color.Unspecified),
         ) {
             if (customIcon != null) {
                 customIcon()

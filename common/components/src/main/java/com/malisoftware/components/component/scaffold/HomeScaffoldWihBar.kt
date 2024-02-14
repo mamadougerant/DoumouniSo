@@ -37,6 +37,7 @@ fun HomeScaffoldWithBar(
     actions: (@Composable (Color) -> Unit)? = null,
     onQueryChange: (String) -> Unit = {},
     searchBarActiveColor: Color = Color.White,
+    tabTextColor: Color? = null,
     onSearch: (String) -> Unit = {},
     initialQuery: String = "",
     shimmerContent: (@Composable (PaddingValues) -> Unit)? = null,
@@ -72,7 +73,8 @@ fun HomeScaffoldWithBar(
                     activeContainerColor = searchBarActiveColor,
                     onActiveChange = { isSearchActive = it },
                     onSearch = onSearch,
-                    initialQuery = initialQuery
+                    initialQuery = initialQuery,
+                    tabTextColor = tabTextColor
                 )
             }
         }

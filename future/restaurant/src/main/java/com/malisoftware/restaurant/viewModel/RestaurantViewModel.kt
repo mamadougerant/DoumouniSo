@@ -1,6 +1,5 @@
 package com.malisoftware.restaurant.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.malisoftware.components.constants.FilterConstant
 import com.malisoftware.components.uiEvent.UiEvent
@@ -9,10 +8,12 @@ import com.malisoftware.model.CategoryData
 import com.malisoftware.model.Sponsors
 import com.malisoftware.model.Store
 import com.malisoftware.model.BusinessData
+import com.malisoftware.restaurant.uistates.RestaurantVmState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import java.util.Random
 import javax.inject.Inject
 
@@ -20,6 +21,10 @@ import javax.inject.Inject
 class RestaurantViewModel @Inject constructor(
     private val dataUseCase: DataUseCase
 ): ViewModel(){
+
+    private val _vmState = MutableStateFlow(RestaurantVmState())
+    val vmState = _vmState.asStateFlow()
+
     private val _sponsors = MutableStateFlow<List<Sponsors>>(emptyList())
     val sponsors = _sponsors.asStateFlow()
 
@@ -38,10 +43,6 @@ class RestaurantViewModel @Inject constructor(
     private val _restaurantsByCategory = MutableStateFlow<List<BusinessData>?>(null)
     val restaurantsByCategory = _restaurantsByCategory.asStateFlow()
 
-    private val _filterList = MutableStateFlow<List<String>>(emptyList())
-    val filterList = _filterList.asStateFlow()
-
-
     private val _restaurantCategoryList = MutableStateFlow<List<CategoryData>>((emptyList()))
     val restaurantCategoryList = _restaurantCategoryList.asStateFlow()
 
@@ -57,8 +58,7 @@ class RestaurantViewModel @Inject constructor(
     private val _minDeliveryFee = MutableStateFlow(0.0)
     private val _maxDeliveryFee = MutableStateFlow(0.0)
 
-    private val _openSheet = MutableStateFlow(true)
-    val openSheet = _openSheet.asStateFlow()
+
 
 
     private val _restaurantLoading = MutableStateFlow(true)
@@ -66,9 +66,6 @@ class RestaurantViewModel @Inject constructor(
     val loading = _restaurantLoading.asStateFlow().combine(_restaurantCategoryLoading.asStateFlow()) { restaurantLoading, restaurantCategoryLoading ->
         restaurantLoading || restaurantCategoryLoading
     }
-    // RestaurantItem
-    private val _restaurantById = MutableStateFlow<BusinessData?>(null)
-    val restaurantById = _restaurantById.asStateFlow()
 
 
     suspend fun fetchAllData(){
@@ -136,7 +133,7 @@ class RestaurantViewModel @Inject constructor(
             is UiEvent.Loading -> {
             }
             is UiEvent.Success -> {
-                _restaurantById.value = it.data!!
+                _vmState.update { state -> state.copy(restaurantById = it.data!!) }
             }
             is UiEvent.Error -> {
             }
@@ -152,12 +149,12 @@ class RestaurantViewModel @Inject constructor(
             is UiEvent.Success -> {
                 _restaurantsByCategory.value = it.data?.ifEmpty { null }
                 when{
-                    _filterList.value.contains(FilterConstant.OPEN_NOW.title) -> filterOpenNow()
-                    _filterList.value.contains(FilterConstant.PROMOTIONS.title) -> filterPromotions()
-                    _filterList.value.contains(FilterConstant.PRICE.title) -> filterPrice(_minPrice.value, _maxPrice.value)
-                    _filterList.value.contains(FilterConstant.RATING.title) -> filterRating(_minRating.value, _maxRating.value)
-                    _filterList.value.contains(FilterConstant.DELIVERY_TIME.title) -> filterDeliveryTime(_maxDeliveryTime.value, _maxDeliveryTime.value)
-                    _filterList.value.contains(FilterConstant.DELIVERY_FEE.title) -> filterDeliveryFee(_minDeliveryFee.value, _maxDeliveryFee.value)
+                    _vmState.value.filterList.contains(FilterConstant.OPEN_NOW.title) -> filterOpenNow()
+                    _vmState.value.filterList.contains(FilterConstant.PROMOTIONS.title) -> filterPromotions()
+                    _vmState.value.filterList.contains(FilterConstant.PRICE.title) -> filterPrice(_minPrice.value, _maxPrice.value)
+                    _vmState.value.filterList.contains(FilterConstant.RATING.title) -> filterRating(_minRating.value, _maxRating.value)
+                    _vmState.value.filterList.contains(FilterConstant.DELIVERY_TIME.title) -> filterDeliveryTime(_maxDeliveryTime.value, _maxDeliveryTime.value)
+                    _vmState.value.filterList.contains(FilterConstant.DELIVERY_FEE.title) -> filterDeliveryFee(_minDeliveryFee.value, _maxDeliveryFee.value)
                 }
             }
             is UiEvent.Error -> {
@@ -188,25 +185,27 @@ class RestaurantViewModel @Inject constructor(
     }
 
     fun closeSheet() {
-        _openSheet.value = false
+        _vmState.update { state -> state.copy(openSheet = false) }
     }
     fun addFilter(filter: String){
-        if (_filterList.value.contains(filter)){
-            _filterList.value = _filterList.value.filter { it != filter }
+        if (_vmState.value.filterList.contains(filter)){
+            _vmState.update { state -> state.copy(
+                filterList = state.filterList.filter { it != filter },
+                openSheet = false
+            ) }
             cancelFilter()
-            _openSheet.value = false
         }else{
-            _filterList.value = _filterList.value + filter
+            _vmState.update { state -> state.copy(filterList = state.filterList + filter) }
             when(filter){
                 FilterConstant.OPEN_NOW.title -> filterOpenNow()
                 FilterConstant.PROMOTIONS.title -> filterPromotions()
             }
-            _openSheet.value = true
+            _vmState.update { state -> state.copy(openSheet = true) }
         }
     }
     fun removeFilter(filter: String){
-        _filterList.value = _filterList.value.filter { it != filter }
-        _openSheet.value = false
+        _vmState.update { state -> state.copy(filterList = state.filterList.filter { it != filter }) }
+        _vmState.update { state -> state.copy(openSheet = false) }
     }
 
     private fun filterOpenNow(){
@@ -267,20 +266,20 @@ class RestaurantViewModel @Inject constructor(
     }
 
     fun clearFilter(){
-    _filterList.value = emptyList()
-    _restaurantsByCategory.value = null
+        _vmState.update { state -> state.copy(filterList = emptyList()) }
+        _restaurantsByCategory.value = null
     }
 
     private fun cancelFilter(){
         _restaurantsByCategory.value = _restaurantList.value
         when{
-            _filterList.value.contains(FilterConstant.OPEN_NOW.title) -> filterOpenNow()
-            _filterList.value.contains(FilterConstant.PROMOTIONS.title) -> filterPromotions()
-            _filterList.value.contains(FilterConstant.PRICE.title) -> filterPrice(_minPrice.value, _maxPrice.value)
-            _filterList.value.contains(FilterConstant.RATING.title) -> filterRating(_minRating.value, _maxRating.value)
-            _filterList.value.contains(FilterConstant.DELIVERY_TIME.title) -> filterDeliveryTime(_maxDeliveryTime.value, _maxDeliveryTime.value)
-            _filterList.value.contains(FilterConstant.DELIVERY_FEE.title) -> filterDeliveryFee(_minDeliveryFee.value, _maxDeliveryFee.value)
-            _filterList.value.isEmpty() -> clearFilter()
+            _vmState.value.filterList.contains(FilterConstant.OPEN_NOW.title) -> filterOpenNow()
+            _vmState.value.filterList.contains(FilterConstant.PROMOTIONS.title) -> filterPromotions()
+            _vmState.value.filterList.contains(FilterConstant.PRICE.title) -> filterPrice(_minPrice.value, _maxPrice.value)
+            _vmState.value.filterList.contains(FilterConstant.RATING.title) -> filterRating(_minRating.value, _maxRating.value)
+            _vmState.value.filterList.contains(FilterConstant.DELIVERY_TIME.title) -> filterDeliveryTime(_maxDeliveryTime.value, _maxDeliveryTime.value)
+            _vmState.value.filterList.contains(FilterConstant.DELIVERY_FEE.title) -> filterDeliveryFee(_minDeliveryFee.value, _maxDeliveryFee.value)
+            _vmState.value.filterList.isEmpty() -> clearFilter()
         }
     }
 

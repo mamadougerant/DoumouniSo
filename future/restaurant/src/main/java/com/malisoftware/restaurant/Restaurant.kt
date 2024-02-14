@@ -116,7 +116,7 @@ fun Restaurant(
                     .padding(16.dp),
                 onSearchResultClick = {searchQuery = it },
                 query = searchQuery
-            ) { MainFeatures.RESTAURANT_ITEM+"/${it.id}" }
+            ) { navController.navigate(MainFeatures.RESTAURANT_ITEM+"/${it.id}") }
             }
         ),
         initialQuery = searchQuery,
@@ -361,7 +361,6 @@ fun LazyListScope.categoryAndChips(
     scope: CoroutineScope,
     onClick: () -> Unit = {},
 ){
-
     item {
         RoundedCategoryList(
             title = null,
@@ -374,8 +373,7 @@ fun LazyListScope.categoryAndChips(
         )
     }
     item {
-        val chipList by viewModel.filterList.collectAsState()
-        val openSheet by viewModel.openSheet.collectAsState()
+        val vmState by viewModel.vmState.collectAsState()
         @Composable fun icon ()= Icon(
             imageVector = Icons.Filled.KeyboardArrowDown,
             contentDescription = "",
@@ -384,7 +382,7 @@ fun LazyListScope.categoryAndChips(
                 .padding(horizontal = 0.dp)
         )
         ChipList(
-            selected = chipList,
+            selected = vmState.filterList,
             modifier = Modifier,
             chips = listOf(
                 FilterConstant.PRICE.title to { icon() },
@@ -397,22 +395,20 @@ fun LazyListScope.categoryAndChips(
             onClick = {
                 viewModel.addFilter(it)
             }
-
-
         )
-        if (openSheet && chipList.isNotEmpty()) {
+        if (vmState.openSheet && vmState.filterList.isNotEmpty()) {
             ModalBottomSheet(
-                onDismissRequest = { viewModel.removeFilter(chipList.last()) },
+                onDismissRequest = { viewModel.removeFilter(vmState.filterList.last()) },
                 dragHandle = {
                     TextWithIcon(
-                        title = chipList.last(),
+                        title = vmState.filterList.last(),
                         modifier = Modifier
                             .padding(10.dp)
                             .padding(top = 20.dp)
                     ) {  }
                 },
             ) {
-                when (chipList.last()){
+                when (vmState.filterList.last()){
                     FilterConstant.PRICE.title -> {
                         PriceSlider(
                             onClick = { start, end ->

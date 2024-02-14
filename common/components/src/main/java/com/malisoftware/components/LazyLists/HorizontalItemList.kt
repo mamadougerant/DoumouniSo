@@ -28,17 +28,20 @@ fun LazyListScope.HorizontalItemList(
     onClick: (Items) -> Unit = {},
     title: String = "title",
     customIcon: (@Composable () -> Unit)? = null,
-   // color: Color? = null ,
+    color: Color? = null ,
+    textsColor: Color? = null,
 ) {
 
     item {
         Card(
             modifier = Modifier
                 .fillMaxWidth() ,
-            colors = CardDefaults.cardColors(if (isSystemInDarkTheme()) AppTheme.colors.background else Color.White),
+            colors = CardDefaults.cardColors(color ?: if (isSystemInDarkTheme()) AppTheme.colors.background else Color.White),
             shape = RoundedCornerShape(0.dp),
         ) {
-            TextWithIcon(modifier = Modifier.padding(10.dp), title = title) {}
+            if (title.isNotEmpty()) {
+                TextWithIcon(modifier = Modifier.padding(10.dp), title = title) {}
+            }
             items.forEachIndexed { index, item ->
                 HorizontalItemContainer(
                     title = item.title,
@@ -49,6 +52,7 @@ fun LazyListScope.HorizontalItemList(
                     onClick = { onClick.invoke(item)},
                     modifier = modifier,
                     customIcon = customIcon,
+                    textsColors = textsColor,
                 )
                 if (index != items.size - 1) {
                     Divider(Modifier.padding(vertical = 10.dp))

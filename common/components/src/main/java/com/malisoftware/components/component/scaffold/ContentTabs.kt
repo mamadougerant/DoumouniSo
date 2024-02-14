@@ -87,6 +87,7 @@ fun NoScrollableContentTabs(
     indexInitial: Int = 0,
     containerColor: Color = Color.Transparent,
     contentColor: Color = Color.Black,
+    textColor: Color? = null,
 ) {
     var selectedIndex by remember (indexInitial) { mutableStateOf(indexInitial) }
     Column (
@@ -106,7 +107,7 @@ fun NoScrollableContentTabs(
                         .tabIndicatorOffset(tabPositions[selectedIndex])
                         .clip(RoundedCornerShape(50))
                         .width(5.dp),
-                    color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                    color = textColor ?: if (isSystemInDarkTheme()) Color.White else Color.Black,
                     height = 2.dp,
                 )
             },
@@ -118,7 +119,7 @@ fun NoScrollableContentTabs(
                     selected = selected,
                     onClick = { selectedIndex = index; onIndexChange(index) },
                     text = { Text(text = text.first, style = AppTheme.typography.titleMedium) },
-                    selectedContentColor = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                    selectedContentColor = textColor ?: if (isSystemInDarkTheme()) Color.White else Color.Black,
                 )
             }
         }

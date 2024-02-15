@@ -43,10 +43,15 @@ import com.malisoftware.components.component.scaffold.CustomTopBar
 import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.formatLocalTime
 import com.malisoftware.components.screens.SpecialInstruction
+import com.malisoftware.local.local.BusinessEntity
+import com.malisoftware.local.local.ItemsEntity
 import com.malisoftware.local.mappers.toItems
+import com.malisoftware.model.BusinessData
+import com.malisoftware.model.Items
 import com.malisoftware.model.format.formatPrice
 import com.malisoftware.theme.AppTheme
 import kotlinx.coroutines.launch
+import java.time.LocalTime
 
 @Composable
 fun CartItems(
@@ -56,12 +61,13 @@ fun CartItems(
 ) {
     Log.d("CartItems", "CartItems: $id")
     // update the item object
-    LaunchedEffect(key1 = viewModel.items.collectAsState()) {
+    LaunchedEffect(key1 = viewModel.items, LocalTime.now()) {
         viewModel.getAllOrderByRestaurantId(id)
     }
-    LaunchedEffect(key1 = viewModel.orders){
+    LaunchedEffect(key1 = viewModel.orders,id){
         viewModel.getOrders()
     }
+
     // fetch the items updeted in LaunchedEffect
     val orders by viewModel.items.collectAsState()
     // fecth the businesses and find the one with the id
@@ -115,7 +121,6 @@ fun CartItems(
             state = scrollState,
             modifier = Modifier.padding(paddingValues)
         ){
-
             item {
                 AnimatedVisibility (
                     total < minPrice ,
@@ -130,19 +135,19 @@ fun CartItems(
                         title = "Ajouter des plats pour atteindre le minimum de commande"
                     )
                 }
-                Log.d("CartItems", "Business: ${business}")
+                Log.d("CartItems", "Business: ${business?.restaurant?.isOpen}")
                 AnimatedVisibility (
-                    business?.restaurant?.isOpen == false,
+                    !checkIfRestaurantIsOpen(business!!.restaurant),
                     enter = expandVertically(),
                     exit = shrinkVertically()
                 ) {
                     Waring(
-                        text = "Ce restaurant ouvre à ${business?.restaurant?.openingTime?.let {
+                        text = "Cet Etablissement ouvre à ${business?.restaurant?.openingTime?.let {
                             formatLocalTime(it)
                         }} " + "et ferme à ${business?.restaurant?.closingTime?.let {
                             formatLocalTime(it)
                         }}" ,
-                        title = "Ce restaurant est fermé"
+                        title = "Ce Etablissement est fermé"
                     )
                 }
             }
@@ -234,5 +239,12 @@ fun Waring(text: String = "",title: String = "" ) {
             )
         }
     }
+}
+
+fun checkIfRestaurantIsOpen(business: BusinessEntity): Boolean  {
+    val time = LocalTime.now()
+    val openingTime = LocalTime.parse(business.openingTime)
+    val closingTime = LocalTime.parse(business.closingTime)
+    return time in openingTime..closingTime
 }
 

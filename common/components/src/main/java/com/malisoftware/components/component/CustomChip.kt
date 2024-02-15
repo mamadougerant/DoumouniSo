@@ -72,7 +72,9 @@ fun CustomChip(
         border = InputChipDefaults.inputChipBorder(
             borderColor= Color.Unspecified,
             selectedBorderColor=Color.Black,
-            selectedBorderWidth = 1.dp
+            selectedBorderWidth = 1.dp,
+            enabled = true,
+            selected = selected
         ),
         elevation = InputChipDefaults.inputChipElevation(
             pressedElevation = 25.dp,

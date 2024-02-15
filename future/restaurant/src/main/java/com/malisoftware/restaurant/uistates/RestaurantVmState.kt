@@ -2,15 +2,18 @@ package com.malisoftware.restaurant.uistates
 
 import com.malisoftware.model.BusinessData
 import com.malisoftware.model.CategoryData
+import com.malisoftware.model.Sponsors
 import kotlinx.coroutines.flow.MutableStateFlow
 
 data class RestaurantVmState (
         val loading: Boolean = true,
         val restaurantList: List<BusinessData> = emptyList(),
+        val restaurantsByCategory : List<BusinessData>? = null,
         val popularRestaurantList: List<BusinessData> = emptyList(),
         val promotionRestaurantList: List<BusinessData> = emptyList(),
         val restaurantCategoryList: List<CategoryData> = emptyList(),
         val sponsorRestaurantList: List<BusinessData> = emptyList(),
+        val sponsors: List<Sponsors> = emptyList(),
         val filterList: List<String> = emptyList(),
         val minPrice: Double = 0.0,
         val maxPrice: Double = 0.0,

@@ -395,7 +395,7 @@ object TestItemObject{
                     price = 2000.00,
                     promotion = "10% reduction",
                     imageUrl = "https://mccormick.widen.net/content/mrqnc4vbjy/original/frenchs_burger_styled-image_800x800.png",
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, vitae aliquam nisl nisl eget nisl.",
+                    description = "Lorem ipsum nise aliquam nisl nisl eget nisl.",
                 ),
                 Items(
                     id = 2,
@@ -403,14 +403,14 @@ object TestItemObject{
                     promotion = "buy 1 get 1 free",
                     imageUrl = "https://recipes.net/wp-content/uploads/2023/05/hardees-double-cheeseburger-recipe_d48b79ef43b714e98a3ad95a7ab9e12e-768x768.jpeg",
                     price = 2500.00,
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, vitae aliquam nisl nisl eget nisl.",
+                    description = "Lorem ipsum nise aliquam nisl nisl eget nisl.",
                 ),
                 Items(
                     id = 3,
                     title = "Bacon Burger",
                     imageUrl = "https://tatyanaseverydayfood.com/wp-content/uploads/2021/06/Caramelized-Onion-Bacon-Cheeseburger-Recipe.jpg",
                     price = 2800.00,
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, vitae aliquam nisl nisl eget nisl.",
+                    description = "Lorem ipsum nise aliquam nisl nisl eget nisl.",
                 ),
                 // Add more burger items as needed
             )
@@ -424,21 +424,21 @@ object TestItemObject{
                     promotion = "buy 1 get 1 free" ,
                     imageUrl = "https://images.squarespace-cdn.com/content/v1/57f1462015d5dbf1ae364486/1537703834286-0YZEDZDGVS2CRMY21O0B/sweet+potato+fries+or+white+potato+fries+which+is+better+vegan+nutrition+nutritionist.jpg",
                     price = 1000.00,
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, vitae aliquam nisl nisl eget nisl.",
+                    description = "Lorem ipsum nise aliquam nisl nisl eget nisl.",
                 ),
                 Items(
                     id = 5,
                     title = "Curly Fries",
                     imageUrl = "https://cdn.theliveinkitchen.com/wp-content/uploads/2022/05/03150451/Frozen-Curly-Fries-Air-Fryer-The-Live-In-Kitchen-Featured.jpg",
                     price = 1200.00,
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, vitae aliquam nisl nisl eget nisl.",
+                    description = "Lorem ipsum nise aliquam nisl nisl eget nisl.",
                 ),
                 Items(
                     id = 6,
                     title = "Sweet Potato Fries",
                     imageUrl = "https://www.cookingclassy.com/wp-content/uploads/2021/10/baked-sweet-potato-fries-12.jpg",
                     price = 1500.00,
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, vitae aliquam nisl nisl eget nisl.",
+                    description = "Lorem ipsum nise aliquam nisl nisl eget nisl.",
                 ),
                 // Add more fries items as needed
             )
@@ -452,14 +452,14 @@ object TestItemObject{
                     imageUrl = "https://ardenmarket.com.tr/media/catalog/product/cache/0b154ba1d9ffbc98998b9163ce10b49b/b/e/beypazari-soda-200ml.jpg",
                     price = 500.00,
                     promotion = "buy 1 get 1 free" ,
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, vitae aliquam nisl nisl eget nisl.",
+                    description = "Lorem ipsum nise aliquam nisl nisl eget nisl.",
                 ),
                 Items(
                     id = 8,
                     title = "Iced Tea",
                     imageUrl = "https://food.fnr.sndimg.com/content/dam/images/food/fullset/2011/6/3/1/FNM_070111-Centerfold-007_s4x3.jpg.rend.hgtvcom.1280.1280.suffix/1371597847872.jpeg",
                     price = 700.00,
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, vitae aliquam nisl nisl eget nisl.",
+                    description = "Lorem ipsum nise aliquam nisl nisl eget nisl.",
                 ),
                 // Add more drink items as needed
             )
@@ -473,14 +473,14 @@ object TestItemObject{
                     promotion = "20% de reduction",
                     imageUrl = "https://www.eatingwell.com/thmb/rmLlvSjdnJCCy_7iqqj3x7XS72c=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/chopped-power-salad-with-chicken-0ad93f1931524a679c0f8854d74e6e57.jpg",
                     price = 1200.00,
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, vitae aliquam nisl nisl eget nisl.",
+                    description = "Lorem ipsum nise aliquam nisl nisl eget nisl.",
                 ),
                 Items(
                     id = 10,
                     title = "Dessert",
                     imageUrl = "https://www.shutterstock.com/image-photo/choux-cake-pistachio-cream-nuts-600nw-2361934171.jpg",
                     price = 800.00,
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget aliquam ultricies, nisl nisl aliquet nisl, vitae aliquam nisl nisl eget nisl.",
+                    description = "Lorem ipsum nise aliquam nisl nisl eget nisl.",
                 ),
                 // Add more items in the "Other" category as needed
             )

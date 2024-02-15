@@ -1,5 +1,6 @@
 package com.malisoftware.components.screens
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +26,8 @@ fun EmptyCard(
     modifier: Modifier = Modifier,
     text: String = "Panier vide",
     actionText: String = "Ajouter des articles",
-    action: () -> Unit = {}
+    action: () -> Unit = {},
+    @DrawableRes image: Int? = null
 ) {
     Box (
         modifier = modifier.fillMaxWidth(),
@@ -36,7 +38,7 @@ fun EmptyCard(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.empty_no_drafts) ,
+                painter = painterResource(id = image ?: R.drawable.empty_no_drafts) ,
                null,
                 modifier = Modifier
                     .width(200.dp)
@@ -57,6 +59,22 @@ fun EmptyCard(
             }
         }
     }
+}
+
+@Composable
+fun NoResultFound(
+    modifier: Modifier = Modifier,
+    text: String = "Pas de résultat trouvé",
+    actionText: String = "Reinitialiser",
+    action: () -> Unit = {}
+) {
+    EmptyCard(
+        modifier = modifier,
+        text = text,
+        actionText = actionText,
+        action = action,
+        image = R.drawable.no_search_results_found
+    )
 }
 
 @Preview

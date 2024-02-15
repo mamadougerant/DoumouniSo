@@ -1,5 +1,6 @@
 package com.malisoftware.restaurant.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.malisoftware.components.constants.FilterConstant
 import com.malisoftware.components.uiEvent.UiEvent
@@ -25,41 +26,6 @@ class RestaurantViewModel @Inject constructor(
     private val _vmState = MutableStateFlow(RestaurantVmState())
     val vmState = _vmState.asStateFlow()
 
-    private val _sponsors = MutableStateFlow<List<Sponsors>>(emptyList())
-    val sponsors = _sponsors.asStateFlow()
-
-    private val _storeList = MutableStateFlow<List<Store>>((emptyList()))
-    val storeList = _storeList.asStateFlow()
-
-    private val _restaurantList = MutableStateFlow<List<BusinessData>>((emptyList()))
-    val restaurantList = _restaurantList.asStateFlow()
-
-    private val _popularRestaurantList = MutableStateFlow<List<BusinessData>>((emptyList()))
-    val popularRestaurantList = _popularRestaurantList.asStateFlow()
-
-    private val _promotionRestaurantList = MutableStateFlow<List<BusinessData>>((emptyList()))
-    val promotionRestaurantList = _promotionRestaurantList.asStateFlow()
-
-    private val _restaurantsByCategory = MutableStateFlow<List<BusinessData>?>(null)
-    val restaurantsByCategory = _restaurantsByCategory.asStateFlow()
-
-    private val _restaurantCategoryList = MutableStateFlow<List<CategoryData>>((emptyList()))
-    val restaurantCategoryList = _restaurantCategoryList.asStateFlow()
-
-    private val _sponsorRestaurantList = MutableStateFlow<List<BusinessData>>((emptyList()))
-    val sponsorRestaurantList = _sponsorRestaurantList.asStateFlow()
-
-    private val _minPrice = MutableStateFlow(0.0)
-    private val _maxPrice = MutableStateFlow(0.0)
-    private val _minRating = MutableStateFlow(0.0)
-    private val _maxRating = MutableStateFlow(0.0)
-    private val _minDeliveryTime = MutableStateFlow(0)
-    private val _maxDeliveryTime = MutableStateFlow(0)
-    private val _minDeliveryFee = MutableStateFlow(0.0)
-    private val _maxDeliveryFee = MutableStateFlow(0.0)
-
-
-
 
     private val _restaurantLoading = MutableStateFlow(true)
     private val _restaurantCategoryLoading = MutableStateFlow(true)
@@ -74,37 +40,41 @@ class RestaurantViewModel @Inject constructor(
         getRestaurantList()
         getSponsoredRestaurant()
         getDiscountedRestaurant()
+        getPopularRestaurant()
     }
 
 
     fun getSponsoredRestaurant(){
-        val sponsoredRestaurant = _restaurantList.value.filter { it.sponsored && it.isOpen }
+        val sponsoredRestaurant = _vmState.value.restaurantList.filter { it.sponsored && it.isOpen }
         val twoSponsoredRestaurant = sponsoredRestaurant.shuffled(Random(1)).take(2)
-        _sponsorRestaurantList.value = twoSponsoredRestaurant
+        _vmState.update { state -> state.copy(sponsorRestaurantList = twoSponsoredRestaurant) }
     }
 
     fun getPopularRestaurant(){
-        val popularRestaurantByOrder = _restaurantList.value.filter { it.isOpen }.maxBy { it.orderCount }
-        val popularRestaurantByRating = _restaurantList.value.filter { it.isOpen }.maxBy { it.feedback.toDouble() }
+        val popularRestaurantByOrder = _vmState.value.restaurantList.filter { it.isOpen }.maxBy { it.orderCount }
+        val popularRestaurantByRating = _vmState.value.restaurantList.filter { it.isOpen }.maxBy { it.feedback.toDouble() }
         //val sponsoredRestaurant = _restaurantList.value.filter { it.sponsored }.shuffled(Random(1)).take(1)
 
-        _popularRestaurantList.value = listOf(popularRestaurantByOrder,
-            popularRestaurantByRating,)
-
+        _vmState.update { state -> state.copy(
+            popularRestaurantList = listOf(popularRestaurantByOrder, popularRestaurantByRating)
+        )}
     }
 
     fun getDiscountedRestaurant() {
-        _promotionRestaurantList.value =  _restaurantList.value.filter { it.promotion != "" && it.isOpen }
+        _vmState.update { state -> state.copy(
+            promotionRestaurantList = _vmState.value.restaurantList.filter { it.isOpen && it.promotion != "" }
+        )}
     }
 
 
     suspend fun getSponsors() = dataUseCase.getSponsors().collect {
+        Log.d("RestaurantViewModel", "getSponsors: $it")
         when(it){
             is UiEvent.Loading -> {
 
             }
             is UiEvent.Success -> {
-                _sponsors.value = it.data!!.shuffled(Random(1))
+                _vmState.update { state -> state.copy(sponsors = it.data!!.shuffled(Random(1)))}
             }
             is UiEvent.Error -> {
             }
@@ -119,7 +89,7 @@ class RestaurantViewModel @Inject constructor(
                 _restaurantLoading.value = true
             }
             is UiEvent.Success -> {
-                _restaurantList.value = it.data!!
+                _vmState.update { state -> state.copy(restaurantList = it.data!!) }
                 _restaurantLoading.value = false
             }
             is UiEvent.Error -> {
@@ -147,24 +117,24 @@ class RestaurantViewModel @Inject constructor(
 
             }
             is UiEvent.Success -> {
-                _restaurantsByCategory.value = it.data?.ifEmpty { null }
+                _vmState.update { state -> state.copy(restaurantsByCategory = it.data?.ifEmpty { null })}
                 when{
                     _vmState.value.filterList.contains(FilterConstant.OPEN_NOW.title) -> filterOpenNow()
                     _vmState.value.filterList.contains(FilterConstant.PROMOTIONS.title) -> filterPromotions()
-                    _vmState.value.filterList.contains(FilterConstant.PRICE.title) -> filterPrice(_minPrice.value, _maxPrice.value)
-                    _vmState.value.filterList.contains(FilterConstant.RATING.title) -> filterRating(_minRating.value, _maxRating.value)
-                    _vmState.value.filterList.contains(FilterConstant.DELIVERY_TIME.title) -> filterDeliveryTime(_maxDeliveryTime.value, _maxDeliveryTime.value)
-                    _vmState.value.filterList.contains(FilterConstant.DELIVERY_FEE.title) -> filterDeliveryFee(_minDeliveryFee.value, _maxDeliveryFee.value)
+                    _vmState.value.filterList.contains(FilterConstant.PRICE.title) -> filterPrice(_vmState.value.minPrice, _vmState.value.maxPrice)
+                    _vmState.value.filterList.contains(FilterConstant.RATING.title) -> filterRating(_vmState.value.minRating, _vmState.value.maxRating)
+                    _vmState.value.filterList.contains(FilterConstant.DELIVERY_TIME.title) -> filterDeliveryTime(_vmState.value.maxDeliveryTime, _vmState.value.maxDeliveryTime)
+                    _vmState.value.filterList.contains(FilterConstant.DELIVERY_FEE.title) -> filterDeliveryFee(_vmState.value.minDeliveryFee, _vmState.value.maxDeliveryFee)
                 }
             }
             is UiEvent.Error -> {
-                _restaurantsByCategory.value = null
+                _vmState.update { state -> state.copy(restaurantsByCategory = null) }
             }
         }
     }
 
     fun setRestaurantsByCategory(filterList: List<BusinessData>) {
-        _restaurantsByCategory.value = filterList
+        _vmState.update { state -> state.copy(restaurantsByCategory = filterList) }
     }
 
 
@@ -175,7 +145,7 @@ class RestaurantViewModel @Inject constructor(
                 _restaurantCategoryLoading.value = true
             }
             is UiEvent.Success -> {
-                _restaurantCategoryList.value = it.data!!
+                _vmState.update { state -> state.copy(restaurantCategoryList = it.data!!)}
                 _restaurantCategoryLoading.value = false
             }
             is UiEvent.Error -> {
@@ -209,76 +179,96 @@ class RestaurantViewModel @Inject constructor(
     }
 
     private fun filterOpenNow(){
-        if (_restaurantsByCategory.value != null){
-            _restaurantsByCategory.value = _restaurantsByCategory.value!!.filter { it.isOpen }
+        if (_vmState.value.restaurantsByCategory != null){
+            _vmState.update { state -> state.copy(restaurantsByCategory =
+            _vmState.value.restaurantsByCategory!!.filter { it.isOpen }
+            ) }
         }else {
-            _restaurantsByCategory.value = _restaurantList.value.filter { it.isOpen }
+            _vmState.update { state -> state.copy(restaurantsByCategory =
+            _vmState.value.restaurantList.filter { it.isOpen }
+            ) }
         }
     }
 
 
     private fun filterPromotions(){
-        if (_restaurantsByCategory.value != null){
-            _restaurantsByCategory.value = _restaurantsByCategory.value!!.filter { it.promotion.isNotEmpty() }
+        if (_vmState.value.restaurantsByCategory != null){
+            _vmState.update { state -> state.copy(restaurantsByCategory =
+            _vmState.value.restaurantsByCategory!!.filter { it.promotion.isNotEmpty() }
+            )}
         }else {
-            _restaurantsByCategory.value = _restaurantList.value.filter { it.promotion.isNotEmpty() }
+            _vmState.update { state -> state.copy(restaurantsByCategory =
+            _vmState.value.restaurantList.filter { it.promotion.isNotEmpty() }
+            )}
         }
     }
 
     fun filterPrice(min: Double, max: Double){
-        _maxPrice.value = max
-        _minPrice.value = min
-        if (_restaurantsByCategory.value != null){
-            _restaurantsByCategory.value = _restaurantsByCategory.value!!.filter { it.minPrice in min..max }
+        _vmState.update { state -> state.copy(minPrice = min, maxPrice = max)}
+        if (_vmState.value.restaurantsByCategory != null){
+            _vmState.update { state -> state.copy(restaurantsByCategory =
+            _vmState.value.restaurantsByCategory!!.filter { it.minPrice in min..max }
+            )}
         }else {
-            _restaurantsByCategory.value = _restaurantList.value.filter { it.minPrice in min..max }
+            _vmState.update { state -> state.copy(restaurantsByCategory =
+            _vmState.value.restaurantList.filter { it.minPrice in min..max }
+            )}
         }
     }
 
     fun filterRating(min: Double, max: Double){
-        _minRating.value = min
-        _maxRating.value = max
-        if (_restaurantsByCategory.value != null){
-            _restaurantsByCategory.value = _restaurantsByCategory.value!!.filter { it.feedback.toDouble() in min..max }
+        _vmState.update { state -> state.copy(minRating = min, maxRating = max)}
+        if (_vmState.value.restaurantsByCategory != null){
+            _vmState.update { state -> state.copy(restaurantsByCategory =
+            _vmState.value.restaurantsByCategory!!.filter { it.feedback.toDouble() in min..max }
+            )}
         }else {
-            _restaurantsByCategory.value = _restaurantList.value.filter { it.feedback.toDouble() in min..max }
+            _vmState.update { state -> state.copy(restaurantsByCategory =
+            _vmState.value.restaurantList.filter { it.feedback.toDouble() in min..max }
+            )}
         }
     }
 
     fun filterDeliveryTime(min: Int, max: Int){
-        _minDeliveryTime.value = min
-        _maxDeliveryTime.value = max
-        if (_restaurantsByCategory.value != null){
-            _restaurantsByCategory.value = _restaurantsByCategory.value!!.filter { it.deliveryTime.toInt() in min..max }
+        _vmState.update { state -> state.copy(minDeliveryTime = min, maxDeliveryTime = max)}
+
+        if (_vmState.value.restaurantsByCategory != null){
+            _vmState.update { state -> state.copy(restaurantsByCategory =
+            _vmState.value.restaurantsByCategory!!.filter { it.deliveryTime.toInt() in min..max }
+            )}
         }else {
-            _restaurantsByCategory.value = _restaurantList.value.filter { it.deliveryTime.toInt() in min..max }
+            _vmState.update { state -> state.copy(restaurantsByCategory =
+            _vmState.value.restaurantList.filter { it.deliveryTime.toInt() in min..max }
+            )}
         }
     }
 
     fun filterDeliveryFee(min: Double, max: Double){
-        _minDeliveryFee.value = min
-        _maxDeliveryFee.value = max
-        if (_restaurantsByCategory.value != null){
-            _restaurantsByCategory.value = _restaurantsByCategory.value!!.filter { it.deliveryFee.toDouble() in min..max }
+        _vmState.update { state -> state.copy(minDeliveryFee = min, maxDeliveryFee = max)}
+        if (_vmState.value.restaurantsByCategory != null){
+            _vmState.update { state -> state.copy(restaurantsByCategory =
+            _vmState.value.restaurantsByCategory!!.filter { it.deliveryFee.toDouble() in min..max }
+            )}
         }else {
-            _restaurantsByCategory.value = _restaurantList.value.filter { it.deliveryFee.toDouble() in min..max }
+            _vmState.update { state -> state.copy(restaurantsByCategory =
+            _vmState.value.restaurantList.filter { it.deliveryFee.toDouble() in min..max }
+            )}
         }
     }
 
     fun clearFilter(){
-        _vmState.update { state -> state.copy(filterList = emptyList()) }
-        _restaurantsByCategory.value = null
+        _vmState.update { state -> state.copy(filterList = emptyList(), restaurantsByCategory = null) }
     }
 
     private fun cancelFilter(){
-        _restaurantsByCategory.value = _restaurantList.value
+        _vmState.update { state -> state.copy(restaurantsByCategory = _vmState.value.restaurantList)}
         when{
             _vmState.value.filterList.contains(FilterConstant.OPEN_NOW.title) -> filterOpenNow()
             _vmState.value.filterList.contains(FilterConstant.PROMOTIONS.title) -> filterPromotions()
-            _vmState.value.filterList.contains(FilterConstant.PRICE.title) -> filterPrice(_minPrice.value, _maxPrice.value)
-            _vmState.value.filterList.contains(FilterConstant.RATING.title) -> filterRating(_minRating.value, _maxRating.value)
-            _vmState.value.filterList.contains(FilterConstant.DELIVERY_TIME.title) -> filterDeliveryTime(_maxDeliveryTime.value, _maxDeliveryTime.value)
-            _vmState.value.filterList.contains(FilterConstant.DELIVERY_FEE.title) -> filterDeliveryFee(_minDeliveryFee.value, _maxDeliveryFee.value)
+            _vmState.value.filterList.contains(FilterConstant.PRICE.title) -> filterPrice(_vmState.value.minPrice, _vmState.value.maxPrice)
+            _vmState.value.filterList.contains(FilterConstant.RATING.title) -> filterRating(_vmState.value.minPrice, _vmState.value.maxPrice)
+            _vmState.value.filterList.contains(FilterConstant.DELIVERY_TIME.title) -> filterDeliveryTime(_vmState.value.maxDeliveryTime, _vmState.value.maxDeliveryTime)
+            _vmState.value.filterList.contains(FilterConstant.DELIVERY_FEE.title) -> filterDeliveryFee(_vmState.value.minDeliveryFee, _vmState.value.maxDeliveryFee)
             _vmState.value.filterList.isEmpty() -> clearFilter()
         }
     }

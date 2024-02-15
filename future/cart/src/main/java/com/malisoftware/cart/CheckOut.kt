@@ -1,5 +1,9 @@
 package com.malisoftware.cart
 
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -40,6 +44,7 @@ import com.malisoftware.components.constants.NavConstant.Roots
 import com.malisoftware.components.container.AddressIcon
 import com.malisoftware.components.container.AddressModal
 import com.malisoftware.components.container.RadioColumn
+import com.malisoftware.components.formatLocalTime
 import com.malisoftware.components.icons.NavigationIcon
 import com.malisoftware.local.mappers.toItems
 import com.malisoftware.model.format.formatPrice
@@ -68,6 +73,9 @@ fun CheckOut(
     val businesses by cartVm.orders.collectAsState()
     val business = businesses.find { it.id == restaurantId }
     val items = orders.map { it.toItems() }
+
+    val total = items.sumOf { it.price * it.quantity }
+    val minPrice = business?.restaurant?.minPrice ?: 0.0
     
     var openSheet by remember { mutableStateOf(false) }
     var showOrderCompletedScreen by remember { mutableStateOf(false) }
@@ -112,7 +120,8 @@ fun CheckOut(
                     .padding(bottom = 10.dp)
                     .height(50.dp),
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(Color.Black,Color.White)
+                colors = ButtonDefaults.buttonColors(Color.Black,Color.White),
+                enabled = business?.restaurant?.isOpen == true && items.isNotEmpty()
             ) {
                 Text(text = "Terminer", style = AppTheme.typography.titleLarge)
             }
@@ -122,6 +131,36 @@ fun CheckOut(
             modifier = Modifier
                 .padding(it)
         ){
+            item {
+                AnimatedVisibility (
+                    total < minPrice ,
+                    enter = expandVertically(),
+                    exit = shrinkVertically()
+                ) {
+                    val waring = if (items.isEmpty()) "Le panier est vide"
+                    else "Plus que ${formatPrice(minPrice.minus(total))} " +
+                            "pour atteindre le minimum de commande de ${business?.restaurant?.title}"
+                    Waring(
+                        text = waring,
+                        title = "Ajouter des plats pour atteindre le minimum de commande"
+                    )
+                }
+                Log.d("CartItems", "Business: ${business?.restaurant?.isOpen}")
+                AnimatedVisibility (
+                    !checkIfRestaurantIsOpen(business!!.restaurant),
+                    enter = expandVertically(),
+                    exit = shrinkVertically()
+                ) {
+                    Waring(
+                        text = "Ce restaurant ouvre à ${business?.restaurant?.openingTime?.let {
+                            formatLocalTime(it)
+                        }} " + "et ferme à ${business?.restaurant?.closingTime?.let {
+                            formatLocalTime(it)
+                        }}" ,
+                        title = "Ce restaurant est fermé"
+                    )
+                }
+            }
             item {
                 Card(
                     modifier = Modifier

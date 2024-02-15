@@ -53,6 +53,7 @@ fun MainHome(
     homeRoomViewModel: HomeRoomViewModel,
 ) {
     // TODO add empty card pic and empty command pic
+    // TODO in the search screen also show the items that match the search for restaurant and shop
     LaunchedEffect(key1 = homeViewModel){
         homeViewModel.fetchAllData()
         homeRoomViewModel.getRecentlyViewed()

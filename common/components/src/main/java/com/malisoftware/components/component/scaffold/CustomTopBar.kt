@@ -67,7 +67,7 @@ fun CustomTopBar(
 ) {
     val firstItemOffset by remember { derivedStateOf { scrollState.firstVisibleItemScrollOffset } }
     val firstItemIndex by remember { derivedStateOf { scrollState.firstVisibleItemIndex } }
-    val color = if (firstItemOffset in 0..offset && firstItemIndex.dp == 0.dp) Color.Unspecified
+    val color = if (firstItemOffset in 0..offset && firstItemIndex.dp == 0.dp) Color.Transparent
     else  if (firstItemOffset in offset..offset+60 && firstItemIndex.dp == 0.dp) AppTheme.colors.background.copy(alpha = 0.5f)
     else  if (firstItemOffset in offset..offset+120 && firstItemIndex.dp == 0.dp) AppTheme.colors.background.copy(alpha = 0.7f)
     else  if (firstItemOffset in offset..offset+180 && firstItemIndex.dp == 0.dp) AppTheme.colors.background.copy(alpha = 0.9f)
@@ -84,14 +84,14 @@ fun CustomTopBar(
                 HeartIcon(
                     onClick = onHeartClick,
                     size = 40.dp,
-                    color = if (color == Color.Unspecified) Color.LightGray else color,
+                    color = if (color == Color.Transparent) Color.LightGray else color,
                     isFavorite = isFavorite
                 )
             }
             IconButton(
                 onClick = onSearch,
                 colors = IconButtonDefaults.iconButtonColors(
-                    if (color == Color.Unspecified) Color.LightGray else color,
+                    if (color == Color.Transparent) Color.LightGray else color,
                     Color.Black
                 )
             ) {
@@ -110,7 +110,7 @@ fun CustomTopBar(
             navigationIcon = { NavigationIcon(
                 onClick = onNavIconClick,
                 navIcon = navIcon,
-                color = if (color == Color.Unspecified) Color.LightGray else color,
+                color = if (color == Color.Transparent) Color.LightGray else color,
                 containerColor = Color.Black
             ) },
             actions =  { actions?.invoke(color) ?: Actions() },

@@ -16,6 +16,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -132,32 +133,13 @@ fun CheckOut(
                 .padding(it)
         ){
             item {
-                AnimatedVisibility (
-                    total < minPrice ,
-                    enter = expandVertically(),
-                    exit = shrinkVertically()
-                ) {
-                    val waring = if (items.isEmpty()) "Le panier est vide"
-                    else "Plus que ${formatPrice(minPrice.minus(total))} " +
-                            "pour atteindre le minimum de commande de ${business?.restaurant?.title}"
-                    Waring(
-                        text = waring,
-                        title = "Ajouter des plats pour atteindre le minimum de commande"
-                    )
-                }
-                Log.d("CartItems", "Business: ${business?.restaurant?.isOpen}")
-                AnimatedVisibility (
-                    !checkIfRestaurantIsOpen(business!!.restaurant),
-                    enter = expandVertically(),
-                    exit = shrinkVertically()
-                ) {
-                    Waring(
-                        text = "Ce restaurant ouvre à ${business?.restaurant?.openingTime?.let {
-                            formatLocalTime(it)
-                        }} " + "et ferme à ${business?.restaurant?.closingTime?.let {
-                            formatLocalTime(it)
-                        }}" ,
-                        title = "Ce restaurant est fermé"
+                if (business != null) {
+                    WaringImpl(
+                        total < minPrice,
+                        !(business.restaurant).isOpen,
+                        items,
+                        business,
+                        formatPrice(minPrice.minus(total))
                     )
                 }
             }
@@ -181,7 +163,7 @@ fun CheckOut(
                         Text(text = "Payment", style = AppTheme.typography.titleLarge)
                     },
                 )
-                Divider(thickness = 5.dp)
+                HorizontalDivider(thickness = 5.dp)
 
             }
 

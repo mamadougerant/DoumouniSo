@@ -44,6 +44,7 @@ import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.formatLocalTime
 import com.malisoftware.components.screens.SpecialInstruction
 import com.malisoftware.local.local.BusinessEntity
+import com.malisoftware.local.local.ItemOrderEntity
 import com.malisoftware.local.local.ItemsEntity
 import com.malisoftware.local.mappers.toItems
 import com.malisoftware.model.BusinessData
@@ -52,6 +53,7 @@ import com.malisoftware.model.format.formatPrice
 import com.malisoftware.theme.AppTheme
 import kotlinx.coroutines.launch
 import java.time.LocalTime
+import java.util.concurrent.locks.Condition
 
 @Composable
 fun CartItems(
@@ -122,32 +124,13 @@ fun CartItems(
             modifier = Modifier.padding(paddingValues)
         ){
             item {
-                AnimatedVisibility (
-                    total < minPrice ,
-                    enter = expandVertically(),
-                    exit = shrinkVertically()
-                ) {
-                    val waring = if (items.isEmpty()) "Le panier est vide"
-                    else "Plus que ${formatPrice(minPrice.minus(total))} " +
-                            "pour atteindre le minimum de commande de ${business?.restaurant?.title}"
-                    Waring(
-                        text = waring,
-                        title = "Ajouter des plats pour atteindre le minimum de commande"
-                    )
-                }
-                Log.d("CartItems", "Business: ${business?.restaurant?.isOpen}")
-                AnimatedVisibility (
-                    !checkIfRestaurantIsOpen(business!!.restaurant),
-                    enter = expandVertically(),
-                    exit = shrinkVertically()
-                ) {
-                    Waring(
-                        text = "Cet Etablissement ouvre à ${business?.restaurant?.openingTime?.let {
-                            formatLocalTime(it)
-                        }} " + "et ferme à ${business?.restaurant?.closingTime?.let {
-                            formatLocalTime(it)
-                        }}" ,
-                        title = "Ce Etablissement est fermé"
+                if (business != null) {
+                    WaringImpl(
+                        total < minPrice,
+                        !(business.restaurant).isOpen,
+                        items,
+                        business,
+                        formatPrice(minPrice.minus(total))
                     )
                 }
             }
@@ -179,17 +162,10 @@ fun CartItems(
             item {
                 TextButton(
                     onClick = {
-                        //navController.navigate(MainFeatures.HOME)
-                        navController.navigate(
-                            route =( if (business?.restaurant?.isRestaurant!!) MainFeatures.RESTAURANT_ITEM
-                            else MainFeatures.SHOP_ITEM )+ "/${id}")
+                        navigateToBusinessItem(navController, id, business?.restaurant?.isRestaurant ?: false)
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp),
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = AppTheme.colors.onBackground
-                    )
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                    colors = ButtonDefaults.textButtonColors(Color.Transparent)
                 ) {
                     Text(
                         text = "Ajouter des plats",
@@ -241,10 +217,48 @@ fun Waring(text: String = "",title: String = "" ) {
     }
 }
 
-fun checkIfRestaurantIsOpen(business: BusinessEntity): Boolean  {
-    val time = LocalTime.now()
-    val openingTime = LocalTime.parse(business.openingTime)
-    val closingTime = LocalTime.parse(business.closingTime)
-    return time in openingTime..closingTime
+@Composable
+fun WaringImpl(
+    condition1: Boolean,
+    condition2: Boolean,
+    items: List<Items>,
+    business: ItemOrderEntity?,
+    formattedMinPrice: String,
+) {
+    AnimatedVisibility (
+        condition1,
+        enter = expandVertically(),
+        exit = shrinkVertically()
+    ) {
+        val waring = if (items.isEmpty()) "Le panier est vide"
+        else "Plus que $formattedMinPrice " +
+                "pour atteindre le minimum de commande de ${business?.restaurant?.title}"
+        Waring(
+            text = waring,
+            title = "Ajouter des plats pour atteindre le minimum de commande"
+        )
+    }
+    Log.d("CartItems", "Business: ${business?.restaurant?.isOpen}")
+    AnimatedVisibility (
+        condition2,
+        enter = expandVertically(),
+        exit = shrinkVertically()
+    ) {
+        Waring(
+            text = "Cet Etablissement ouvre à ${business?.restaurant?.openingTime?.let {
+                formatLocalTime(it)
+            }} " + "et ferme à ${business?.restaurant?.closingTime?.let {
+                formatLocalTime(it)
+            }}" ,
+            title = "Ce Etablissement est fermé"
+        )
+    }
 }
+
+fun navigateToBusinessItem(navController: NavController, id: String, isRestaurant: Boolean) {
+    navController.navigate(route =( if (isRestaurant) MainFeatures.RESTAURANT_ITEM
+        else MainFeatures.SHOP_ITEM )+ "/${id}")
+}
+
+
 

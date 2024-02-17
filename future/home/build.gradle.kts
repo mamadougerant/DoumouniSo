@@ -79,6 +79,7 @@ dependencies {
     implementation(project(":future:search"))
     implementation(project(":common:futureapi"))
     implementation(project(":data:backend"))
+    implementation(project(":ai"))
 
     implementation ("io.realm.kotlin:library-base:1.13.0")
     //implementation ("io.realm.kotlin:library-sync:1.11.0")// If using Device Sync

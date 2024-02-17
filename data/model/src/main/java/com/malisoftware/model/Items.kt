@@ -1,7 +1,10 @@
 package com.malisoftware.model
 
 import com.malisoftware.model.format.formatPrice
+import kotlinx.serialization.Serializable
 
+
+@Serializable
 data class Items(
     val id: Int = 0,
     val title: String = "title",

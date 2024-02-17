@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.malisoftware.ai.presentation.ChatUi
 import com.malisoftware.components.constants.NavConstant.MainFeatures
 import com.malisoftware.components.constants.NavConstant.Roots
 import com.malisoftware.home.MainHome
@@ -23,11 +24,15 @@ internal object InternalHomeApi: HomeApi {
             composable(MainFeatures.HOME){
                 val homeViewModel: HomeViewModel = hiltViewModel()
                 val homeRoomViewModel: HomeRoomViewModel = hiltViewModel()
+
+                ChatUi()
+
+                /*
                 MainHome(
                     navController = navController,
                     homeViewModel = homeViewModel,
                     homeRoomViewModel = homeRoomViewModel
-                )
+                )*/
             }
         }
 

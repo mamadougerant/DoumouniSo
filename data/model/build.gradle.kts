@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("dagger.hilt.android.plugin")
     kotlin("kapt")
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -64,6 +65,9 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+
 
     // Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.50")

@@ -16,6 +16,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.TextDisposition
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.CardSizes.roundedBusinessPic
+import com.malisoftware.theme.PaddingSizes
 
 /**
  * SmallBusinessContainer is a composable function that creates a compact container for representing small businesses.
@@ -43,11 +45,11 @@ fun SmallBusinessContainer(
     Row (
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
     ){
         ImageContainer(
             modifier = Modifier
-                .size(70.dp),
+                .size(roundedBusinessPic),
             imageUrl = imageUrl,
             onClick = {},
             loading = false,
@@ -56,7 +58,8 @@ fun SmallBusinessContainer(
         TextDisposition (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(end = 10.dp, bottom = 10.dp, top = 10.dp),
+                .padding(vertical = PaddingSizes.medium)
+                .padding(end = PaddingSizes.medium),
             h1 = title,
             h1Style = AppTheme.typography.titleMedium,
             h2 = subtitle,

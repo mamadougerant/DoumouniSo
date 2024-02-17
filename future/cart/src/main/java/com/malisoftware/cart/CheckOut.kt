@@ -136,7 +136,7 @@ fun CheckOut(
                 if (business != null) {
                     WaringImpl(
                         total < minPrice,
-                        !(business.restaurant).isOpen,
+                        !isBusinessOpen(business),
                         items,
                         business,
                         formatPrice(minPrice.minus(total))

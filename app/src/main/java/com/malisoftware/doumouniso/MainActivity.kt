@@ -1,7 +1,6 @@
 package com.malisoftware.doumouniso
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -19,13 +18,10 @@ import androidx.navigation.compose.rememberNavController
 import com.malisoftware.doumouniso.bottomBar.NavigationBottomBar
 import com.malisoftware.doumouniso.navigation.AppNavigation
 import com.malisoftware.doumouniso.navigation.NavigationProvider
-import com.doumounidron.theme.DoumouniDronTheme
+import com.malisoftware.theme.DoumouniDronTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.malisoftware.local.repository.LocalRepository
-import com.malisoftware.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
-import java.time.LocalTime
 import javax.inject.Inject
 
 @AndroidEntryPoint

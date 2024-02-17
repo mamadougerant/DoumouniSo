@@ -19,6 +19,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.malisoftware.theme.CardSizes.categorySize
+import com.malisoftware.theme.PaddingSizes
 import com.malisoftware.theme.montSerrat
 import kotlin.random.Random
 
@@ -46,11 +48,11 @@ fun CategoryContainer(
 ) {
     Column (
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(5.dp),
+        verticalArrangement = Arrangement.spacedBy(PaddingSizes.small),
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
         ImageContainer(
-            modifier = Modifier.size(90.dp),
+            modifier = Modifier.size(categorySize),
             onClick = onClick,
             imageUrl = imageUrl,
             color = color,
@@ -58,7 +60,7 @@ fun CategoryContainer(
             loading = loading,
         )
         Text(
-            modifier = Modifier.widthIn(90.dp),
+            modifier = Modifier.widthIn(categorySize),
             text = title,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.SemiBold,

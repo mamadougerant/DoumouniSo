@@ -48,7 +48,7 @@ import com.malisoftware.components.component.scaffold.ItemCustomScaffold
 import com.malisoftware.model.Items
 import com.malisoftware.model.format.formatPrice
 import com.malisoftware.theme.AppTheme
-import com.doumounidron.theme.DoumouniDronTheme
+import com.malisoftware.theme.DoumouniDronTheme
 import com.malisoftware.components.R
 
 @OptIn(ExperimentalMaterial3Api::class)

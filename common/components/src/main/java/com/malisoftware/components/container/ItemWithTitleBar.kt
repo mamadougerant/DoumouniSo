@@ -2,7 +2,6 @@ package com.malisoftware.components.container
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,13 +15,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.TextDisposition
 import com.malisoftware.components.icons.SmallLeftIcon
 import com.malisoftware.model.Items
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.CardSizes.promotionBusinessItemBarHeight
+import com.malisoftware.theme.CardSizes.promotionBusinessItemWidth
+import com.malisoftware.theme.PaddingSizes
 
 
+@Preview
 @Composable
 fun ItemWithTitleBar(
     data: List<Items> = List(2){ Items() },
@@ -32,9 +36,9 @@ fun ItemWithTitleBar(
     LazyRow (
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 10.dp),
+            .padding(PaddingSizes.medium),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(15.dp),
+        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.large),
     ){
         items(data.size) {
             val item = data[it]
@@ -42,7 +46,7 @@ fun ItemWithTitleBar(
                 imageUrl = item.imageUrl,
                 modifier = Modifier
                     .fillParentMaxWidth(0.48f)
-                    .height(150.dp),
+                    .height(promotionBusinessItemWidth),
                 rightIcon = { CustomCard(item = item) },
                 onClick = { onClick(item) },
                 topRightIcon = {
@@ -50,8 +54,8 @@ fun ItemWithTitleBar(
                         SmallLeftIcon(
                             text = item.quantity.toString(),
                             modifier = Modifier
-                                .padding(5.dp)
-                                .border(1.dp, Color.LightGray, CircleShape),
+                                .padding(PaddingSizes.small)
+                                .border(PaddingSizes.tiny, Color.LightGray, CircleShape),
                             textColor = Color.Black,
                             shape = CircleShape,
                             color = Color.LightGray
@@ -61,6 +65,7 @@ fun ItemWithTitleBar(
         }
     }
 }
+
 @Composable
 fun CustomCard(
     item: Items
@@ -68,14 +73,14 @@ fun CustomCard(
     Card (
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp),
-        shape = RoundedCornerShape(topEnd = 0.dp, topStart =0.dp, bottomEnd = 10.dp, bottomStart = 10.dp),
+            .height(promotionBusinessItemBarHeight),
+        shape = RoundedCornerShape(topEnd = PaddingSizes.paddingO, topStart = PaddingSizes.paddingO, bottomEnd = PaddingSizes.medium, bottomStart = PaddingSizes.medium),
         colors = CardDefaults.cardColors(AppTheme.colors.background.copy(alpha = 0.7f)),
     ){
         TextDisposition(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 10.dp),
+                .padding(horizontal = PaddingSizes.medium),
             h1 = item.title,
             h3 = item.formattedPrice,
             h1Style = AppTheme.typography.titleMedium,

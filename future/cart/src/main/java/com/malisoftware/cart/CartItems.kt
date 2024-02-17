@@ -114,7 +114,7 @@ fun CartItems(
                     }
 
                 },
-                enabled = total >= minPrice && business?.restaurant?.isOpen == true
+                enabled = total >= minPrice && isBusinessOpen(business)
                         && items.isNotEmpty()
             )
         }
@@ -127,7 +127,7 @@ fun CartItems(
                 if (business != null) {
                     WaringImpl(
                         total < minPrice,
-                        !(business.restaurant).isOpen,
+                        !isBusinessOpen(business),
                         items,
                         business,
                         formatPrice(minPrice.minus(total))
@@ -164,7 +164,9 @@ fun CartItems(
                     onClick = {
                         navigateToBusinessItem(navController, id, business?.restaurant?.isRestaurant ?: false)
                     },
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp),
                     colors = ButtonDefaults.textButtonColors(Color.Transparent)
                 ) {
                     Text(
@@ -215,6 +217,14 @@ fun Waring(text: String = "",title: String = "" ) {
             )
         }
     }
+}
+
+
+fun isBusinessOpen(business: ItemOrderEntity?): Boolean {
+    val openingTime = LocalTime.parse(business?.restaurant?.openingTime)
+    val closingTime = LocalTime.parse(business?.restaurant?.closingTime)
+    val now = LocalTime.now()
+    return now.isAfter(openingTime) && now.isBefore(closingTime)
 }
 
 @Composable

@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.TextWithIcon
 import com.malisoftware.components.shimmerEffect
+import com.malisoftware.theme.PaddingSizes
 
 /**
  * RowListContainer is a composable function that creates a container with a row-oriented lazy list
@@ -64,7 +65,7 @@ fun RowListContainer(
     ){
         LazyRow (
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
         ){
             content()
         }
@@ -110,7 +111,7 @@ fun ColumnListContainer(
     ){
         LazyColumn (
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            verticalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
         ){
             content()
         }
@@ -133,7 +134,7 @@ fun GridListContainer(
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns),
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
         ){
             content()
         }
@@ -150,7 +151,7 @@ fun CoreListContainer(
 ) {
     Column (
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
         if (title != null) {

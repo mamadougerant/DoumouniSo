@@ -34,7 +34,7 @@ import com.malisoftware.components.container.StoreContainer
 import com.malisoftware.components.icons.ArrowForward
 import com.malisoftware.model.BusinessData
 import com.malisoftware.model.Items
-import com.doumounidron.theme.DoumouniDronTheme
+import com.malisoftware.theme.DoumouniDronTheme
 import com.future.home.HomeShimmer
 import com.malisoftware.home.viewModel.HomeViewModel
 import com.malisoftware.components.container.ContinueOrder

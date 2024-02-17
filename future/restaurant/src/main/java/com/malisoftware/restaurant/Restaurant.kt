@@ -2,7 +2,6 @@ package com.malisoftware.restaurant
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -27,7 +25,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,7 +42,7 @@ import com.malisoftware.components.icons.ArrowForward
 import com.malisoftware.components.icons.NavigationIcon
 import com.malisoftware.model.BusinessData
 import com.malisoftware.model.CategoryData
-import com.doumounidron.theme.DoumouniDronTheme
+import com.malisoftware.theme.DoumouniDronTheme
 import com.future.restaurant.RestaurantShimmer
 import com.malisoftware.components.component.PriceSlider
 import com.malisoftware.components.component.PriceSliderWithText

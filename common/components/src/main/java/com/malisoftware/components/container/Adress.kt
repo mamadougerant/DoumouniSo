@@ -38,12 +38,15 @@ import androidx.compose.ui.unit.dp
 import com.malisoftware.components.TextDisposition
 import com.malisoftware.components.icons.NavigationIcon
 import com.malisoftware.theme.AppTheme
-import com.doumounidron.theme.DoumouniDronTheme
+import com.malisoftware.theme.ButtonSizes
+import com.malisoftware.theme.DoumouniDronTheme
+import com.malisoftware.theme.PaddingSizes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddressModal(
     onStaClose: (Boolean) -> Unit = {},
+    onClick: () -> Unit = {}
 ) {
     val state = rememberModalBottomSheetState(true)
     ModalBottomSheet(
@@ -68,22 +71,10 @@ fun AddressModal(
                 )
             },
             bottomBar = {
-                Button(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
-                        .padding(bottom = 10.dp)
-                        .height(50.dp)
-                    ,
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Black,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(text = "Enregistrer", style = AppTheme.typography.titleLarge)
-                }
+                NormalButton(
+                    onClick = onClick,
+                    text = "Enregistrer"
+                )
             }
         ){
             Address(
@@ -92,8 +83,29 @@ fun AddressModal(
             )
         }
     }
+}
 
-
+@Composable
+fun NormalButton(
+    onClick: () -> Unit = {},
+    text: String = "Enregistrer"
+) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = PaddingSizes.medium)
+            .padding(bottom = PaddingSizes.medium)
+            .height(ButtonSizes.large)
+        ,
+        shape = AppTheme.shapes.medium,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Black,
+            contentColor = Color.White
+        )
+    ) {
+        Text(text = text, style = AppTheme.typography.titleLarge)
+    }
 }
 
 

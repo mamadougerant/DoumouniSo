@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +24,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.HorizontalDividerSizes
+import com.malisoftware.theme.PaddingSizes
 
 /**
  * SearchQueriesContainer is a composable function that creates a container for search queries.
@@ -48,7 +51,7 @@ fun SearchQueriesContainer(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onClick() }
-            .padding(start = 5.dp),
+            .padding(start = PaddingSizes.small),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ){
@@ -57,7 +60,7 @@ fun SearchQueriesContainer(
             modifier = Modifier.clickable { onClick() }
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(10.dp),
+                modifier = Modifier.fillMaxWidth().padding(PaddingSizes.medium),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -72,10 +75,11 @@ fun SearchQueriesContainer(
                 trailingIcon?.invoke()
             }
             if (showDivider)
-                Divider(modifier = Modifier
-                    .height( 2.dp)
-                    .clip(CircleShape)
-                    .padding(start = 10.dp),
+                HorizontalDivider(
+                    modifier = Modifier
+                        .height(HorizontalDividerSizes.small)
+                        .clip(CircleShape)
+                        .padding(start = PaddingSizes.medium),
                     color = Color.Black
                 )
         }

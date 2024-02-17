@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.malisoftware.components.container.CategoryContainer
 import com.malisoftware.components.container.RowListContainer
 import com.malisoftware.model.CategoryData
-import com.doumounidron.theme.DoumouniDronTheme
+import com.malisoftware.theme.DoumouniDronTheme
 import kotlin.random.Random
 
 

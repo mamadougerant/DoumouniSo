@@ -34,7 +34,7 @@ fun LazyListScope.ItemHeader(
         }
         Card (
             colors = CardDefaults.cardColors(AppTheme.colors.background),
-            shape = RoundedCornerShape(0.dp),
+            shape = AppTheme.shapes.extraSmall,
         ) {
             BusinessInfo(
                 modifier = Modifier

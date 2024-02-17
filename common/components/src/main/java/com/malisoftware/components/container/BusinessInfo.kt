@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,6 +20,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.TextWithIcon
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.CardSizes.restaurantDeliveryTimeCard
+import com.malisoftware.theme.PaddingSizes
 
 @Composable
 fun BusinessInfo(
@@ -38,7 +41,7 @@ fun BusinessInfo(
         TextWithIcon(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(horizontal = 20.dp),
+                .padding(horizontal = PaddingSizes.extraLarge),
             title = title
         ) {}
         Text(
@@ -46,50 +49,49 @@ fun BusinessInfo(
             style = AppTheme.typography.titleMedium,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(horizontal = 20.dp),
+                .padding(horizontal = PaddingSizes.extraLarge),
             textAlign = TextAlign.Center
         )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 10.dp),
+                .padding(horizontal = PaddingSizes.extraLarge, vertical = PaddingSizes.medium),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
         ) {
-            OutlinedCard(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(50.dp),
-                colors = CardDefaults.cardColors(subInCard1Color),
-            ) {
-                Text(
-                    text = subInCard1,
-                    style = AppTheme.typography.titleMedium,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .align(Alignment.CenterHorizontally)
-                        .padding(5.dp),
-                    textAlign = TextAlign.Center
-                )
-            }
-            OutlinedCard(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(50.dp),
-                colors = CardDefaults.cardColors(subInCard2Color),
-
-            ) {
-                Text(
-                    text = subInCard2,
-                    style = AppTheme.typography.titleMedium,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .align(Alignment.CenterHorizontally)
-                        .padding(5.dp),
-                    textAlign = TextAlign.Center
-                )
-            }
+            BusinessInfoCard(
+                text = subInCard1,
+                color = subInCard1Color
+            )
+            BusinessInfoCard(
+                text = subInCard2,
+                color = subInCard2Color
+            )
         }
     }
 
+}
+
+@Composable
+fun RowScope.BusinessInfoCard(
+    text: String,
+    color: Color,
+) {
+    OutlinedCard(
+        modifier = Modifier
+            .weight(1f)
+            .height(restaurantDeliveryTimeCard),
+        colors = CardDefaults.cardColors(color),
+
+        ) {
+        Text(
+            text = text,
+            style = AppTheme.typography.titleMedium,
+            modifier = Modifier
+                .fillMaxHeight()
+                .align(Alignment.CenterHorizontally)
+                .padding(PaddingSizes.small),
+            textAlign = TextAlign.Center
+        )
+    }
 }

@@ -41,6 +41,11 @@ import androidx.compose.ui.unit.dp
 import com.malisoftware.components.TextDisposition
 import com.malisoftware.components.R
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.ButtonSizes
+import com.malisoftware.theme.CardSizes.plusIconHeight
+import com.malisoftware.theme.CardSizes.shopItemHeight
+import com.malisoftware.theme.CardSizes.shopItemWidth
+import com.malisoftware.theme.PaddingSizes
 
 /**
  * CoreItemContainer is a composable function that creates a container for representing items,
@@ -115,13 +120,13 @@ fun ItemContainer(
 ) {
     Column (
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(5.dp),
+        verticalArrangement = Arrangement.spacedBy(PaddingSizes.small),
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
         CoreItemContainer(
             modifier = Modifier
-                .width(115.dp)
-                .height(130.dp),
+                .width(shopItemWidth)
+                .height(shopItemHeight),
             imageUrl = imageUrl,
             onClick = onClick,
             color = color,
@@ -133,8 +138,8 @@ fun ItemContainer(
         )
         TextDisposition(
             modifier = Modifier
-                .width(115.dp)
-                .padding(start = 10.dp,),
+                .width(shopItemWidth)
+                .padding(start = PaddingSizes.medium),
             h1 = title,
             h1Style = AppTheme.typography.titleMedium.copy(color = textsColor ?: Color.Unspecified),
             h2 = subtitle,
@@ -153,8 +158,8 @@ fun PlusIcon(
 ) {
     Card (
         modifier = Modifier
-            .padding(horizontal = 5.dp, vertical = 10.dp)
-            .height(35.dp),
+            .padding(horizontal = PaddingSizes.small, vertical = PaddingSizes.medium)
+            .height(plusIconHeight),
         shape = CircleShape,
         colors = CardDefaults.cardColors(color),
         elevation = CardDefaults.cardElevation(elevation),
@@ -175,9 +180,9 @@ private fun ColumnScope.AnimatedPlusMinusIcon(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(5.dp),
+        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.small),
         modifier = Modifier
-            .padding(horizontal = 5.dp)
+            .padding(horizontal = PaddingSizes.small)
             .fillMaxHeight()
             .align(Alignment.CenterHorizontally)
     ) {
@@ -186,7 +191,7 @@ private fun ColumnScope.AnimatedPlusMinusIcon(
             IconButton(
                 onClick = { if (num in 1..9 ) { num-- ; onQuantityChange(num) }  },
                 colors = IconButtonDefaults.iconButtonColors(Color.Unspecified, Color.Black),
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.size(ButtonSizes.small)
             ) {
                 if (num > 1) Icon(painterResource(id = R.drawable.ic_baseline_minus), contentDescription = "")
                 else Icon(Icons.Rounded.Delete, contentDescription = "")
@@ -198,7 +203,7 @@ private fun ColumnScope.AnimatedPlusMinusIcon(
         IconButton(
             onClick = { if (num in 0..8 ) { num++; onQuantityChange(num) } },
             colors = IconButtonDefaults.iconButtonColors(Color.Unspecified, Color.Black),
-            modifier = Modifier.size(30.dp)
+            modifier = Modifier.size(ButtonSizes.small)
         ) {
             Icon(Icons.Rounded.Add, contentDescription = "")
         }

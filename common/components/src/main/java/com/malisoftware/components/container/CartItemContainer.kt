@@ -24,6 +24,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.malisoftware.model.BusinessData
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.CardSizes.buttonHeight
+import com.malisoftware.theme.PaddingSizes
 
 
 @Composable
@@ -41,61 +43,52 @@ fun CartItemContainer(
         SmallBusinessContainer(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp),
+                .padding(PaddingSizes.medium),
             imageUrl = business.imageUrl,
             title = business.title,
             subtitle = business.category,
         ) { IconButton(onClick = onClear) {
             Icon(Icons.Rounded.Clear, contentDescription = "")
         } }
-        Button(
+
+        CartButton(
             onClick = onConfirm,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(5.dp)
-                .padding(horizontal = 5.dp)
-                .height(50.dp),
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(AppTheme.colors.onBackground),
-            contentPadding = PaddingValues(0.dp)
-        ) {
-            val text = buildAnnotatedString {
-                withStyle(AppTheme.typography.titleMedium.toSpanStyle()) {
-                    append("Voir le panier")
-                }
-            }
-            Text(
-                text = text,
-                style = AppTheme.typography.titleMedium,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .align(Alignment.CenterVertically)
-                    .padding(vertical = 15.dp, horizontal = 10.dp),
-                color = AppTheme.colors.background
-            )
-        }
-        Button(
+            text = "Voir le panier"
+        )
+        CartButton(
             onClick = { onBusinessForward.invoke(business) },
+            text = "Voir l'etablissement",
+            color = Color.LightGray
+        )
+
+    }
+}
+
+@Composable
+fun CartButton(
+    onClick: () -> Unit = {},
+    text: String = "Voir le panier",
+    color: Color = AppTheme.colors.onBackground
+) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(PaddingSizes.small)
+            .padding(horizontal = PaddingSizes.small)
+            .height(buttonHeight),
+        shape = AppTheme.shapes.medium,
+        colors = ButtonDefaults.buttonColors(color),
+        contentPadding = PaddingValues(0.dp)
+    ) {
+        Text(
+            text = text,
+            style = AppTheme.typography.titleMedium,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(5.dp)
-                .padding(horizontal = 5.dp)
-                .height(50.dp),
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(if (isSystemInDarkTheme()) Color.LightGray.copy(0.5f) else Color.LightGray),
-            contentPadding = PaddingValues(0.dp)
-        ) {
-            Text(
-                text = "Voir l'etablissement",
-                style = AppTheme.typography.titleMedium,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .align(Alignment.CenterVertically)
-                    .padding(15.dp),
-                color = AppTheme.colors.background
-            )
-        }
-
-
+                .fillMaxHeight()
+                .align(Alignment.CenterVertically)
+                .padding(vertical = PaddingSizes.large, horizontal = PaddingSizes.medium),
+            color = AppTheme.colors.background
+        )
     }
 }

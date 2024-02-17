@@ -24,6 +24,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.TextDisposition
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.ButtonSizes
+import com.malisoftware.theme.CardSizes.restaurantItemHeight
+import com.malisoftware.theme.CardSizes.restaurantItemWidth
+import com.malisoftware.theme.CardSizes.smallRestaurantItemHeight
+import com.malisoftware.theme.CardSizes.smallRestaurantItemWidth
+import com.malisoftware.theme.PaddingSizes
 
 @Composable
 fun HorizontalItemContainer(
@@ -40,16 +46,16 @@ fun HorizontalItemContainer(
     Row (
         modifier = modifier
             .fillMaxWidth()
-            .padding(5.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+            .padding(PaddingSizes.small),
+        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
         verticalAlignment = Alignment.CenterVertically
     ){
         ImageContainer(
             onClick = onClick,
             imageUrl = imageUrl,
             modifier = Modifier
-                .width(100.dp)
-                .height(100.dp),
+                .width(restaurantItemWidth)
+                .height(restaurantItemHeight),
             rightIcon = {}
         )
         TextDisposition(
@@ -69,8 +75,8 @@ fun HorizontalItemContainer(
                     onClick = onClick,
                     colors = IconButtonDefaults.iconButtonColors(Color.LightGray,Color.Black),
                     modifier = Modifier
-                        .padding(5.dp)
-                        .size(40.dp)
+                        .padding(PaddingSizes.small)
+                        .size(ButtonSizes.medium)
                 ) {
                     if (quantity == 0)
                         Icon(Icons.Rounded.Add, contentDescription = "")
@@ -96,16 +102,16 @@ fun HorizontalCartItemContainer(
     Row (
         modifier = modifier
             .fillMaxWidth()
-            .padding(5.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+            .padding(PaddingSizes.small),
+        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
         verticalAlignment = Alignment.CenterVertically
     ){
         ImageContainer(
             onClick = onClick,
             imageUrl = imageUrl,
             modifier = Modifier
-                .width(70.dp)
-                .height(70.dp),
+                .width(smallRestaurantItemWidth)
+                .height(smallRestaurantItemHeight),
             rightIcon = {}
         )
         TextDisposition(

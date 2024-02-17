@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.doumounidron.theme.DoumouniDronTheme
+import com.malisoftware.theme.DoumouniDronTheme
 import com.malisoftware.components.LazyLists.GridSmallContainerWithTitle
 import com.malisoftware.components.LazyLists.SearchQueriesList
 import com.malisoftware.components.TextWithIcon

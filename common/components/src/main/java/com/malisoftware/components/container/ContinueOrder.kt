@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.TextWithIcon
 import com.malisoftware.components.icons.ArrowForward
+import com.malisoftware.theme.PaddingSizes
 
 @Composable
 fun ContinueOrder(
@@ -23,7 +24,7 @@ fun ContinueOrder(
     ) {}
     OutlinedCard() {
         SmallBusinessContainer(
-            modifier = Modifier.padding(5.dp),
+            modifier = Modifier.padding(PaddingSizes.small),
             imageUrl = imageUrl,
             title =  title,
             subtitle = subtitle,

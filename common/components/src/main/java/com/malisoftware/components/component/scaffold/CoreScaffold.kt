@@ -14,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -25,6 +26,7 @@ fun CoreScaffold(
     bottomBar: @Composable () -> Unit = {},
     imageUrl: String = "",
     scrollState: LazyListState = rememberLazyListState(),
+    containerColor: Color = Color.Unspecified,
     contentPaddingValues: (PaddingValues)->Unit = {  },
     content: LazyListScope.() -> Unit = {},
 ) {
@@ -32,6 +34,7 @@ fun CoreScaffold(
         modifier = Modifier,
         topBar = topBar,
         bottomBar = bottomBar,
+        containerColor = containerColor
     ) {
         contentPaddingValues.invoke(it)
         Box(

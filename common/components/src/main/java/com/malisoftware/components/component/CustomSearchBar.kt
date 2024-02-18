@@ -30,6 +30,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.component.scaffold.ContentTabs
 import com.malisoftware.components.component.scaffold.NoScrollableContentTabs
+import com.malisoftware.theme.ButtonSizes
+import com.malisoftware.theme.PaddingSizes
 
 /**
  * A composable function that creates a custom search bar with tabs.
@@ -61,7 +63,7 @@ fun CustomSearchBar(
     val containerColor = if (!active) Color.LightGray else Color.LightGray
     SearchBar(
         modifier = modifier
-            .padding(horizontal = if (active) 0.dp else 10.dp),
+            .padding(horizontal = if (active) PaddingSizes.paddingO else PaddingSizes.Dp10),
         query = if (active) query else "",
         onQueryChange = { query = it; onQueryChange(it) },
         onSearch = onSearch,
@@ -99,7 +101,7 @@ fun CustomSearchBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
-                .padding(horizontal = 20.dp),
+                .padding(horizontal = PaddingSizes.Dp20),
             list = tabList,
             textColor = tabTextColor,
         )
@@ -114,14 +116,14 @@ fun SearchIcon(
 ) {
     if (!active) {
         IconButton(
-            onClick = onClick, Modifier.size(24.dp),
+            onClick = onClick, Modifier.size(ButtonSizes.Dp24),
             colors = IconButtonDefaults.iconButtonColors(Color.Unspecified, Color.Black),
         ) {
             Icon(imageVector = Icons.Default.Search, contentDescription = null)
         }
     } else {
         IconButton(
-            onClick = onClick, Modifier.size(24.dp),
+            onClick = onClick, Modifier.size(ButtonSizes.Dp24),
             colors = IconButtonDefaults.iconButtonColors(Color.Unspecified, Color.Black),
         ) {
             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
@@ -134,7 +136,7 @@ fun ClearIcon( onClick: () -> Unit = {} ) {
     IconButton(
         onClick = onClick,
         Modifier
-            .size(24.dp)
+            .size(ButtonSizes.Dp24)
             .offset(y = 2.dp)
     ) {
         Icon(imageVector = Icons.Default.Clear, contentDescription = null)

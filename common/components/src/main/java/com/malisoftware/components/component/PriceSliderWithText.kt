@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.PaddingSizes
 
 @Composable
 fun PriceSliderWithText(
@@ -20,26 +21,26 @@ fun PriceSliderWithText(
     RangeSliderWithData(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 30.dp)
-            .padding(bottom = 30.dp),
+            .padding(horizontal = PaddingSizes.Dp30)
+            .padding(bottom = PaddingSizes.Dp30),
         data = data,
         dataModifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 5.dp),
+            .padding(horizontal = PaddingSizes.Dp5),
         content = { start, end ->
             Button(
                 onClick = { onClick(start, end) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 10.dp),
-                shape = RoundedCornerShape(10.dp),
+                    .padding(top = PaddingSizes.Dp10),
+                shape = AppTheme.shapes.medium,
                 colors = ButtonDefaults.buttonColors(
                     AppTheme.colors.onBackground
                 )
             ){
                 Text(
                     text = "Appliquer" ,
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier.padding(PaddingSizes.Dp10),
                     textAlign = TextAlign.Center,
                     color = AppTheme.colors.background,
                     style = AppTheme.typography.titleLarge

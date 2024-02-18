@@ -1,5 +1,6 @@
 package com.malisoftware.ai.chatUseCase
 
+import android.util.Log
 import com.malisoftware.ai.repository.ChatRepository
 import com.malisoftware.ai.model.Chat
 import com.malisoftware.ai.model.request.ChatRequest
@@ -20,6 +21,7 @@ class ChatUseCase @Inject constructor(
         val result = chatRepository.getChat(
             request = request
         )
+        Log.d("ChatUseCase", "invoke: $result")
         val message = result.body()?.choices?.first()?.message?.content
         val toolData = result.body()?.choices?.first()?.message
             ?.tool_calls?.get(0)?.function?.arguments

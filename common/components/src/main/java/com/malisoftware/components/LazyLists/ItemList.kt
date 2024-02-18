@@ -19,6 +19,7 @@ import com.malisoftware.components.container.ItemContainer
 import com.malisoftware.components.container.RowListContainer
 import com.malisoftware.model.Items
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.PaddingSizes
 
 @Composable
 fun ItemList(
@@ -79,8 +80,8 @@ fun LazyListScope.GridItemList(
             title = title!!,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
-                .padding(horizontal = 10.dp),
+                .padding(PaddingSizes.Dp10)
+                .padding(horizontal = PaddingSizes.Dp10),
             customStyle = AppTheme.typography.titleLarge.copy(color = textsColor ?: Color.Unspecified )
         ){ trailingContent.invoke(items) }
     }
@@ -88,7 +89,7 @@ fun LazyListScope.GridItemList(
         val gridItem = gridItems[item]
         ItemList(
             modifier = modifier
-                .padding(horizontal = 10.dp, vertical = 5.dp),
+                .padding(horizontal = PaddingSizes.Dp10, vertical = PaddingSizes.Dp5),
             title = null,
             items = gridItem,
             onClick = onClick,

@@ -64,6 +64,7 @@ fun CustomScaffold(
     isFavorite: Boolean = false,
     onSearch: () -> Unit = {},
     onHeartClick: (Boolean) -> Unit = {},
+    extraActions: (@Composable (Color) -> Unit)? = null,
     barExtraContent: (@Composable () -> Unit)? = null,
     showBarAtIndex: Int? = 2,
     contentPaddingValues: (PaddingValues)->Unit = {  },
@@ -83,7 +84,8 @@ fun CustomScaffold(
                 onHeartClick = onHeartClick,
                 barExtraContent = barExtraContent,
                 showBarAtIndex = showBarAtIndex,
-                isFavorite = isFavorite
+                isFavorite = isFavorite,
+                extraActions = extraActions
             )
         },
         imageUrl = imageUrl,

@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.malisoftware.components.TextDisposition
 import com.malisoftware.components.icons.SmallLeftIcon
 import com.malisoftware.model.Items
@@ -36,9 +35,9 @@ fun ItemWithTitleBar(
     LazyRow (
         modifier = Modifier
             .fillMaxWidth()
-            .padding(PaddingSizes.medium),
+            .padding(PaddingSizes.Dp10),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.large),
+        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.Dp15),
     ){
         items(data.size) {
             val item = data[it]
@@ -54,8 +53,8 @@ fun ItemWithTitleBar(
                         SmallLeftIcon(
                             text = item.quantity.toString(),
                             modifier = Modifier
-                                .padding(PaddingSizes.small)
-                                .border(PaddingSizes.tiny, Color.LightGray, CircleShape),
+                                .padding(PaddingSizes.Dp5)
+                                .border(PaddingSizes.Dp1, Color.LightGray, CircleShape),
                             textColor = Color.Black,
                             shape = CircleShape,
                             color = Color.LightGray
@@ -74,13 +73,13 @@ fun CustomCard(
         modifier = Modifier
             .fillMaxWidth()
             .height(promotionBusinessItemBarHeight),
-        shape = RoundedCornerShape(topEnd = PaddingSizes.paddingO, topStart = PaddingSizes.paddingO, bottomEnd = PaddingSizes.medium, bottomStart = PaddingSizes.medium),
+        shape = RoundedCornerShape(topEnd = PaddingSizes.paddingO, topStart = PaddingSizes.paddingO, bottomEnd = PaddingSizes.Dp10, bottomStart = PaddingSizes.Dp10),
         colors = CardDefaults.cardColors(AppTheme.colors.background.copy(alpha = 0.7f)),
     ){
         TextDisposition(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = PaddingSizes.medium),
+                .padding(horizontal = PaddingSizes.Dp10),
             h1 = item.title,
             h3 = item.formattedPrice,
             h1Style = AppTheme.typography.titleMedium,

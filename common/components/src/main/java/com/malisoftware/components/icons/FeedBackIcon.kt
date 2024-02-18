@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.ButtonSizes
 
 @Composable
 fun FeedBackIcon(
@@ -20,7 +21,7 @@ fun FeedBackIcon(
         onClick = onClick,
         modifier = Modifier
             .padding(vertical = 10.dp)
-            .size(30.dp),
+            .size(ButtonSizes.Dp30),
         colors = IconButtonDefaults.iconButtonColors(
             Color.LightGray,
             contentColor = Color.Black

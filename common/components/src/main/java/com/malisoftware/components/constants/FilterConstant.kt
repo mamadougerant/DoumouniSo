@@ -7,5 +7,4 @@ enum class FilterConstant (val title: String) {
     DELIVERY_FEE("Delivery Fee"),
     OPEN_NOW("Open Now"),
     PROMOTIONS("Promotions"),
-
 }

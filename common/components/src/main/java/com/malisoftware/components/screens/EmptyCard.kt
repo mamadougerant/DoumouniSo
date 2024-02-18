@@ -15,11 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.R
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.CardSizes.emptyCardSize
+import com.malisoftware.theme.PaddingSizes
 
 @Composable
 fun EmptyCard(
@@ -27,7 +30,7 @@ fun EmptyCard(
     text: String = "Panier vide",
     actionText: String = "Ajouter des articles",
     action: () -> Unit = {},
-    @DrawableRes image: Int? = null
+    image:  Painter? = null
 ) {
     Box (
         modifier = modifier.fillMaxWidth(),
@@ -35,19 +38,19 @@ fun EmptyCard(
     ) {
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(PaddingSizes.Dp10)
         ) {
             Image(
-                painter = painterResource(id = image ?: R.drawable.empty_no_drafts) ,
+                painter = image ?: painterResource(id = R.drawable.empty_no_drafts) ,
                null,
                 modifier = Modifier
-                    .width(200.dp)
-                    .height(200.dp)
+                    .width(emptyCardSize)
+                    .height(emptyCardSize)
             )
             Text(text = text, style = AppTheme.typography.titleLarge)
             Button(
                 onClick = action,
-                modifier = Modifier.width(200.dp),
+                modifier = Modifier.width(emptyCardSize),
                 contentPadding = PaddingValues(5.dp),
                 colors = ButtonDefaults.buttonColors( AppTheme.colors.onBackground),
             ) {
@@ -73,12 +76,12 @@ fun NoResultFound(
         text = text,
         actionText = actionText,
         action = action,
-        image = R.drawable.no_search_results_found
+        image = painterResource(id = R.drawable.no_search_results_found )
     )
 }
 
 @Preview
 @Composable
 fun EmptyCard_() {
-    EmptyCard()
+    NoResultFound()
 }

@@ -33,15 +33,20 @@ object CardSizes{
     val buttonHeight = 50.dp
     val restaurantDeliveryTimeCard = 50.dp // card in which delivery time else fee are shown
     val orderInfoCard = 250.dp
+    val businessContainerWidth = 235.dp
+    val businessContainerHeight = 150.dp
+    val lageBusinessContainerHeight = 180.dp
+    val emptyCardSize = 200.dp
 }
 
 object PaddingSizes{
     val paddingO = 0.dp
-    val tiny = 1.dp
-    val small = 5.dp
-    val medium = 10.dp
-    val large = 15.dp // also for horizontalArrangement spaceBy
-    val extraLarge = 20.dp
+    val Dp1 = 1.dp
+    val Dp5 = 5.dp
+    val Dp10 = 10.dp
+    val Dp15 = 15.dp // also for horizontalArrangement spaceBy
+    val Dp20 = 20.dp
+    val Dp30 = 30.dp
 }
 
 object HorizontalDividerSizes{
@@ -52,7 +57,9 @@ object HorizontalDividerSizes{
 }
 
 object ButtonSizes {
-    val small = 30.dp
+    val Dp24 = 24.dp
+    val Dp30 = 30.dp
+    val Dp35 = 35.dp
     val medium = 40.dp
     val large = 50.dp
     val extraLarge = 60.dp

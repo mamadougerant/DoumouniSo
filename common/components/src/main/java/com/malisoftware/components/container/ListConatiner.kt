@@ -11,10 +11,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,7 +63,7 @@ fun RowListContainer(
     ){
         LazyRow (
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
+            horizontalArrangement = Arrangement.spacedBy(PaddingSizes.Dp10),
         ){
             content()
         }
@@ -111,7 +109,7 @@ fun ColumnListContainer(
     ){
         LazyColumn (
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
+            verticalArrangement = Arrangement.spacedBy(PaddingSizes.Dp10),
         ){
             content()
         }
@@ -134,7 +132,7 @@ fun GridListContainer(
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns),
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
+            verticalArrangement = Arrangement.spacedBy(PaddingSizes.Dp10),
         ){
             content()
         }
@@ -151,7 +149,7 @@ fun CoreListContainer(
 ) {
     Column (
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
+        verticalArrangement = Arrangement.spacedBy(PaddingSizes.Dp10),
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
         if (title != null) {

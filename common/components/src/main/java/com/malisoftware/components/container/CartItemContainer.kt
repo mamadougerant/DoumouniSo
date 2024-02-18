@@ -1,12 +1,10 @@
 package com.malisoftware.components.container
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.Button
@@ -19,8 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.malisoftware.model.BusinessData
 import com.malisoftware.theme.AppTheme
@@ -43,7 +39,7 @@ fun CartItemContainer(
         SmallBusinessContainer(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(PaddingSizes.medium),
+                .padding(PaddingSizes.Dp10),
             imageUrl = business.imageUrl,
             title = business.title,
             subtitle = business.category,
@@ -74,8 +70,8 @@ fun CartButton(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(PaddingSizes.small)
-            .padding(horizontal = PaddingSizes.small)
+            .padding(PaddingSizes.Dp5)
+            .padding(horizontal = PaddingSizes.Dp5)
             .height(buttonHeight),
         shape = AppTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(color),
@@ -87,7 +83,7 @@ fun CartButton(
             modifier = Modifier
                 .fillMaxHeight()
                 .align(Alignment.CenterVertically)
-                .padding(vertical = PaddingSizes.large, horizontal = PaddingSizes.medium),
+                .padding(vertical = PaddingSizes.Dp15, horizontal = PaddingSizes.Dp10),
             color = AppTheme.colors.background
         )
     }

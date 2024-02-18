@@ -1,5 +1,6 @@
 package com.malisoftware.ai.viewModel
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -7,26 +8,80 @@ import androidx.lifecycle.viewModelScope
 import com.malisoftware.ai.chatUseCase.ChatUseCase
 import com.malisoftware.ai.model.Chat
 import com.malisoftware.ai.model.request.ChatRequest
+import com.malisoftware.ai.model.response.ResponseObject
+import com.malisoftware.backend.dataUseCase.DataUseCase
 import com.malisoftware.components.uiEvent.UiEvent
+import com.malisoftware.model.Items
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
-    private val chatUseCase: ChatUseCase
+    private val chatUseCase: ChatUseCase,
+    private val dataUseCase: DataUseCase
 ) : ViewModel() {
 
-    private val menu  = mutableStateOf("")
+    private val menu  = mutableStateOf(emptyList<Pair<String,String>>())
+    private val restaurantAndItems = mutableStateOf(emptyList<Pair<String,List<Items>>>())
 
     private val _chats = MutableStateFlow<List<Chat>>(emptyList())
     val chats: StateFlow<List<Chat>> = _chats
 
     private val _loading = mutableStateOf(false)
     val loading: State<Boolean> = _loading
+
+
+    init {
+        viewModelScope.launch {
+            getRestaurantList()
+            getRestaurantsMenu()
+        }
+    }
+
+    private suspend fun getRestaurantList(){
+        dataUseCase.getRestaurantList().collect {result->
+            when(result){
+                is UiEvent.Loading -> {
+                    _loading.value = true
+                }
+                is UiEvent.Success -> {
+                    _loading.value = false
+                    menu.value = result.data!!.filter { it.isOpen }.map { Pair(it.title,it.id) }
+                }
+                else -> {_loading.value = false}
+            }
+        }
+    }
+
+    private suspend fun getRestaurantsMenu(){
+
+        menu.value.forEach {restaurant->
+            dataUseCase.getRestaurantItems(restaurant.second).collect { result ->
+                when (result) {
+                    is UiEvent.Loading -> {
+                        _loading.value = true
+                    }
+
+                    is UiEvent.Success -> {
+                        _loading.value = false
+                        val items = result.data!!
+                            .map { it.items }.flatten()
+                            .map { it.items }.flatten()
+                        restaurantAndItems.value += Pair(restaurant.first, items)
+                    }
+
+                    else -> {
+                        _loading.value = false
+                    }
+                }
+            }
+        }
+    }
 
 
     // change to one function
@@ -40,6 +95,8 @@ class ChatViewModel @Inject constructor(
         """.trimIndent()
     }
     fun setRequest(message: String) {
+        // prevent user to send multiple messages
+        if ( _chats.value.isNotEmpty() &&  !_chats.value.last().isAssistant) _chats.value = _chats.value.dropLast(1)
         _chats.value += Chat(message = message, isAssistant = false)
         // adapt the conversation  the chat gpt api understands and add to the request
         var conversation = ""
@@ -56,7 +113,7 @@ class ChatViewModel @Inject constructor(
                 " their order. you don't ask personal address, location or payment information. " +
                 "You can Make suggestions and recommendations if the user don't have any idea about what to order." +
                 "you can answer any question even if it's not related to the order. " +
-                "You know the list of restaurants and their menus. " + menu.value
+                "You know the list of restaurants and their menus. " + restaurantAndItems.value.toString() + ""
 
 
         val request = """
@@ -116,18 +173,31 @@ class ChatViewModel @Inject constructor(
                         _loading.value = true
                     }
                     is UiEvent.Success -> {
-                        _chats.value += result.data!!
+                        Log.d("ChatViewModel", "setRequest2: ${result.data}")
+
+                        _chats.value += result.data!!.copy(items = findFood(result.data!!.orderInfo))
+
                         _loading.value = false
                     }
-                    else -> {_loading.value = false}
+                    else -> {
+                        _loading.value = false
+                        Log.d("ChatViewModel", "setRequest: ${result.message}")
+                    }
                 }
 
             }
         }
     }
 
-    fun setMenu(menu: String){
-        this.menu.value = menu
+    fun findFood (data: ResponseObject? = null,) : List<Items> {
+        if (data == null) return emptyList()
+        val restaurant = data.restaurantName
+        return if (restaurant == "") restaurantAndItems.value.find { it.first == restaurant }?.second?.filter {
+            it.title.contains(data.foodName)
+        } ?: emptyList() else restaurantAndItems.value.flatMap { it.second }.filter {
+            it.title.contains(data.foodName) || it.description.contains(data.foodName) || it.category.contains(data.foodName)
+        }
     }
+
 
 }

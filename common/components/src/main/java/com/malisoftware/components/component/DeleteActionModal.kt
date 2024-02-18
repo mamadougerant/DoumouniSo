@@ -6,12 +6,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +19,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.ButtonSizes
+import com.malisoftware.theme.PaddingSizes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,10 +35,10 @@ fun DeleteActionModal(
         dragHandle = {  },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp)
+            .padding(horizontal = PaddingSizes.Dp10)
         ,
         containerColor = Color.Unspecified,
-        shape = RoundedCornerShape(10.dp),
+        shape = AppTheme.shapes.medium,
     ) {
         Card(
             modifier = Modifier
@@ -48,18 +49,18 @@ fun DeleteActionModal(
                 text = text ,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 10.dp),
+                    .padding(horizontal = PaddingSizes.Dp20, vertical = PaddingSizes.Dp10),
                 textAlign = TextAlign.Center,
                 color = Color.Black
             )
-            Divider( )
+            HorizontalDivider()
 
             Text(
                 text = "Supprimer",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp)
-                    .padding(vertical = 10.dp)
+                    .padding(PaddingSizes.Dp10)
+                    .padding(vertical = PaddingSizes.Dp10)
                     .clickable { onConfirm() },
                 color = Color.Red,
                 textAlign = TextAlign.Center,
@@ -75,15 +76,15 @@ fun DeleteActionModal(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp),
-            shape = RoundedCornerShape(10.dp),
+                .height(ButtonSizes.large),
+            shape = AppTheme.shapes.medium,
 
             ) {
             Text(
                 text = "Annuler",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp),
+                    .padding(PaddingSizes.Dp10),
                 textAlign = TextAlign.Center,
                 style = AppTheme.typography.titleMedium
             )

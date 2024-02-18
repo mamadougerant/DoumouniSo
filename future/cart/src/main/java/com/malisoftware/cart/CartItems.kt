@@ -63,16 +63,16 @@ fun CartItems(
 ) {
     Log.d("CartItems", "CartItems: $id")
     // update the item object
-    LaunchedEffect(key1 = viewModel.items, LocalTime.now()) {
+    LaunchedEffect(key1 = viewModel.items, viewModel) {
         viewModel.getAllOrderByRestaurantId(id)
     }
     LaunchedEffect(key1 = viewModel.orders,id){
         viewModel.getOrders()
     }
 
-    // fetch the items updeted in LaunchedEffect
+    // fetch the items updated in LaunchedEffect
     val orders by viewModel.items.collectAsState()
-    // fecth the businesses and find the one with the id
+    // fetch the businesses and find the one with the id
     val businesses by viewModel.orders.collectAsState()
     val business = businesses.find { it.id == id }
 
@@ -83,8 +83,6 @@ fun CartItems(
     var instruction by remember(business?.specialInstruction) { mutableStateOf(business?.specialInstruction) }
 
     val scrollState = rememberLazyListState()
-    //TODO: alerter si le restaurant est fermé
-    //TODO: add instruction to the order
 
     val total = items.sumOf { it.price * it.quantity }
     val minPrice = business?.restaurant?.minPrice ?: 0.0
@@ -221,8 +219,9 @@ fun Waring(text: String = "",title: String = "" ) {
 
 
 fun isBusinessOpen(business: ItemOrderEntity?): Boolean {
-    val openingTime = LocalTime.parse(business?.restaurant?.openingTime)
-    val closingTime = LocalTime.parse(business?.restaurant?.closingTime)
+    if (business == null) return false
+    val openingTime = LocalTime.parse(business.restaurant.openingTime)
+    val closingTime = LocalTime.parse(business.restaurant.closingTime)
     val now = LocalTime.now()
     return now.isAfter(openingTime) && now.isBefore(closingTime)
 }

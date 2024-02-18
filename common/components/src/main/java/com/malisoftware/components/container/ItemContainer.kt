@@ -27,6 +27,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -120,7 +121,7 @@ fun ItemContainer(
 ) {
     Column (
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(PaddingSizes.small),
+        verticalArrangement = Arrangement.spacedBy(PaddingSizes.Dp5),
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
         CoreItemContainer(
@@ -139,7 +140,7 @@ fun ItemContainer(
         TextDisposition(
             modifier = Modifier
                 .width(shopItemWidth)
-                .padding(start = PaddingSizes.medium),
+                .padding(start = PaddingSizes.Dp10),
             h1 = title,
             h1Style = AppTheme.typography.titleMedium.copy(color = textsColor ?: Color.Unspecified),
             h2 = subtitle,
@@ -155,10 +156,12 @@ fun PlusIcon(
     onQuantityChange: (Int) -> Unit = {},
     elevation: Dp = 10.dp,
     color: Color = Color.White,
+    min: Int = 0,
 ) {
+
     Card (
         modifier = Modifier
-            .padding(horizontal = PaddingSizes.small, vertical = PaddingSizes.medium)
+            .padding(horizontal = PaddingSizes.Dp5, vertical = PaddingSizes.Dp10)
             .height(plusIconHeight),
         shape = CircleShape,
         colors = CardDefaults.cardColors(color),
@@ -167,31 +170,38 @@ fun PlusIcon(
         AnimatedPlusMinusIcon(
             quantity = quantity,
             onQuantityChange = onQuantityChange,
+            min = min
         )
     }
 }
 
 @Composable
 private fun ColumnScope.AnimatedPlusMinusIcon(
+    min: Int = 0,
     quantity: Int = 0,
     onQuantityChange: (Int) -> Unit = {},
 ) {
-    var num by remember(quantity) { mutableStateOf(quantity.coerceAtLeast(0)) }
+    Log.d("HorizontalCartItemContainer", "quantity: $quantity")
 
+    var num1 by remember(quantity,) { mutableStateOf(quantity.coerceAtLeast(min)) }
+    var num = num1.coerceAtLeast(min)
+
+    Log.d("ShopItem", "quantity: $quantity")
+    Log.d("ShopItem", "num: $num")
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.small),
+        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.Dp5),
         modifier = Modifier
-            .padding(horizontal = PaddingSizes.small)
+            .padding(horizontal = PaddingSizes.Dp5)
             .fillMaxHeight()
             .align(Alignment.CenterHorizontally)
     ) {
-        AnimatedVisibility(visible = num > 0) {
-            Log.d("ShopItem", "num: $num")
+        AnimatedVisibility(visible =  (num.coerceAtLeast(min) > 0)) {
+
             IconButton(
                 onClick = { if (num in 1..9 ) { num-- ; onQuantityChange(num) }  },
                 colors = IconButtonDefaults.iconButtonColors(Color.Unspecified, Color.Black),
-                modifier = Modifier.size(ButtonSizes.small)
+                modifier = Modifier.size(ButtonSizes.Dp30)
             ) {
                 if (num > 1) Icon(painterResource(id = R.drawable.ic_baseline_minus), contentDescription = "")
                 else Icon(Icons.Rounded.Delete, contentDescription = "")
@@ -203,7 +213,7 @@ private fun ColumnScope.AnimatedPlusMinusIcon(
         IconButton(
             onClick = { if (num in 0..8 ) { num++; onQuantityChange(num) } },
             colors = IconButtonDefaults.iconButtonColors(Color.Unspecified, Color.Black),
-            modifier = Modifier.size(ButtonSizes.small)
+            modifier = Modifier.size(ButtonSizes.Dp30)
         ) {
             Icon(Icons.Rounded.Add, contentDescription = "")
         }

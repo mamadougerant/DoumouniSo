@@ -41,7 +41,7 @@ fun StoreContainer(
     fun Images() {
         Row (
             modifier = modifier,
-            horizontalArrangement = Arrangement.spacedBy(PaddingSizes.large),
+            horizontalArrangement = Arrangement.spacedBy(PaddingSizes.Dp15),
             verticalAlignment = Alignment.CenterVertically
         ){
             ImageContainer(
@@ -86,7 +86,7 @@ fun StoreText(
     Text(
         text = text,
         style = AppTheme.typography.titleLarge,
-        modifier = Modifier.padding(PaddingSizes.small)
+        modifier = Modifier.padding(PaddingSizes.Dp5)
     )
 }
 
@@ -95,7 +95,7 @@ fun StoreText(
 fun Modifier.storeModifier() : Modifier = composed {
     this
         .height(storeHeight)
-        .border(PaddingSizes.tiny, Color.LightGray.copy(0.4f), AppTheme.shapes.medium)
+        .border(PaddingSizes.Dp1, Color.LightGray.copy(0.4f), AppTheme.shapes.medium)
 }
 
 

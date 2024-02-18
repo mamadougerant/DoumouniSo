@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.malisoftware.components.container.SmallBusinessContainer
 import com.malisoftware.components.icons.ArrowForward
 import com.malisoftware.model.Items
+import com.malisoftware.theme.PaddingSizes
 
 @Composable
 fun SmallBusinessList(
@@ -31,7 +32,7 @@ fun SmallBusinessList(
 ) {
     Column (
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(PaddingSizes.Dp10),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         SmallBusinessContainer(

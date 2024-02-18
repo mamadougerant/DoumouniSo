@@ -81,7 +81,7 @@ fun ShopItem(
     val searchItems by shopOrderVM.searchItems.collectAsState()
 
     if (shop == null) { return }
-
+    // Todo impliment zoom for the shop items
     BusinessScreenScaffold(
         scrollState = scrollState,
         modifier = Modifier,

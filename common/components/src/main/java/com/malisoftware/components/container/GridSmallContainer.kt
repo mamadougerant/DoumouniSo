@@ -7,8 +7,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.malisoftware.components.icons.OutlinedButtonWithText
 import com.malisoftware.theme.CardSizes.searchButtonsLazyLayoutHeight
 import com.malisoftware.theme.PaddingSizes
@@ -21,11 +19,11 @@ fun GridSmallContainer(
 ) {
     LazyHorizontalGrid(
         rows = GridCells.Fixed(3),
-        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
+        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.Dp10),
         modifier = Modifier
             .fillMaxWidth()
             .height(searchButtonsLazyLayoutHeight),
-        verticalArrangement = Arrangement.spacedBy(PaddingSizes.medium)
+        verticalArrangement = Arrangement.spacedBy(PaddingSizes.Dp10)
 
     ){
         items(list.size){

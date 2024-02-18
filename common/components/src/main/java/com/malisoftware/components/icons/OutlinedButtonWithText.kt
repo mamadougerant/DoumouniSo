@@ -17,6 +17,8 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.ButtonSizes
+import com.malisoftware.theme.PaddingSizes
 
 @Composable
 fun OutlinedButtonWithText(
@@ -31,7 +33,7 @@ fun OutlinedButtonWithText(
     val hapticFeedback = LocalHapticFeedback.current
     OutlinedButton(
         modifier = Modifier
-            .height(35.dp),
+            .height(ButtonSizes.Dp35),
         onClick = {
             hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
             onClick()
@@ -47,7 +49,7 @@ fun OutlinedButtonWithText(
         Text(
             text = text,
             style = AppTheme.typography.titleSmall,
-            modifier = Modifier.padding(horizontal = 10.dp),
+            modifier = Modifier.padding(horizontal = PaddingSizes.Dp10),
             fontWeight = FontWeight.SemiBold,
             color = Color.Black
         )

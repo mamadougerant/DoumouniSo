@@ -48,7 +48,7 @@ fun CategoryContainer(
 ) {
     Column (
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(PaddingSizes.small),
+        verticalArrangement = Arrangement.spacedBy(PaddingSizes.Dp5),
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
         ImageContainer(

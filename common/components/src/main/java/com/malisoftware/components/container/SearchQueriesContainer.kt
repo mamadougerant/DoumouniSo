@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -22,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.malisoftware.theme.AppTheme
 import com.malisoftware.theme.HorizontalDividerSizes
 import com.malisoftware.theme.PaddingSizes
@@ -51,7 +49,7 @@ fun SearchQueriesContainer(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onClick() }
-            .padding(start = PaddingSizes.small),
+            .padding(start = PaddingSizes.Dp5),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ){
@@ -60,7 +58,7 @@ fun SearchQueriesContainer(
             modifier = Modifier.clickable { onClick() }
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(PaddingSizes.medium),
+                modifier = Modifier.fillMaxWidth().padding(PaddingSizes.Dp10),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -79,7 +77,7 @@ fun SearchQueriesContainer(
                     modifier = Modifier
                         .height(HorizontalDividerSizes.small)
                         .clip(CircleShape)
-                        .padding(start = PaddingSizes.medium),
+                        .padding(start = PaddingSizes.Dp10),
                     color = Color.Black
                 )
         }

@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.PaddingSizes
 
 @Composable
 fun SmallLeftIcon(
@@ -28,7 +29,7 @@ fun SmallLeftIcon(
         Text(
             text = text,
             style = AppTheme.typography.labelSmall,
-            modifier = Modifier.padding(5.dp),
+            modifier = Modifier.padding(PaddingSizes.Dp5),
             color = textColor
         )
     }

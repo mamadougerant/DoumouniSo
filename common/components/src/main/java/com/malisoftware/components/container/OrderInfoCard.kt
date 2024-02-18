@@ -6,12 +6,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,29 +37,29 @@ fun OrderInfoCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(orderInfoCard)
-                .padding(PaddingSizes.extraLarge)
-                .padding(top = PaddingSizes.large),
+                .padding(PaddingSizes.Dp20)
+                .padding(top = PaddingSizes.Dp15),
             elevation = CardDefaults.cardElevation(10.dp)
         ) {
             Text(
                 text = text,
                 style = AppTheme.typography.titleLarge,
                 modifier = Modifier
-                    .padding(horizontal = PaddingSizes.large)
-                    .padding(top = PaddingSizes.large)
+                    .padding(horizontal = PaddingSizes.Dp15)
+                    .padding(top = PaddingSizes.Dp15)
             )
             Text(
                 text = subText,
                 style = AppTheme.typography.titleMedium,
                 modifier = Modifier
-                    .padding(PaddingSizes.large)
+                    .padding(PaddingSizes.Dp15)
             )
             HorizontalDivider()
             TextWithIcon(
                 title = info,
                 customStyle = AppTheme.typography.titleMedium,
                 modifier = Modifier
-                    .padding(PaddingSizes.large)
+                    .padding(PaddingSizes.Dp15)
             ) {}
         }
         Image(

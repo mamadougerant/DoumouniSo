@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.malisoftware.ai.viewModel.ChatViewModel
 import com.malisoftware.ai.presentation.ChatContainer
 import com.malisoftware.ai.presentation.MessageField
+import com.malisoftware.components.LazyLists.ItemList
 import com.malisoftware.components.LoadingAnimation
 
 @Preview
@@ -53,6 +54,11 @@ fun ChatUi() {
                         text = chat.value[it].message,
                         isAssistant = chat.value[it].isAssistant
                     )
+                    ItemList(
+                        items = chat.value[it].items ?: emptyList(),
+                    ) {
+
+                    }
                 }
             }
             if (loading) {

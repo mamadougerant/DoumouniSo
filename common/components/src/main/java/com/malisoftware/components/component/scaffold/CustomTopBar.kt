@@ -63,6 +63,7 @@ fun CustomTopBar(
     onHeartClick: (Boolean) -> Unit = {},
     barExtraContent: (@Composable () -> Unit)? = null,
     actions: (@Composable (Color) -> Unit)? = null,
+    extraActions: (@Composable (Color) -> Unit)? = null,
     showBarAtIndex: Int? = 2,
 ) {
     val firstItemOffset by remember { derivedStateOf { scrollState.firstVisibleItemScrollOffset } }
@@ -80,6 +81,9 @@ fun CustomTopBar(
         Row (
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            AnimatedVisibility (extraActions != null && color != barColor) {
+                extraActions?.invoke(color)
+            }
             AnimatedVisibility (color != barColor) {
                 HeartIcon(
                     onClick = onHeartClick,

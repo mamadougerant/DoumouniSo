@@ -1,6 +1,5 @@
 package com.malisoftware.components.container
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.malisoftware.components.TextWithIcon
 import com.malisoftware.theme.AppTheme
 import com.malisoftware.theme.CardSizes.restaurantDeliveryTimeCard
@@ -41,7 +39,7 @@ fun BusinessInfo(
         TextWithIcon(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(horizontal = PaddingSizes.extraLarge),
+                .padding(horizontal = PaddingSizes.Dp20),
             title = title
         ) {}
         Text(
@@ -49,15 +47,15 @@ fun BusinessInfo(
             style = AppTheme.typography.titleMedium,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(horizontal = PaddingSizes.extraLarge),
+                .padding(horizontal = PaddingSizes.Dp20),
             textAlign = TextAlign.Center
         )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = PaddingSizes.extraLarge, vertical = PaddingSizes.medium),
+                .padding(horizontal = PaddingSizes.Dp20, vertical = PaddingSizes.Dp10),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
+            horizontalArrangement = Arrangement.spacedBy(PaddingSizes.Dp10),
         ) {
             BusinessInfoCard(
                 text = subInCard1,
@@ -90,7 +88,7 @@ fun RowScope.BusinessInfoCard(
             modifier = Modifier
                 .fillMaxHeight()
                 .align(Alignment.CenterHorizontally)
-                .padding(PaddingSizes.small),
+                .padding(PaddingSizes.Dp5),
             textAlign = TextAlign.Center
         )
     }

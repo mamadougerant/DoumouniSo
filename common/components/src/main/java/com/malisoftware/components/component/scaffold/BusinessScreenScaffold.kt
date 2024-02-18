@@ -17,7 +17,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CenterFocusWeak
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.malisoftware.components.component.CustomSearchBar
+import com.malisoftware.components.icons.NavigationIcon
 import kotlinx.coroutines.delay
 import kotlin.math.pow
 
@@ -73,6 +77,7 @@ fun BusinessScreenScaffold(
     isFavorite: Boolean = false,
     onSearch: (String) -> Unit = {},
     barExtraContent: (@Composable () -> Unit)? = null,
+    extraActionsClick: ()->Unit = {},
     showBarAtIndex: Int? = 2,
     contentPaddingValues: (PaddingValues)->Unit = {  },
     searchText: String = "Search",
@@ -104,7 +109,8 @@ fun BusinessScreenScaffold(
             barExtraContent = barExtraContent,
             showBarAtIndex = showBarAtIndex,
             contentPaddingValues = contentPaddingValues,
-            content = filterContents ?: content
+            content = filterContents ?: content,
+            extraActions = {CustomNavIcon(extraActionsClick)}
         )
         AnimatedVisibility(
             visible = showSearchResult,
@@ -125,6 +131,18 @@ fun BusinessScreenScaffold(
             }
         }
     }
+}
+
+@Composable
+fun CustomNavIcon(
+    extraActionsClick: ()->Unit = {}
+) {
+    NavigationIcon(
+        navIcon = {
+            Icon(imageVector = Icons.Default.CenterFocusWeak, null, tint = Color.Black )
+        },
+        onClick = extraActionsClick
+    )
 }
 
 @Preview

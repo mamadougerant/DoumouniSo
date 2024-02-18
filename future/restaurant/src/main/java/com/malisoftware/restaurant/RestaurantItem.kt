@@ -1,12 +1,18 @@
 package com.malisoftware.restaurant
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,14 +35,20 @@ import com.malisoftware.components.component.scaffold.ContentTabs
 import com.malisoftware.components.container.BusinessInfo
 import com.malisoftware.components.container.ItemHeader
 import com.malisoftware.components.container.ItemWithTitleBar
+import com.malisoftware.components.icons.NavigationIcon
 import com.malisoftware.components.screens.OrderScreenInModalSheet
+import com.malisoftware.components.screens.PagerImageContainer
 import com.malisoftware.local.local.ItemsEntity
 import com.malisoftware.model.Items
 import com.malisoftware.theme.AppTheme
 import com.malisoftware.restaurant.viewModel.RestaurantOrderVM
 import com.malisoftware.restaurant.viewModel.RestaurantViewModel
 import com.malisoftware.local.mappers.toItemEntity
+import com.malisoftware.local.mappers.toItems
+import com.malisoftware.restaurant.uistates.RestaurantOrderState
+import com.malisoftware.restaurant.uistates.RestaurantVmState
 import com.malisoftware.restaurant.viewModel.RoomViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
@@ -68,21 +80,70 @@ fun RestaurantItem(
 
     val favoritesIds = favorites.map { it.favoriteBusiness.restaurantId }
 
+    Log.d("RestaurantItem", "RestaurantItem: $orderItem")
 
     val scrollState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    var sheetContent by remember { mutableStateOf(Items()) }
-    var openSheet by remember { mutableStateOf(false) }
-
-    var instruction by remember { mutableStateOf("") }
+    var showZoom by remember { mutableStateOf(false) }
 
     if (vmState.restaurantById == null) { return }
+
+    Box (
+        modifier = Modifier.fillMaxSize()
+    ){
+
+        RestaurantItemContainer(
+            scrollState = scrollState,
+            navController = navController,
+            vmState = vmState,
+            uiState = uiState,
+            scope = scope,
+            orderItem = orderItem,
+            favoritesIds = favoritesIds,
+            roomVm = roomVm,
+            orderViewModel = orderViewModel,
+            onOpenZoom = { showZoom = true }
+        )
+        AnimatedVisibility(visible = showZoom) {
+            PagerImageContainer(
+                listItem = uiState.restaurantItems.flatMap { it.items }.updateQuantity(orderItem),
+                onQuit = { showZoom = false },
+                title = vmState.restaurantById!!.title,
+                onQuantityChange = { quantity, item ->
+                    scope.launch {
+                        roomVm.insertOrderItem(item = item.copy(quantity = quantity).toItemEntity(vmState.restaurantById!!.id))
+                        roomVm.insertOrder(restaurant = vmState.restaurantById!!, vmState.restaurantById!!.id )
+                    }
+                }
+            )
+        }
+    }
+
+}
+
+@Composable
+fun RestaurantItemContainer(
+    scrollState: LazyListState,
+    navController: NavHostController,
+    vmState: RestaurantVmState,
+    uiState: RestaurantOrderState,
+    scope: CoroutineScope,
+    orderItem: List<ItemsEntity>,
+    favoritesIds: List<String>,
+    roomVm: RoomViewModel,
+    orderViewModel: RestaurantOrderVM,
+    onOpenZoom: () -> Unit = {},
+) {
+
+    var sheetContent by remember { mutableStateOf(Items()) }
+    var openSheet by remember { mutableStateOf(false) }
+    var instruction by remember { mutableStateOf("") }
 
     BusinessScreenScaffold(
         scrollState = scrollState,
         modifier = Modifier,
         text = vmState.restaurantById?.title!!,
-        imageUrl = vmState.restaurantById?.imageUrl!!,
+        imageUrl = vmState.restaurantById.imageUrl,
         barExtraContent = {
             if (uiState.restaurantItems.size > 2)
                 ContentTabs(
@@ -95,6 +156,7 @@ fun RestaurantItem(
                     containerColor = Color.White
                 )
         },
+        extraActionsClick = onOpenZoom,
         searchContent = {
             val item = uiState.searchResults.updateQuantity(orderItem)
             HorizontalItemList(

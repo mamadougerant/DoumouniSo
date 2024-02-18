@@ -46,8 +46,8 @@ fun HorizontalItemContainer(
     Row (
         modifier = modifier
             .fillMaxWidth()
-            .padding(PaddingSizes.small),
-        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
+            .padding(PaddingSizes.Dp5),
+        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.Dp10),
         verticalAlignment = Alignment.CenterVertically
     ){
         ImageContainer(
@@ -75,7 +75,7 @@ fun HorizontalItemContainer(
                     onClick = onClick,
                     colors = IconButtonDefaults.iconButtonColors(Color.LightGray,Color.Black),
                     modifier = Modifier
-                        .padding(PaddingSizes.small)
+                        .padding(PaddingSizes.Dp5)
                         .size(ButtonSizes.medium)
                 ) {
                     if (quantity == 0)
@@ -102,8 +102,8 @@ fun HorizontalCartItemContainer(
     Row (
         modifier = modifier
             .fillMaxWidth()
-            .padding(PaddingSizes.small),
-        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
+            .padding(PaddingSizes.Dp5),
+        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.Dp10),
         verticalAlignment = Alignment.CenterVertically
     ){
         ImageContainer(
@@ -121,7 +121,7 @@ fun HorizontalCartItemContainer(
             h2 = price,
             h1Style = MaterialTheme.typography.titleMedium,
         ) {
-            PlusIcon(quantity, onQuantityChange,0.dp,Color.LightGray)
+            PlusIcon(quantity.coerceAtLeast(1), onQuantityChange,0.dp,Color.LightGray, min = 1)
         }
     }
 

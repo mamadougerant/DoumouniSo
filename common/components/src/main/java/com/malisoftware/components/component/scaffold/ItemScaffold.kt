@@ -29,6 +29,7 @@ fun ItemCustomScaffold(
     barColor: Color = Color.White,
     navIcon: (@Composable () -> Unit)? = null,
     onNavIconClick: () -> Unit = {},
+    containerColor: Color = Color.Unspecified,
     actions: (@Composable (Color) -> Unit)? = {},
     bottomBar: (@Composable () -> Unit) = {},
     contentPaddingValues: (PaddingValues)->Unit = {  },
@@ -51,6 +52,7 @@ fun ItemCustomScaffold(
                 actions = actions
             )
         },
+        containerColor = containerColor,
         imageUrl = imageUrl,
         scrollState = scrollState,
         contentPaddingValues = contentPaddingValues,

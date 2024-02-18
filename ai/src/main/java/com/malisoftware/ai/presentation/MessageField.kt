@@ -47,7 +47,7 @@ fun BoxScope.MessageField(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
+            .background(Color.Unspecified)
             .padding(
                 top = 5.dp,
                 bottom = 10.dp,

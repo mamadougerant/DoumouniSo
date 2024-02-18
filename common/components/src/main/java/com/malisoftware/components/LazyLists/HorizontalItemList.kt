@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +22,7 @@ import com.malisoftware.components.container.HorizontalItemContainer
 import com.malisoftware.model.Items
 import com.malisoftware.model.format.formatPrice
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.PaddingSizes
 
 fun LazyListScope.HorizontalItemList(
     modifier: Modifier = Modifier,
@@ -40,7 +42,7 @@ fun LazyListScope.HorizontalItemList(
             shape = RoundedCornerShape(0.dp),
         ) {
             if (title.isNotEmpty()) {
-                TextWithIcon(modifier = Modifier.padding(10.dp), title = title) {}
+                TextWithIcon(modifier = Modifier.padding(PaddingSizes.Dp10), title = title) {}
             }
             items.forEachIndexed { index, item ->
                 HorizontalItemContainer(
@@ -55,7 +57,7 @@ fun LazyListScope.HorizontalItemList(
                     textsColors = textsColor,
                 )
                 if (index != items.size - 1) {
-                    Divider(Modifier.padding(vertical = 10.dp))
+                    HorizontalDivider(Modifier.padding(vertical = PaddingSizes.Dp10))
                 }
             }
         }
@@ -80,11 +82,12 @@ fun LazyListScope.HorizontalCartItemList(
                 imageUrl = item.imageUrl,
                 onClick = { onClick.invoke(item)},
                 modifier = modifier,
-                quantity = item.quantity,
+                quantity = item.quantity.coerceAtLeast(1),
                 onQuantityChange = { onQuantityChange.invoke(it,item) },
             )
+            Log.d("HorizontalCartItemList", "index: ${item.quantity}")
             if (index != items.size - 1) {
-                Divider(Modifier.padding(vertical = 10.dp))
+                HorizontalDivider(Modifier.padding(vertical = PaddingSizes.Dp10))
             }
         }
     }

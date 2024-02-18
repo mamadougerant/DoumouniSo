@@ -20,7 +20,7 @@ import com.malisoftware.theme.CardSizes.roundedBusinessPic
 import com.malisoftware.theme.PaddingSizes
 
 /**
- * SmallBusinessContainer is a composable function that creates a compact container for representing small businesses.
+ * SmallBusinessContainer is a composable function that creates a compact container for representing Dp30 businesses.
  * It includes an image, title, subtitle, and optional trailing content.
  *
  * @param modifier Modifier for styling and layout adjustments.
@@ -45,7 +45,7 @@ fun SmallBusinessContainer(
     Row (
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.medium),
+        horizontalArrangement = Arrangement.spacedBy(PaddingSizes.Dp10),
     ){
         ImageContainer(
             modifier = Modifier
@@ -58,8 +58,8 @@ fun SmallBusinessContainer(
         TextDisposition (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = PaddingSizes.medium)
-                .padding(end = PaddingSizes.medium),
+                .padding(vertical = PaddingSizes.Dp10)
+                .padding(end = PaddingSizes.Dp10),
             h1 = title,
             h1Style = AppTheme.typography.titleMedium,
             h2 = subtitle,

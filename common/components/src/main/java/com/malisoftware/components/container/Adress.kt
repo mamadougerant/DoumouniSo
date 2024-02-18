@@ -94,8 +94,8 @@ fun NormalButton(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = PaddingSizes.medium)
-            .padding(bottom = PaddingSizes.medium)
+            .padding(horizontal = PaddingSizes.Dp10)
+            .padding(bottom = PaddingSizes.Dp10)
             .height(ButtonSizes.large)
         ,
         shape = AppTheme.shapes.medium,

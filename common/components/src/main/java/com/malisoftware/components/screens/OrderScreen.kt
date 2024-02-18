@@ -20,6 +20,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -50,6 +51,8 @@ import com.malisoftware.model.format.formatPrice
 import com.malisoftware.theme.AppTheme
 import com.malisoftware.theme.DoumouniDronTheme
 import com.malisoftware.components.R
+import com.malisoftware.theme.ButtonSizes
+import com.malisoftware.theme.PaddingSizes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -118,6 +121,7 @@ fun OrderScreen(
                      quantity = item.quantity
                  )
         },
+        containerColor = if (isSystemInDarkTheme()) AppTheme.colors.background else Color.White
     ){
         item {
             Card(
@@ -138,7 +142,7 @@ fun OrderScreen(
                     modifier = Modifier.padding(10.dp),
                 ) {}
             }
-            Divider()
+            HorizontalDivider()
         }
         extraContent()
 
@@ -147,7 +151,7 @@ fun OrderScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 colors = CardDefaults.cardColors(if (isSystemInDarkTheme()) AppTheme.colors.background else Color.White),
-                shape = RoundedCornerShape(0.dp),
+                shape = AppTheme.shapes.medium,
             ){
                 SpecialInstruction(onValueChange = onSpecialOrderValueChange)
             }
@@ -168,35 +172,35 @@ fun OrderBottomBar(
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(5.dp)
+            horizontalArrangement = Arrangement.spacedBy(PaddingSizes.Dp5)
         ) {
             Row (
                 modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(15.dp)
+                horizontalArrangement = Arrangement.spacedBy(PaddingSizes.Dp15)
             ){
                 val color = if (number > 1) Color.White else Color.White.copy(0.5f)
                 IconButton(
                     onClick = { if (number > 1) { number-- } },
                     colors = IconButtonDefaults.iconButtonColors(color, Color.Black),
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(ButtonSizes.large)
                 ) { Icon(painterResource(id = R.drawable.ic_baseline_minus), contentDescription = "") }
                 Text(text = number.toString(), style = AppTheme.typography.titleLarge,color = Color.Black)
                 IconButton(
                     onClick = { if (number < 9) { number++ } },
                     colors = IconButtonDefaults.iconButtonColors(Color.White,Color.Black),
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(ButtonSizes.large)
                 ) { Icon(Icons.Rounded.Add, contentDescription = "") }
             }
             TextButton(
                 onClick = { onAddClick(number) },
                 modifier = Modifier
-                    .weight(1.8f)
+                    .weight(1.5f)
                     .height(75.dp)
-                    .padding(vertical = 10.dp),
+                    .padding(vertical = PaddingSizes.Dp10),
                 contentPadding = PaddingValues(5.dp),
                 colors = ButtonDefaults.buttonColors(if (isSystemInDarkTheme()) Color.White else Color.Black),
-                shape = RoundedCornerShape(10.dp)
+                shape = AppTheme.shapes.medium
             ) {
                 val text = buildAnnotatedString {
                     withStyle(style = AppTheme.typography.titleLarge.toSpanStyle()) {
@@ -208,7 +212,7 @@ fun OrderBottomBar(
                 }
                 Text(
                     text = text,
-                    modifier = Modifier.padding( 10.dp),
+                    modifier = Modifier.padding(PaddingSizes.Dp10),
                     style = AppTheme.typography.titleLarge,
                     textAlign = TextAlign.Center,
                     color = if (isSystemInDarkTheme()) Color.Black else Color.White

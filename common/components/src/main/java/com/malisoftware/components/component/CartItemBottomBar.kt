@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import com.malisoftware.components.TextWithIcon
 import com.malisoftware.model.format.formatPrice
 import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.ButtonSizes
+import com.malisoftware.theme.PaddingSizes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +53,7 @@ fun CartItemBottomBar(
             TextWithIcon(
                 title = "Sous-Total", modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 5.dp),
+                    .padding(horizontal = PaddingSizes.Dp10, vertical = PaddingSizes.Dp5),
                 customStyle = AppTheme.typography.titleMedium
             ) {
                 Text(text = formatPrice(total), style = AppTheme.typography.titleMedium)
@@ -61,7 +63,7 @@ fun CartItemBottomBar(
             TextWithIcon(
                 title = "Frais de Livrason", modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 5.dp),
+                    .padding(horizontal = PaddingSizes.Dp10, vertical = PaddingSizes.Dp5),
                 customStyle = AppTheme.typography.titleMedium
             ) {
                 Text(text = formatPrice(deliveryFee), style = AppTheme.typography.titleMedium)
@@ -70,7 +72,7 @@ fun CartItemBottomBar(
 
         TextWithIcon(title = "Total", modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 5.dp)) {
+            .padding(horizontal = PaddingSizes.Dp10, vertical = PaddingSizes.Dp5)) {
             Text(
                 text = formatPrice(total + deliveryFee),
                 style = AppTheme.typography.titleMedium,
@@ -100,7 +102,7 @@ fun CartItemBottomBar(
             Text(
                 text = text ,
                 modifier = Modifier
-                    .padding(horizontal = 10.dp, vertical = 5.dp)
+                    .padding(horizontal = PaddingSizes.Dp10, vertical = PaddingSizes.Dp5)
                     .clickable { onUserTerms() },
                 textAlign = TextAlign.Start,
             )
@@ -115,10 +117,10 @@ fun CartItemBottomBar(
             enabled = enabled,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(5.dp)
-                .padding(vertical = 5.dp)
-                .height(50.dp),
-            shape = RoundedCornerShape(10.dp),
+                .padding(PaddingSizes.Dp5)
+                .padding(vertical = PaddingSizes.Dp5)
+                .height(ButtonSizes.large),
+            shape = AppTheme.shapes.medium,
             contentPadding = PaddingValues(0.dp)
         ) {
             Text(
@@ -126,7 +128,7 @@ fun CartItemBottomBar(
                 style = AppTheme.typography.titleLarge,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(5.dp),
+                    .padding(PaddingSizes.Dp5),
                 textAlign = TextAlign.Center
             )
         }

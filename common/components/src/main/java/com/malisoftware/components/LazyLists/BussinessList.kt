@@ -20,6 +20,10 @@ import androidx.compose.ui.unit.dp
 import com.malisoftware.components.container.BusinessContainer
 import com.malisoftware.components.container.RowListContainer
 import com.malisoftware.model.BusinessData
+import com.malisoftware.theme.AppTheme
+import com.malisoftware.theme.CardSizes.businessContainerHeight
+import com.malisoftware.theme.CardSizes.businessContainerWidth
+import com.malisoftware.theme.CardSizes.lageBusinessContainerHeight
 
 @Composable
 fun RowBusinessList(
@@ -42,8 +46,8 @@ fun RowBusinessList(
 
             BusinessContainer(
                 modifier = Modifier
-                    .width(235.dp),
-                imageHeight = 150.dp,
+                    .width(businessContainerWidth),
+                imageHeight = businessContainerHeight,
                 title = businessData[it].title ,
                 subTitle = businessData[it].category + " - " + businessData[it].formattedMinPrice,
                 deliveryFee = businessData[it].formattedDeliveryFee,
@@ -56,7 +60,7 @@ fun RowBusinessList(
                 onFavoriteClick = { fav-> onFavoriteClick(businessData[it],fav) },
                 isFavorite = favoriteBusiness.contains(businessData[it]),
                 color = color,
-                shape = RoundedCornerShape(10.dp),
+                shape = AppTheme.shapes.medium,
                 topLeftText = businessData[it].promotion,
                 smallBottomText = businessData[it].formattedDeliveryTime,
                 isOpen = businessData[it].isOpen,
@@ -88,7 +92,7 @@ fun LazyListScope.ColumnBusinessList(
         BusinessContainer(
             modifier = modifier
                 .fillMaxWidth(),
-            imageHeight = 180.dp,
+            imageHeight = lageBusinessContainerHeight,
             title = businessData[it].title ,
             subTitle = businessData[it].category + " - " + businessData[it].formattedMinPrice,
             deliveryFee = businessData[it].formattedDeliveryFee,
@@ -100,7 +104,7 @@ fun LazyListScope.ColumnBusinessList(
             },
             onFavoriteClick = { fav-> onFavoriteClick(businessData[it],fav) },
             color = color,
-            shape = RoundedCornerShape(10.dp),
+            shape = AppTheme.shapes.medium,
             topLeftText = businessData[it].promotion,
             smallBottomText = businessData[it].formattedDeliveryTime,
             isOpen = businessData[it].isOpen,

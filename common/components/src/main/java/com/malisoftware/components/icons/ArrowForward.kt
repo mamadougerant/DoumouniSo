@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
+import com.malisoftware.theme.ButtonSizes
 
 @Composable
 fun ArrowForward (
@@ -24,7 +25,7 @@ fun ArrowForward (
             onClick()
         },
         modifier = Modifier
-            .size(24.dp),
+            .size(ButtonSizes.Dp24),
         colors = IconButtonDefaults.iconButtonColors(
             containerColor = Color.LightGray,
             contentColor = Color.Black

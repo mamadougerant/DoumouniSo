@@ -16,7 +16,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.malisoftware.theme.AppTheme
 import com.malisoftware.theme.PaddingSizes
 
@@ -32,7 +31,7 @@ fun RadioColumn(
     Column (
         modifier = modifier
             .fillMaxWidth()
-            .padding(PaddingSizes.medium)
+            .padding(PaddingSizes.Dp10)
     ){
         titleContent()
         options.forEach { option ->

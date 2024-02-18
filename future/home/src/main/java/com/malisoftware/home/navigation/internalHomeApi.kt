@@ -25,14 +25,12 @@ internal object InternalHomeApi: HomeApi {
                 val homeViewModel: HomeViewModel = hiltViewModel()
                 val homeRoomViewModel: HomeRoomViewModel = hiltViewModel()
 
-                ChatUi()
-
-                /*
+                //ChatUi()
                 MainHome(
                     navController = navController,
                     homeViewModel = homeViewModel,
                     homeRoomViewModel = homeRoomViewModel
-                )*/
+                )
             }
         }
 

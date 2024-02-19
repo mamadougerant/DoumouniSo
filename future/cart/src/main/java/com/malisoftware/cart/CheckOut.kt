@@ -55,7 +55,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CheckOut(
-    modifier: Modifier = Modifier,
     navController: NavController,
     restaurantId: String = "123456789",
     cartVm: CartRoomViewModel,

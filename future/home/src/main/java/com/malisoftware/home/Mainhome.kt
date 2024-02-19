@@ -151,7 +151,7 @@ fun MainHome(
                 onImage2Click = { navController.navigate(Roots.SHOP_ROOT) },
             )
         }
-        // RESTARANT  category
+        // RESTAURANT  category
         item {
             CategoryList (
                 modifier = Modifier,

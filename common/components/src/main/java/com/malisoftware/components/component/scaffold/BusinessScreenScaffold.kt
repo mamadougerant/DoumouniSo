@@ -110,7 +110,7 @@ fun BusinessScreenScaffold(
             showBarAtIndex = showBarAtIndex,
             contentPaddingValues = contentPaddingValues,
             content = filterContents ?: content,
-            extraActions = {CustomNavIcon(extraActionsClick)}
+            extraActions = {CustomNavIcon(extraActionsClick,it)}
         )
         AnimatedVisibility(
             visible = showSearchResult,
@@ -135,12 +135,14 @@ fun BusinessScreenScaffold(
 
 @Composable
 fun CustomNavIcon(
-    extraActionsClick: ()->Unit = {}
+    extraActionsClick: ()->Unit = {},
+    tint: Color = Color.LightGray
 ) {
     NavigationIcon(
         navIcon = {
             Icon(imageVector = Icons.Default.CenterFocusWeak, null, tint = Color.Black )
         },
+        color = tint,
         onClick = extraActionsClick
     )
 }

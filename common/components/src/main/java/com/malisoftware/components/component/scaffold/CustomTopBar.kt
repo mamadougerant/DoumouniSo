@@ -82,7 +82,7 @@ fun CustomTopBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AnimatedVisibility (extraActions != null && color != barColor) {
-                extraActions?.invoke(color)
+                extraActions?.invoke(if (color == Color.Transparent) Color.LightGray else color,)
             }
             AnimatedVisibility (color != barColor) {
                 HeartIcon(

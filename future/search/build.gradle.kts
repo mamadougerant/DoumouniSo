@@ -51,6 +51,11 @@ android {
 
 dependencies {
 
+    implementation(project(":data:model"))
+    implementation(project(":data:backend"))
+    implementation(project(":data:backend"))
+    implementation(project(":data:local"))
+
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
@@ -59,9 +64,6 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation(project(":data:backend"))
-    implementation(project(":data:model"))
-    implementation(project(":data:local"))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -74,15 +76,13 @@ dependencies {
 
 
     // Dagger - Hilt
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
-    kapt("androidx.hilt:hilt-compiler:1.1.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    daggerHilt()
 
     implementation(project(":common:components"))
     implementation(project(":common:theme"))
+    implementation(project(":data:local"))
 
     implementation ("io.realm.kotlin:library-base:1.13.0")
     //implementation ("io.realm.kotlin:library-sync:1.11.0")// If using Device Sync
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
 }

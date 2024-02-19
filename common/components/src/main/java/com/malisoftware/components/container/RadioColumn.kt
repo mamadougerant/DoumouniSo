@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import com.malisoftware.theme.AppTheme
 import com.malisoftware.theme.PaddingSizes
 
@@ -51,6 +52,7 @@ fun RadioColumn(
                     ),
                     selected = option.first == selectedOption,
                     onClick = { selectedOption = option.first; getSelected(option.first) },
+                    modifier = Modifier.testTag(option.first)
                 )
             }
         }
